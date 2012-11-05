@@ -5,6 +5,13 @@ source "https://rubygems.org"
 gem 'activerecord', require: 'active_record'
 gem 'activerecord-jdbcpostgresql-adapter'
 
-group :development do
+group :test, :development do
   gem 'pry'
 end
+
+group :test do
+  gem 'rspec'
+  gem 'guard-rspec'
+  gem 'mocha'
+end
+
