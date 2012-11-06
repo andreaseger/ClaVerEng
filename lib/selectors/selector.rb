@@ -1,5 +1,5 @@
 class Selector
-  def initialize(args)
+  def initialize(*args)
 
   end
 end

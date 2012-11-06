@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/sch1zo/svm_toolkit.git
+  revision: 0c6489ac51f9dfb31e4d83ee362bc3e7c0a04d7a
+  branch: restructure
+  specs:
+    svm_toolkit (1.1.0-java)
+      celluloid
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -18,18 +26,47 @@ GEM
       multi_json (~> 1.0)
     arel (3.0.2)
     builder (3.0.4)
+    celluloid (0.12.3)
+      facter (>= 1.6.12)
+      timers (>= 1.0.0)
     coderay (1.0.8)
+    diff-lcs (1.1.3)
+    facter (1.6.14)
+    guard (1.5.3)
+      listen (>= 0.4.2)
+      lumberjack (>= 1.0.2)
+      pry (>= 0.9.10)
+      thor (>= 0.14.6)
+    guard-rspec (2.1.1)
+      guard (>= 1.1)
+      rspec (~> 2.11)
     i18n (0.6.1)
     jdbc-postgres (9.1.901)
+    listen (0.5.3)
+    lumberjack (1.0.2)
+    metaclass (0.0.1)
     method_source (0.8.1)
+    mocha (0.12.7)
+      metaclass (~> 0.0.1)
     multi_json (1.3.6)
     pry (0.9.10-java)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.3.1)
       spoon (~> 0.0)
+    rake (0.9.2.2)
+    rspec (2.11.0)
+      rspec-core (~> 2.11.0)
+      rspec-expectations (~> 2.11.0)
+      rspec-mocks (~> 2.11.0)
+    rspec-core (2.11.1)
+    rspec-expectations (2.11.3)
+      diff-lcs (~> 1.1.3)
+    rspec-mocks (2.11.3)
     slop (3.3.3)
     spoon (0.0.1)
+    thor (0.16.0)
+    timers (1.0.1)
     tzinfo (0.3.33)
 
 PLATFORMS
@@ -38,4 +75,8 @@ PLATFORMS
 DEPENDENCIES
   activerecord
   activerecord-jdbcpostgresql-adapter
+  guard-rspec
+  mocha
   pry
+  rake
+  svm_toolkit!

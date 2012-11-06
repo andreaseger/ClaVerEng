@@ -1,5 +1,5 @@
 class Preprocessor
-  def initialize(args)
+  def initialize(*args)
 
   end
 end
