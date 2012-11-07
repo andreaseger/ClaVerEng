@@ -1,5 +1,6 @@
 class Selector
-  def initialize(*args)
-
+  attr_accessor :data
+  def initialize(data, *args)
+    self.data = data
   end
 end

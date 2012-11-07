@@ -7,14 +7,14 @@ class Engine
   attr_accessor :preprocessor
   attr_accessor :selector
   def initialize *args
-    preprocessor = args.fetch(:preprocessor, SimplePreprocessor).new
-    selector = args.fetch(:selector, SimpleSelector).new
+    preprocessor = args.fetch(:preprocessor, SimplePreprocessor)
+    selector = args.fetch(:selector, SimpleSelector)
   end
 
   def run
     jobs = Job.checked.with_language(5)
-    data = preprocessor.run(jobs)
-    feature_sets = selector.run(data)
+    data = preprocessor.new(jobs).process
+    feature_sets = selector.new(data).generate_feature_vectors
 
     training_set, cross_set, test_set, _ = feature_sets.each_slice(job.size/3).to_a
 

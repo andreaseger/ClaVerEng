@@ -1,5 +1,6 @@
 class Preprocessor
-  def initialize(*args)
-
+  attr_accessor :jobs
+  def initialize(jobs, *args)
+    self.jobs = jobs
   end
 end
