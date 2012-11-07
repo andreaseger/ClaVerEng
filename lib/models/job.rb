@@ -1,16 +1,10 @@
 require_relative 'pjpp/job'
 class Job < Pjpp::Job
-
-
-  # choose which preprocessor/feature selection strategy
-  # to use from the setting file
-  def preprocess
-    #TODO
-  end
-  def select_features
-    #TODO
-  end
-  def create_feature_vector
-    #TODO
-  end
+  scope :checked, -> { joins(:qc_job_check => [:qc_check_status]).
+                       where("ja_qc_check_status.check_status IS NOT NULL") }
+  scope :checked_correct, -> { joins(:qc_job_check => [:qc_check_status]).
+                               where("ja_qc_check_status.check_status = true") }
+  scope :checked_faulty, -> { joins(:qc_job_check => [:qc_check_status]).
+                              where("ja_qc_check_status.check_status = false") }
+  scope :with_language, -> id { where("jobs.language_id = ?", id) }
 end
