@@ -1,4 +1,7 @@
 require_relative 'preprocessor'
-class SimplePreprocessor < Preprocessor
-
+module Preprocessor
+  class Simple < Preprocessor::Base
+    TITLE_FILTER = /,|\.|:|\*|\(|\)|!|\?|\/|·|\"|„|\(m\|w\)/
+    DESCRIPTION_FILTER = /<(.*?)>|(\r\n)|(,|\.|:|\*|\(|\)|!|\?|\/|·|\"|„)/
+  end
 end

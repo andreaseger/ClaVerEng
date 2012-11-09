@@ -1,4 +1,5 @@
 require_relative 'selector'
-class SimpleSelector < Selector
-
+module Selector
+  class Simple < Selector::Base
+  end
 end
