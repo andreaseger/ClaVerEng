@@ -4,5 +4,8 @@ module Selector
     def initialize(data, *args)
       self.data = data
     end
+    def process
+      raise "NotYetImplemented"
+    end
   end
 end

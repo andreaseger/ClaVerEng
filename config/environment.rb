@@ -27,4 +27,5 @@ ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.configurations = YAML::load(IO.read('config/database.yml'))
 ActiveRecord::Base.establish_connection(rack_env)
 
+require 'svm_toolkit'
 include SvmToolkit

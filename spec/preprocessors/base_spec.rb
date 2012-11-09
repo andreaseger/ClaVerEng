@@ -1,6 +1,7 @@
 require 'spec_helper'
-require "preprocessor/base"
+require "preprocessors/base"
 
 describe Preprocessor::Base do
-  it "does something"
+  let(:base) { Preprocessor::Base.new }
+  it { base.should respond_to :process }
 end

@@ -1,5 +1,5 @@
 require "spec_helper"
-require 'selector/base'
+require 'selectors/base'
 
 describe Selector::Base do
   it "should description"
