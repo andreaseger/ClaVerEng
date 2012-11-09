@@ -6,9 +6,15 @@ gem 'rake'
 # database
 gem 'activerecord', require: 'active_record'
 
-gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby
-gem 'svm_toolkit', git: 'https://github.com/sch1zo/svm_toolkit.git', branch: 'restructure', require: false, platform: :jruby
-
+platforms :jruby do
+  gem 'activerecord-jdbcpostgresql-adapter'
+  gem 'svm_toolkit',  git: 'https://github.com/sch1zo/svm_toolkit.git',
+                      branch: 'restructure',
+                      require: false
+end
+platforms :ruby do
+  gem 'pg'
+end
 
 
 group :test, :development do

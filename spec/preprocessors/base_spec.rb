@@ -1,5 +1,5 @@
 require 'spec_helper'
-require "preprocessors/base"
+require "preprocessors/base.rb"
 
 describe Preprocessor::Base do
   let(:base) { Preprocessor::Base.new }

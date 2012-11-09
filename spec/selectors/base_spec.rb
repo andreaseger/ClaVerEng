@@ -1,5 +1,5 @@
 require "spec_helper"
-require 'selectors/base'
+load 'selectors/base.rb'
 
 describe Selector::Base do
   let(:base) { Selector::Base.new }
