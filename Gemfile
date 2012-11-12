@@ -16,6 +16,7 @@ platforms :ruby do
   gem 'pg'
 end
 
+gem 'nokogiri'
 
 group :test, :development do
   gem 'pry'

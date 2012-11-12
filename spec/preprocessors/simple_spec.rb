@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 require "preprocessors/simple.rb"
 
@@ -6,7 +7,26 @@ describe Preprocessor::Simple do
   it "should have process implemented" do
     expect { simple.process([]) }.to_not raise_error
   end
-  context "cleanup title" do
+  context "process" do
+    before(:each) do
+      simple.stubs(:clean_title)
+      simple.stubs(:clean_description)
+    end
+    it "should call clean_title on each job" do
+      jobs = [  FactoryGirl.build(:job_title_w_gender2_dash),
+                FactoryGirl.build(:job_title_w_gender2_brackets),
+                FactoryGirl.build(:job_title_w_code) ]
+      simple.expects(:clean_title).times(3)
+      simple.process(jobs)
+    end
+    it "should call clean_description on each job" do
+      jobs = [  FactoryGirl.build(:job_title_w_gender2_dash),
+                FactoryGirl.build(:job_title_w_code) ]
+      simple.expects(:clean_description).times(2)
+      simple.process(jobs)
+    end
+  end
+  context "title" do
     [ FactoryGirl.build(:job_title_w_gender),
       FactoryGirl.build(:job_title_w_gender_brackets),
       FactoryGirl.build(:job_title_w_gender_pipe),
@@ -24,11 +44,37 @@ describe Preprocessor::Simple do
       FactoryGirl.build(:job_title_w_special),
       FactoryGirl.build(:job_title_w_percent)].each do |job|
         it "should cleanup '#{job.title}'" do
-          data = simple.process([job])
-          data.each do |d|
-            d.title.should eq(job.clean_title)
-          end
+          simple.clean_title(job.title).should eq(job.clean_title)
         end
+    end
+    context "description" do
+      let(:jobs) {
+        [ FactoryGirl.build(:job_description_w_tags),
+          FactoryGirl.build(:job_description_w_adress),
+          FactoryGirl.build(:job_description_w_special),
+          FactoryGirl.build(:job_description_w_code_token),
+          FactoryGirl.build(:job_description_w_gender) ]
+      }
+      it "should remove html/xml tags" do
+        desc = simple.clean_description(jobs[0].description)
+        desc.should_not match(/<(.*?)>/)
+      end
+      it "should remove new lines" do
+        desc = simple.clean_description(jobs[0].description)
+        desc.should_not match(/\r\n|\n|\r/)
+      end
+      it "should remove all special characters" do
+        desc = simple.clean_description(jobs[2].description)
+        desc.should_not match(/[^a-z öäü]/i)
+      end
+      it "should remove gender tokens" do
+        desc = simple.clean_description(jobs[3].description)
+        desc.should_not match(%r{(\(*(m|w)(\/|\|)(w|m)\)*)|(/-*in)|\(in\)|mw})
+      end
+      it "should remove job code token" do
+        desc = simple.clean_description(jobs[4].description)
+        desc.should_not match(/\[.*\]|\(.*\)|\{.*\}|\d+\w+/)
+      end
     end
   end
 end
