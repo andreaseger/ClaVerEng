@@ -1,4 +1,4 @@
-require "PlotPackage"
+require_relative "PlotPackage"
 java_import "jahuwaldt.plot.ContourPlot"
 java_import "jahuwaldt.plot.DiamondSymbol"
 java_import "jahuwaldt.plot.PlotDatum"

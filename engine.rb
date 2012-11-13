@@ -1,22 +1,32 @@
 require_relative 'config/environment'
 require_relative 'lib/contour_display'
-require_relative 'lib/preprocessor/simple.rb'
-require_relative 'lib/selector/simple.rb'
+require_relative 'lib/preprocessors/simple.rb'
+require_relative 'lib/selectors/simple.rb'
+require 'pry'
 
 class Engine
   attr_accessor :preprocessor
   attr_accessor :selector
-  def initialize *args
-    preprocessor = args.fetch(:preprocessor, SimplePreprocessor)
-    selector = args.fetch(:selector, SimpleSelector)
+  def initialize args={}
+    self.preprocessor = args.fetch(:preprocessor, Preprocessor::Simple).new
+    self.selector = args.fetch(:selector, Selector::Simple).new
   end
 
   def run
-    jobs = Job.checked.with_language(5)
-    data = preprocessor.new(jobs).process
-    feature_sets = selector.new(data).generate_feature_vectors
+    jobs = Job.checked.with_language(5).limit(5000)
+    p "preprocessing..."
+    data = @preprocessor.process(jobs);jobs=nil
+    p "creating feature vectors..."
+    feature_vectors = @selector.select_feature_vector(data)
+    # insert stuff to save the dictonary
+    #dict = @selector.global_dictionary
 
-    training_set, cross_set, test_set, _ = feature_sets.each_slice(job.size/3).to_a
+    training_set,
+    cross_set,
+    test_set, _ = feature_vectors.each_slice(data.size/3).map{|set|
+      Problem.from_array(set.map(&:data), set.map(&:checked_correct))
+    }
+    feature_vectors=nil;data=nil
 
     costs = [-5, -3, -1, 0, 1, 3, 5, 8, 10, 13, 15].collect {|n| 2**n}
     gammas = [-15, -12, -8, -5, -3, -1, 1, 3, 5, 7, 9].collect {|n| 2**n}
@@ -25,14 +35,17 @@ class Engine
     model, results = Svm.cross_validation_search(training_set, cross_set, costs, gammas)
 
     results.sort_by!{|r| [r[:gamma], r[:cost]] }
+    results_matrix = results.map{|e| e[:result].value}.each_slice(costs.size).to_a
     ContourDisplay.new(costs.collect {|n| Math.log2(n)}, 
                        gammas.collect {|n| Math.log2(n)}, 
-                       results.map{|r| r[:result]})
+                       results_matrix)
+    p "GeometricMean on test_set: #{model.evaluate_dataset(test_set, :evaluator => Evaluator::GeometricMean)}"
+    binding.pry
   end
 end
 
 
-engine = Engine.new preprocessor: MegaPreprocessor, selector: SimpleSelector
+engine = Engine.new preprocessor: Preprocessor::Simple, selector: Selector::Simple
 
 # use setting from Instancecreation
 engine.run

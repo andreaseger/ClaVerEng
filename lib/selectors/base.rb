@@ -1,10 +1,10 @@
 module Selector
   class Base
     attr_accessor :data
-    # def initialize(data, *args)
+    # def initialize(data, args={})
     #   self.data = data
     # end
-    def process
+    def select_feature_vector
       raise "NotYetImplemented"
     end
   end
