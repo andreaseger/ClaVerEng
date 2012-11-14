@@ -12,9 +12,11 @@ class Engine
     self.selector = args.fetch(:selector, Selector::Simple).new
   end
 
-  def run
+  def run args={}
     start = Time.now
-    jobs = Job.checked.with_language(5).limit(5000)
+    sample_size = args.fetch(:sample_size,5000)
+
+    jobs = Job.checked.with_language(5).limit(sample_size)
     p "preprocessing..."
     data = @preprocessor.process(jobs);jobs=nil
     p "creating feature vectors..."
