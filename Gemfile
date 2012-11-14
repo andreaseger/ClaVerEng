@@ -30,7 +30,7 @@ group :test, :development do
 end
 
 group :test do
-  gem 'mocha', require: 'mocha_standalone'
+  gem 'mocha', require: 'mocha/api'
   gem 'factory_girl', '~> 4.0'
 end
 

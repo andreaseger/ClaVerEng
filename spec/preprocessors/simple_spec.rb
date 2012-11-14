@@ -1,32 +1,31 @@
 # encoding: UTF-8
 require 'spec_helper'
-require "preprocessors/simple.rb"
+require 'preprocessors/simple'
 
 describe Preprocessor::Simple do
+  it_behaves_like 'a preprocessor'
+
   let(:simple) { Preprocessor::Simple.new }
   it "should have process implemented" do
     expect { simple.process([]) }.to_not raise_error
   end
-  context "process" do
+  context "processing" do
+    let(:jobs) { FactoryGirl.build_list(:dummy_job,3) }
     before(:each) do
       simple.stubs(:clean_title)
       simple.stubs(:clean_description)
     end
     it "should call clean_title on each job" do
-      jobs = [  FactoryGirl.build(:job_title_w_gender2_dash),
-                FactoryGirl.build(:job_title_w_gender2_brackets),
-                FactoryGirl.build(:job_title_w_code) ]
       simple.expects(:clean_title).times(3)
       simple.process(jobs)
     end
     it "should call clean_description on each job" do
-      jobs = [  FactoryGirl.build(:job_title_w_gender2_dash),
-                FactoryGirl.build(:job_title_w_code) ]
-      simple.expects(:clean_description).times(2)
+      simple.expects(:clean_description).times(3)
       simple.process(jobs)
     end
   end
-  context "title" do
+
+  context "#clean_title" do
     it "should be downcased" do
       job = FactoryGirl.build(:job_title_downcasing)
       simple.clean_title(job.title).should eq(job.clean_title)
@@ -52,7 +51,7 @@ describe Preprocessor::Simple do
       end
     end
   end
-  context "description" do
+  context "#clean_description" do
     let(:jobs) {
       [ FactoryGirl.build(:job_description_w_tags),
         FactoryGirl.build(:job_description_w_adress),

@@ -13,13 +13,12 @@ class Engine
   end
 
   def run
+    start = Time.now
     jobs = Job.checked.with_language(5).limit(5000)
     p "preprocessing..."
     data = @preprocessor.process(jobs);jobs=nil
     p "creating feature vectors..."
-    feature_vectors = @selector.select_feature_vector(data)
-    # insert stuff to save the dictonary
-    #dict = @selector.global_dictionary
+    feature_vectors = @selector.generate_vectors(data)
 
     training_set,
     cross_set,
@@ -40,7 +39,11 @@ class Engine
                        gammas.collect {|n| Math.log2(n)}, 
                        results_matrix)
     p "GeometricMean on test_set: #{model.evaluate_dataset(test_set, :evaluator => Evaluator::GeometricMean)}"
-    binding.pry
+
+    p "Time: #{Time.now - start} seconds"
+    timestamp = Time.now.strftime('%Y-%m-%dT%l:%M')
+    model.save "tmp/#{timestamp}-model"
+    IO.write "tmp/#{timestamp}-dictionary", @selector.global_dictionary
   end
 end
 

@@ -1,10 +1,11 @@
 # guard 'jruby-rspec', all_after_pass: false do
 guard 'rspec', cli: "--color --format d", rvm: ["1.9.3"], all_after_pass: false do
   watch(%r{^spec/.+_spec\.rb$})
-  watch(%r{^lib/(.+)\.rb$})    { |m| "spec/#{m[1]}_spec.rb" }
-  watch('spec/spec_helper.rb') {'spec'}
-  watch('spec/factories.rb')   {'spec'}
-  watch(%r{^spec/factories/(.+)\.rb})   {'spec'}
+  watch(%r{^lib/(.+)\.rb$})               { |m| "spec/#{m[1]}_spec.rb" }
+  watch('spec/spec_helper.rb')            { 'spec' }
+  watch('spec/factories.rb')              { 'spec' }
+  watch(%r{^spec/factories/(.+)\.rb})     { 'spec' }
+  watch(%r{^spec/support/(.+)_spec\.rb})  { |m| "spec/#{m[1]}s/*" }
 end
 
 notification :tmux,

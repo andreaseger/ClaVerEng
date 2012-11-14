@@ -11,12 +11,10 @@ module Preprocessor
     NEW_LINES = /(\r\n)|\r|\n/
 
     def process jobs
-      jobs.map do |job|
-        OpenStruct.new(
-          title: clean_title(job.title),
-          description: clean_description(job.description),
-          checked_correct: job.checked_correct?
-        )
+      if jobs.respond_to? :map
+        jobs.map{|job| process_job job }
+      else
+        process_job jobs
       end
     end
 
@@ -39,6 +37,14 @@ module Preprocessor
           .gsub(CODE_TOKEN_FILTER,'')
           .downcase
           .strip
+    end
+
+    private
+    def process_job job
+      OpenStruct.new(
+        data: [ clean_title(job.title), clean_description(job.description) ],
+        label: job.checked_correct?
+      )
     end
   end
 end
