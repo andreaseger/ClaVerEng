@@ -6,7 +6,7 @@ describe Selector::Simple do
   
   let(:simple) { Selector::Simple.new }
   it "should have select_feature_vector implemented" do
-    expect { simple.generate_vectors([]) }.to_not raise_error
+    expect { simple.generate_vectors([], :function) }.to_not raise_error
   end
   context "#stopwords" do
     it "simply loads them from a file"
@@ -54,13 +54,13 @@ describe Selector::Simple do
   context "#generate_vector" do
     let(:dictionary) { %w(auto pferd haus hase garten) }
     let(:data) { FactoryGirl.build(:data) }
-    let(:vector) { simple.generate_vector(data) }
+    let(:vector) { simple.generate_vector(data, :career_level) }
 
     before(:each) do
       simple.stubs(:global_dictionary).returns(dictionary)
     end
-    it "should build a feature vector for each dataset with the size of the dictionary" do
-      vector.data.should have(5).things
+    it "should build a feature vector for each dataset with the size of the dictionary plus classifications" do
+      vector.data.should have(5+8).things
     end
     it "should set 0 if a word from the dictionary NOT exists at the corresponding index" do
       vector.data[0].should eq(0)
@@ -69,7 +69,10 @@ describe Selector::Simple do
       vector.data[1].should eq(1)
     end
     it "should set 0's and 1's for each word in the dictionary" do
-      vector.data.should eq([0,1,1,0,1])
+      vector.data.first(5).should eq([0,1,1,0,1])
+    end
+    it "should add a n-sized array of 0's and 1's to the results" do
+      vector.data.last(8).should eq([0,0,0,0,0,0,0,1])
     end
     it "should call make_vector" do
       simple.expects(:make_vector).once
@@ -77,8 +80,8 @@ describe Selector::Simple do
     end
     context "custom dictionary" do
       it "should accept a custom dictionary" do
-        vector = simple.generate_vector(data,%w(pferd flasche glas))
-        vector.data.should eq([1,0,0])
+        vector = simple.generate_vector(data, :career_level, %w(pferd flasche glas))
+        vector.data.should eq([[1,0,0],[0,0,0,0,0,0,0,1]].flatten)
       end
     end
   end
@@ -91,17 +94,17 @@ describe Selector::Simple do
     end
     it "should call extract words" do
       simple.expects(:extract_words).returns([])
-      simple.generate_vectors(data)
+      simple.generate_vectors(data, :function)
     end
     it "should call generate_global_dictionary" do
       simple.stubs(:extract_words).returns([])
       simple.expects(:generate_global_dictionary).returns([])
-      simple.generate_vectors(data)
+      simple.generate_vectors(data, :function)
     end
     it "should call make_vector for each set of words" do
       simple.stubs(:extract_words).returns(words_per_data)
       simple.expects(:make_vector).twice
-      simple.generate_vectors(data)
+      simple.generate_vectors(data, :function)
     end
   end
 end

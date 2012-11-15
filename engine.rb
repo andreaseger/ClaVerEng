@@ -1,58 +1,59 @@
-require_relative 'config/environment'
-require_relative 'lib/contour_display'
-require_relative 'lib/preprocessors/simple.rb'
-require_relative 'lib/selectors/simple.rb'
-require 'pry'
+require 'optparse'
+require_relative 'lib/preprocessors/simple'
+require_relative 'lib/selectors/simple'
 
-class Engine
-  attr_accessor :preprocessor
-  attr_accessor :selector
-  def initialize args={}
-    self.preprocessor = args.fetch(:preprocessor, Preprocessor::Simple).new
-    self.selector = args.fetch(:selector, Selector::Simple).new
+options={}
+optparse = OptionParser.new do |opts|
+  opts.on( "-g", "--plot", "Show a plot of the results" ) do |opt|
+    options[:plot] = true
   end
 
-  def run args={}
-    start = Time.now
-    sample_size = args.fetch(:sample_size,5000)
+  options[:preprocessor] = Preprocessor::Simple
+  opts.on( "-p", "--preprocessor NAME", "Which Preprocessor to use. [Simple]" ) do |opt|
+    options[:preprocessor] =  case opt
+                              when 'simple'
+                                Preprocessor::Simple
+                              else
+                                Preprocessor::Simple
+                              end
+  end
+  options[:selector] = Selector::Simple
+  opts.on( "-s", "--selector NAME", "Which Selector to use. [Simple]" ) do |opt|
+    options[:selector] =  case opt
+                          when 'simple'
+                            Selector::Simple
+                          else
+                            Selector::Simple
+                          end
+  end
+  opts.on( "-n", "--samplesize SIZE", Integer, "Number of jobs to use." ) do |opt|
+    options[:samplesize] = opt
+  end
+  opts.on( "-d", "--dictionary-size SIZE", Integer,
+                 "Number of unique words in the dictionary" ) do |opt|
+    options[:dictionary_size] = opt
+  end
 
-    jobs = Job.checked.with_language(5).limit(sample_size)
-    p "preprocessing..."
-    data = @preprocessor.process(jobs);jobs=nil
-    p "creating feature vectors..."
-    feature_vectors = @selector.generate_vectors(data)
-
-    training_set,
-    cross_set,
-    test_set, _ = feature_vectors.each_slice(data.size/3).map{|set|
-      Problem.from_array(set.map(&:data), set.map(&:checked_correct))
-    }
-    feature_vectors=nil;data=nil
-
-    costs = [-5, -3, -1, 0, 1, 3, 5, 8, 10, 13, 15].collect {|n| 2**n}
-    gammas = [-15, -12, -8, -5, -3, -1, 1, 3, 5, 7, 9].collect {|n| 2**n}
-
-    p "cross_validation_search"
-    model, results = Svm.cross_validation_search(training_set, cross_set, costs, gammas)
-
-    results.sort_by!{|r| [r[:gamma], r[:cost]] }
-    results_matrix = results.map{|e| e[:result].value}.each_slice(costs.size).to_a
-    ContourDisplay.new(costs.collect {|n| Math.log2(n)}, 
-                       gammas.collect {|n| Math.log2(n)}, 
-                       results_matrix)
-    p "GeometricMean on test_set: #{model.evaluate_dataset(test_set, :evaluator => Evaluator::GeometricMean)}"
-
-    p "Time: #{Time.now - start} seconds"
-    timestamp = Time.now.strftime('%Y-%m-%dT%l:%M')
-    model.save "tmp/#{timestamp}-model"
-    IO.write "tmp/#{timestamp}-dictionary", @selector.global_dictionary
+  options[:classification] = :function
+  opts.on( "-c", "--classification CLASSIFICATION", String,
+                 "One of [*function*, industry, careerlevel]" ) do |opt|
+    options[:classification] = opt.downcase.to_sym
+  end
+  opts.on( '-?', '--help', 'Display this screen' ) do
+    puts opts
+    exit
   end
 end
+optparse.parse!
 
 
-engine = Engine.new preprocessor: Preprocessor::Simple, selector: Selector::Simple
+require_relative 'config/environment'
+require_relative 'lib/runner'
+
+runner = Runner.new preprocessor: options[:preprocessor],
+                    selector: options[:selector]
 
 # use setting from Instancecreation
-engine.run
+runner.run(options)
 # use run specific settings
 # engine.run preprocessor: AdvancedPreprocessor, selector: SimpleSelector

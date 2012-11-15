@@ -5,14 +5,14 @@ shared_examples_for 'a selector' do
   let(:data) { FactoryGirl.build(:data) }
 
   it "should create and array with 0 and 1's" do
-    vector = selector.generate_vector(data)
+    vector = selector.generate_vector(data, :function)
     vector.data.each do |e|
       [0,1].should include(e)
     end
   end
   it "should be able to process multiple data entries at once" do
-    selector.generate_vectors([data]).each do |e|
-      e.should eq(selector.generate_vector(data))
+    selector.generate_vectors([data], :function).each do |e|
+      e.should eq(selector.generate_vector(data, :function))
     end
   end
 end
