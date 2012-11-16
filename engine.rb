@@ -50,6 +50,7 @@ optparse.parse!
 require_relative 'config/environment'
 require_relative 'lib/runner'
 
+p options
 runner = Runner.new preprocessor: options[:preprocessor],
                     selector: options[:selector]
 
