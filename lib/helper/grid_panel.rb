@@ -10,8 +10,7 @@ class GridPanel < javax.swing.JFrame
     # create your PlotPanel (you can use it as a JPanel) with a legend at SOUTH
     self.plot = Plot3DPanel.new("SOUTH");
     add plot
-    self.setDefaultCloseOperation(javax.swing.WindowConstants::DISPOSE_ON_CLOSE)
-    self.visible = true
+
   end
 
   def add_plot args={}
@@ -24,6 +23,11 @@ class GridPanel < javax.swing.JFrame
     self.plot.addGridPlot(args.fetch(:plot_name,""), jxs, jys, jzs);
   end
 
+  def show!
+    self.setDefaultCloseOperation(javax.swing.WindowConstants::DISPOSE_ON_CLOSE)
+    self.visible = true
+  end
+  private
   # convert RubyArrays to Jave double arrays
   def to_java_array xs,ys,zs
     jxs = Java::double[xs.size].new

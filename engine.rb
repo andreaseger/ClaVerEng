@@ -36,7 +36,7 @@ optparse = OptionParser.new do |opts|
 
   options[:classification] = :function
   opts.on( "-c", "--classification CLASSIFICATION", String,
-                 "One of [*function*, industry, careerlevel]" ) do |opt|
+                 "One of [*function*, industry, careerlevel, all]" ) do |opt|
     options[:classification] = opt.downcase.to_sym
   end
   opts.on( '-?', '--help', 'Display this screen' ) do
@@ -52,9 +52,9 @@ require_relative 'lib/runner'
 
 p options
 runner = Runner.new preprocessor: options[:preprocessor],
-                    selector: options[:selector]
+                    selector: options[:selector],
+                    show_plot: options[:plot]
 
-# use setting from Instancecreation
 runner.run(options)
 # use run specific settings
 # engine.run preprocessor: AdvancedPreprocessor, selector: SimpleSelector
