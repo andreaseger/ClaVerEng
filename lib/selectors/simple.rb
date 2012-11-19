@@ -58,7 +58,7 @@ module Selector
     end
 
     def extract_words_from_data data
-      (data.data.map(&:split).flatten - stopwords).delete_if { |e| e.size <= 3 }
+      (data.data.flat_map(&:split) - stopwords).delete_if { |e| e.size <= 3 }
     end
 
     private
