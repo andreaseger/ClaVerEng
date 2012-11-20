@@ -1,15 +1,8 @@
 require_relative 'base'
-require 'set'
 module Selector
   class Simple < Selector::Base
     STOPWORD_LOCATION = './lib/stopwords.de'
     DEFAULT_DICTIONARY_SIZE = 5000
-    # CLASSIFICATIONS = { function: Pjpp::Function.count,
-    #                     industry: Pjpp::Industry.count,
-    #                     career_level: Pjpp::CareerLevel.count }
-    CLASSIFICATIONS_SIZE = {  function: 19,
-                              industry: 632,
-                              career_level: 8 }
 
     attr_accessor :global_dictionary
     attr_accessor :classification
@@ -25,7 +18,7 @@ module Selector
       generate_global_dictionary words_per_data, dictionary_size
 
       words_per_data.map.with_index{|words,index|
-        word_set = Set.new words
+        word_set = words.uniq
         make_vector word_set,
                     data_set[index].send("#{classification.to_s}_id"),
                     data_set[index].label
@@ -69,9 +62,6 @@ module Selector
               }.concat(classification_array(classification_id)),
         label: label ? 1 : 0
       )
-    end
-    def classification_array(id)
-      Array.new(CLASSIFICATIONS_SIZE[classification]){|n| n==id ? 1 : 0}
     end
   end
 end

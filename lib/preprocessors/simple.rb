@@ -49,8 +49,5 @@ module Preprocessor
         label: get_label(job)
       )
     end
-    def get_label job
-      job.checked_correct?
-    end
   end
 end
