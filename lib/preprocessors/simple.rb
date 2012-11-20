@@ -46,8 +46,11 @@ module Preprocessor
         industry_id: job.industry_id,
         function_id: job.function_id,
         career_level_id: job.career_level_id,
-        label: job.checked_correct?
+        label: get_label(job)
       )
+    end
+    def get_label job
+      job.checked_correct?
     end
   end
 end

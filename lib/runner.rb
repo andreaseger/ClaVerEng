@@ -24,35 +24,45 @@ class Runner
     @samplesize = args.fetch(:samplesize,5000)
     @dictionary_size = args.fetch(:dictionary_size,5000)
     classification = args.fetch(:classification, :function)
-    jobs = [  Job.checked_correct.with_language(5).limit(@samplesize/2),
-              Job.checked_faulty.with_language(5).limit(@samplesize/2)  ].flatten.shuffle
-    p "preprocessing..."
-    @data = @preprocessor.process(jobs)
 
     benchmark={}
     if classification == :all
       [:function, :industry, :career_level].each do |e|
-        benchmark[e] = Benchmark.measure {run_for_classification(e)}
+        benchmark[e] = Benchmark.measure {
+          data = fetch_and_preprocess e
+          run_for_classification(e)
+        }
       end
     else
-      benchmark[classification] = Benchmark.measure {run_for_classification(classification)}
+      benchmark[classification] = Benchmark.measure {
+        data = fetch_and_preprocess classification
+        run_for_classification(classification)
+      }
     end
 
+    puts
     benchmark.each do |k,v|
       print "#{k}: "
       puts v
     end
     panel.show!
   end
-  def run_for_classification classification
-    #TODO use benchmark package
-    start = Time.now
+
+  def fetch_and_preprocess classification
+    # jobs = [  Job.with_language(5).correct_for_classification(classification).limit(@samplesize/2),
+              # Job.with_language(5).faulty_for_classification(classification).limit(@samplesize/2)  ].flatten.shuffle
+    jobs = [  Job.with_language(5).checked_correct.limit(@samplesize/2),
+              Job.with_language(5).checked_faulty.limit(@samplesize/2)  ].flatten.shuffle
+    @preprocessor.process(jobs)
+  end
+
+  def run_for_classification data, classification
     p "creating feature vectors for #{classification}..."
-    feature_vectors = @selector.generate_vectors(@data,classification,@dictionary_size)
+    feature_vectors = @selector.generate_vectors(data,classification,@dictionary_size)
 
     training_set,
     cross_set,
-    test_set, _ = feature_vectors.each_slice(@data.size/3).map{|set|
+    test_set, _ = feature_vectors.each_slice(data.size/3).map{|set|
       Problem.from_array(set.map(&:data), set.map(&:label))
     }
 
@@ -63,14 +73,13 @@ class Runner
     results_matrix = results.map{|e| e[:result].value}.each_slice(COSTS.size).to_a
 
     if self.panel
-      panel.add_plot(xs: COSTS.collect {|n| Math.log2(n)}, 
-                     ys: GAMMAS.collect {|n| Math.log2(n)}, 
+      panel.add_plot(xs: COSTS.collect {|n| Math.log2(n)},
+                     ys: GAMMAS.collect {|n| Math.log2(n)},
                      zs: results_matrix,
                      plot_name: "#{classification}, samplesize: #{@samplesize}, dictionary_size: #{@dictionary_size}")
     end
     p "GeometricMean on test_set: #{model.evaluate_dataset(test_set, :evaluator => Evaluator::GeometricMean)}"
 
-    p "Time: #{Time.now - start} seconds"
     timestamp = Time.now.strftime('%Y-%m-%dT%l:%M')
     model.save "tmp/#{timestamp}-#{classification}-model"
     IO.write "tmp/#{timestamp}-#{classification}-dictionary", @selector.global_dictionary

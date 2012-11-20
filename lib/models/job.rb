@@ -11,6 +11,14 @@ class Job < Pjpp::Job
                               includes(:qc_job_check => [:qc_check_status]) }
   scope :with_language, -> id { where("jobs.language_id = ?", id) }
 
+  scope :correct_for_classification,
+    -> classification { joins(:qc_job_check).
+                        where("ja_qc_job_check.wrong_#{classification}_id IS NULL").
+                        includes(:qc_job_check)}
+  scope :faulty_for_classification, 
+    -> classification  { joins(:qc_job_check).
+                         where("ja_qc_job_check.wrong_#{classification}_id IS NOT NULL").
+                         includes(:qc_job_check)}
 
 
   def checked_correct?
