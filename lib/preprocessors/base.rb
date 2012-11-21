@@ -8,8 +8,8 @@ module Preprocessor
     end
 
     private
-    def get_label job
-      job.checked_correct?
+    def was_correct? job
+      job.qc_job_check.send("wrong_#{@classification}_id").nil?
     end
   end
 end

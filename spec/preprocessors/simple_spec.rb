@@ -7,21 +7,21 @@ describe Preprocessor::Simple do
 
   let(:simple) { Preprocessor::Simple.new }
   it "should have process implemented" do
-    expect { simple.process([]) }.to_not raise_error
+    expect { simple.process([], :function) }.to_not raise_error
   end
   context "processing" do
-    let(:jobs) { FactoryGirl.build_list(:dummy_job,3) }
+    let(:jobs) { FactoryGirl.build_list(:job,3) }
     before(:each) do
       simple.stubs(:clean_title)
       simple.stubs(:clean_description)
     end
     it "should call clean_title on each job" do
       simple.expects(:clean_title).times(3)
-      simple.process(jobs)
+      simple.process(jobs, :function)
     end
     it "should call clean_description on each job" do
       simple.expects(:clean_description).times(3)
-      simple.process(jobs)
+      simple.process(jobs, :function)
     end
   end
 

@@ -3,10 +3,16 @@ require 'factory_girl'
 require 'ostruct'
 
 FactoryGirl.define do
-  factory :dummy_job, class: OpenStruct do
+  factory :qc_job_check, class: OpenStruct do
+    wrong_industry_id nil
+    wrong_function_id 4
+    wrong_career_level nil
+  end
+  factory :job, class: OpenStruct do
     title "Meh"
     description "Foo Bar"
     summary "Really lot of work to do"
+    qc_job_check
   end
 
 

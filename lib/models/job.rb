@@ -13,14 +13,20 @@ class Job < Pjpp::Job
 
   scope :correct_for_classification,
     -> classification { joins(:qc_job_check).
-                        where("ja_qc_job_check.wrong_#{classification}_id IS NULL").
+                        where("ja_qc_job_checks.wrong_#{classification}_id IS NULL").
                         includes(:qc_job_check)}
-  scope :faulty_for_classification, 
-    -> classification  { joins(:qc_job_check).
-                         where("ja_qc_job_check.wrong_#{classification}_id IS NOT NULL").
-                         includes(:qc_job_check)}
+  scope :faulty_for_classification,
+    -> classification { joins(:qc_job_check).
+                        where("ja_qc_job_checks.wrong_#{classification}_id IS NOT NULL").
+                        includes(:qc_job_check)}
 
 
+
+  %w(industry function career_level).each do |method|
+    define_method "original_#{method}_id" do
+       self.qc_job_check.send("wrong_#{method}_id") || self.send("#{method}_id")
+    end
+  end
   def checked_correct?
     self.qc_job_check.qc_check_status.check_status
   end

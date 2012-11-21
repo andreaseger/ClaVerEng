@@ -10,7 +10,8 @@ module Preprocessor
     CODE_TOKEN_FILTER = /\[.*\]|\(.*\)|\{.*\}|\d+\w+/
     NEW_LINES = /(\r\n)|\r|\n/
 
-    def process jobs
+    def process jobs, classification
+      @classification = classification
       if jobs.respond_to? :map
         jobs.map{|job| process_job job }
       else
@@ -43,10 +44,10 @@ module Preprocessor
     def process_job job
       OpenStruct.new(
         data: [ clean_title(job.title), clean_description(job.description) ],
-        industry_id: job.industry_id,
-        function_id: job.function_id,
-        career_level_id: job.career_level_id,
-        label: get_label(job)
+        industry_id: job.original_industry_id,
+        function_id: job.original_function_id,
+        career_level_id: job.original_career_level_id,
+        label: was_correct?(job)
       )
     end
   end

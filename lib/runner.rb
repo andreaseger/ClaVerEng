@@ -30,13 +30,13 @@ class Runner
       [:function, :industry, :career_level].each do |e|
         benchmark[e] = Benchmark.measure {
           data = fetch_and_preprocess e
-          run_for_classification(e)
+          run_for_classification(data, e)
         }
       end
     else
       benchmark[classification] = Benchmark.measure {
         data = fetch_and_preprocess classification
-        run_for_classification(classification)
+        run_for_classification(data, classification)
       }
     end
 
@@ -49,11 +49,11 @@ class Runner
   end
 
   def fetch_and_preprocess classification
-    # jobs = [  Job.with_language(5).correct_for_classification(classification).limit(@samplesize/2),
-              # Job.with_language(5).faulty_for_classification(classification).limit(@samplesize/2)  ].flatten.shuffle
-    jobs = [  Job.with_language(5).checked_correct.limit(@samplesize/2),
-              Job.with_language(5).checked_faulty.limit(@samplesize/2)  ].flatten.shuffle
-    @preprocessor.process(jobs)
+    jobs = [  Job.with_language(5).correct_for_classification(classification).limit(@samplesize/2),
+              Job.with_language(5).faulty_for_classification(classification).limit(@samplesize/2)  ].flatten.shuffle
+    # jobs = [  Job.with_language(5).checked_correct.limit(@samplesize/2),
+              # Job.with_language(5).checked_faulty.limit(@samplesize/2)  ].flatten.shuffle
+    @preprocessor.process(jobs, classification)
   end
 
   def run_for_classification data, classification
