@@ -15,9 +15,6 @@ FactoryGirl.define do
     qc_job_check
   end
 
-
-
-
   factory :data, class: OpenStruct do
     data ["haus fooo garten baaz pferd fooo"]
     career_level_id 7

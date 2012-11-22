@@ -47,7 +47,7 @@ module Preprocessor
         industry_id: job.original_industry_id,
         function_id: job.original_function_id,
         career_level_id: job.original_career_level_id,
-        label: was_correct?(job)
+        label: correct?(job)
       )
     end
   end

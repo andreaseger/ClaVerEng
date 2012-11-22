@@ -51,8 +51,6 @@ class Runner
   def fetch_and_preprocess classification
     jobs = [  Job.with_language(5).correct_for_classification(classification).limit(@samplesize/2),
               Job.with_language(5).faulty_for_classification(classification).limit(@samplesize/2)  ].flatten.shuffle
-    # jobs = [  Job.with_language(5).checked_correct.limit(@samplesize/2),
-              # Job.with_language(5).checked_faulty.limit(@samplesize/2)  ].flatten.shuffle
     @preprocessor.process(jobs, classification)
   end
 

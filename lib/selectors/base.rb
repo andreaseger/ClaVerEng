@@ -6,9 +6,6 @@ module Selector
     CLASSIFICATIONS_SIZE = {  function: 19,
                               industry: 632,
                               career_level: 8 }
-    # def initialize(data, args={})
-    #   self.data = data
-    # end
     def select_feature_vector
       raise "NotYetImplemented"
     end
