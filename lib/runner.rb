@@ -64,8 +64,13 @@ class Runner
       Problem.from_array(set.map(&:data), set.map(&:label))
     }
 
-    p "cross_validation_search"
-    model, results = Svm.cross_validation_search(training_set, cross_set, COSTS, GAMMAS)
+    p "DOE cross_validation_search"
+    #model, results = Svm.cross_validation_search(training_set, cross_set, COSTS, GAMMAS)
+    model, results = Svm.doe_search(
+      feature_vectors: feature_vectors,
+      costs: COSTS,
+      gammas: GAMMAS,
+      folds: 3)
 
     results.sort_by!{|r| [r[:gamma], r[:cost]] }
     results_matrix = results.map{|e| e[:result].value}.each_slice(COSTS.size).to_a
