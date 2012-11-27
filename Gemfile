@@ -20,7 +20,7 @@ platforms :ruby do
   gem 'pg'
 end
 
-gem 'nokogiri'
+#gem 'nokogiri'
 
 group :test, :development do
   gem 'pry'
