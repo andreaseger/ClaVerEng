@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/sch1zo/svm_toolkit.git
-  revision: b06aec74c60540e4fec14affea5e4a6489e8073b
+  revision: c52c10b456db517d8f61eb36c8a265ca31e7e79d
   branch: restructure
   specs:
-    svm_toolkit (1.1.0-java)
+    svm_toolkit (1.1.1-java)
       celluloid
 
 GEM

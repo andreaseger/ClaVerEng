@@ -58,18 +58,20 @@ class Runner
     p "creating feature vectors for #{classification}..."
     feature_vectors = @selector.generate_vectors(data,classification,@dictionary_size)
 
-    training_set,
-    cross_set,
-    test_set, _ = feature_vectors.each_slice(data.size/3).map{|set|
-      Problem.from_array(set.map(&:data), set.map(&:label))
-    }
+    # training_set,
+    # cross_set,
+    # test_set, _ = feature_vectors.each_slice(data.size/3).map{|set|
+    #   Problem.from_array(set.map(&:data), set.map(&:label))
+    # }
 
     p "DOE cross_validation_search"
     #model, results = Svm.cross_validation_search(training_set, cross_set, COSTS, GAMMAS)
     model, results = Svm.doe_search(
       feature_vectors: feature_vectors,
-      costs: COSTS,
-      gammas: GAMMAS,
+      cost_min: -5,
+      cost_max: 15,
+      gamma_min: -15,
+      gamma_max: 9,
       folds: 3)
 
     results.sort_by!{|r| [r[:gamma], r[:cost]] }
@@ -81,7 +83,7 @@ class Runner
                      zs: results_matrix,
                      plot_name: "#{classification}, samplesize: #{@samplesize}, dictionary_size: #{@dictionary_size}")
     end
-    p "GeometricMean on test_set: #{model.evaluate_dataset(test_set, :evaluator => Evaluator::GeometricMean)}"
+    #p "GeometricMean on test_set: #{model.evaluate_dataset(test_set, :evaluator => Evaluator::GeometricMean)}"
 
     timestamp = Time.now.strftime('%Y-%m-%dT%l:%M')
     model.save "tmp/#{timestamp}-#{classification}-model"

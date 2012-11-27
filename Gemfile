@@ -11,6 +11,10 @@ platforms :jruby do
   gem 'svm_toolkit',  git: 'https://github.com/sch1zo/svm_toolkit.git',
                       branch: 'restructure',
                       require: false
+
+  # gem 'svm_toolkit',  git: '/home/aeger/master/svm_toolkit',
+  #                     branch: 'restructure',
+  #                     require: false
 end
 platforms :ruby do
   gem 'pg'
