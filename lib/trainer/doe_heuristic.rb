@@ -4,13 +4,9 @@ require_relative 'doe_pattern'
 module Trainer
   class DoeHeuristic < Base
     include DoePattern
-    def search(args={})
-      # deal with input
-      feature_vectors = args[:feature_vectors]
-      max_iterations = args.fetch(:interations) { 1 }
-
+    def search feature_vectors, max_interations=1
       # split feature_vectors into folds
-      *folds,_ = make_folds feature_vectors
+      folds = make_folds feature_vectors
 
       # initialize iteration parameters and resolution
       parameter, resolution = pattern_for_range costs, gammas

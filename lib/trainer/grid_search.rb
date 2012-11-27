@@ -2,12 +2,9 @@ require 'celluloid'
 require_relative 'base'
 module Trainer
   class GridSearch < Base
-   def search(args={})
-      # deal with input
-      feature_vectors = args[:feature_vectors]
-
+   def search feature_vectors
       # split feature_vectors into folds
-      *folds,_ = make_folds feature_vectors
+      folds = make_folds feature_vectors
 
       # create Celluloid Threadpool
       worker = Worker.pool(args: [{evaluator: @evaluator}] )

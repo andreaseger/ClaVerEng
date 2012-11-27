@@ -16,10 +16,25 @@ module Trainer
     end
 
     def make_folds feature_vectors
-      feature_vectors.each_slice(feature_vectors.size/number_of_folds).map do |set|
-        Problem.from_array(set.map(&:data), set.map(&:label))
-      end
+      *folds,_ = feature_vectors.each_slice(feature_vectors.size/number_of_folds).map do |set|
+                   Problem.from_array(set.map(&:data), set.map(&:label))
+                 end
+      folds
     end
+
+    def collect_futures futures
+      # init a hash which automatically expands to something like {a:[], b:[]}
+      values = Hash.new { |h, k| h[k] = [] }
+      futures.map { |f|
+        model, result = f.value
+        values[cost: model.cost, gamma: model.gamma] << result
+      }
+      # calculate means for each parameter pair
+      values.map!{|k,v| {k => v.instance_eval { reduce(:+) / size.to_f }}}
+      # flatten array of hashed into one hash
+      Hash[*values.map(&:to_a).flatten]
+    end
+    private
     def train_svm feature_vector, cost, gamma
       feature_set = Problem.from_array(feature_vectors.map(&:data),
                                        feature_vectors.map(&:label))
@@ -28,22 +43,12 @@ module Trainer
                                           :cost => cost,
                                           :gamma => gamma) )
     end
-    def collect_futures futures
-      values = Hash.new { |h, k| h[k] = [] }
-      futures.map { |f|
-        model, result = f.value
-        values[cost: model.cost, gamma: model.gamma] << result
-      }
-      # calculate means for each parameter pair
-      values.map!{|k,v| {k => v.instance_eval { reduce(:+) / size.to_f }}}
-      Hash[*values.map(&:to_a).flatten]
-    end
   end
+
   class Worker
     include Celluloid
     def initialize args={}
       @evaluator = args[:evaluator]
-      @parameter = 
     end
     def train train, parameter, folds
       svm_parameter = Parameter.new(:svm_type => Parameter::C_SVC,
