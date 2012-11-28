@@ -4,7 +4,8 @@ require_relative 'doe_pattern'
 module Trainer
   class DoeHeuristic < Base
     include DoePattern
-    def search feature_vectors, max_interations=1
+    DEFAULT_MAX_ITERATIONS=3
+    def search feature_vectors, max_interations=DEFAULT_MAX_ITERATIONS
       # split feature_vectors into folds
       folds = make_folds feature_vectors
 
@@ -22,15 +23,14 @@ module Trainer
 
           # n-fold cross validation
           folds.each.with_index do |fold,index|
-            # train SVM async             ( trainings_set, parameter, validation_sets)
+            # start async SVM training  | ( trainings_set, parameter, validation_sets)
             futures << worker.future.train( fold, {:cost => cost, :gamma => gamma},
-                                            folds.select.with_index{|e,ii| index!=ii }
-                                          )
+                                            folds.select.with_index{|e,ii| index!=ii } )
           end
         end
 
-        # collect results
-        results.merge collect_futures(futures)
+        # collect results - !blocking!
+        results.merge collect_results(futures)
 
         # get the pair with the best value
         best = results.invert[results.values.max]
@@ -41,7 +41,7 @@ module Trainer
 
       best_parameter = results.invert[results.values.max]
       # retrain the model with the best results and all of the available data
-      model = train_svm feature_vectors, *best_parameter.values
+      model = train_svm feature_vectors, best_parameter[:cost], best_parameter[:gamma]
       return model, results
     end
   end

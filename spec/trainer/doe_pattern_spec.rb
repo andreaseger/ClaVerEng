@@ -1,10 +1,10 @@
 require "spec_helper"
 require 'trainer/doe_pattern'
 
-describe DoePattern do
+describe Trainer::DoePattern do
   let(:dummy_class) do
     Class.new do
-      extend(DoePattern)
+      extend(Trainer::DoePattern)
     end
   end
 

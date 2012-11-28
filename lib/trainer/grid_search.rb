@@ -12,19 +12,19 @@ module Trainer
       futures = []
       @gammas.each do |gamma|
         @costs.each do |cost|
+          # start async SVM training  | ( trainings_set, parameter, validation_sets)
           futures << worker.future.train( fold, {:cost => cost, :gamma => gamma},
-                                          folds.select.with_index{|e,ii| index!=ii }
-                                        )
+                                          folds.select.with_index{|e,ii| index!=ii } )
         end
       end
 
-      # collect results
-      results = collect_futures(futures)
+      # collect results - !blocking!
+      results = collect_results(futures)
 
       # get the pair with the best value
       best_parameter = results.invert[results.values.max]
 
-      model = train_svm feature_vectors, *best_parameter.values
+      model = train_svm feature_vectors, best_parameter[:cost], best_parameter[:gamma]
       return model, results
     end
   end
