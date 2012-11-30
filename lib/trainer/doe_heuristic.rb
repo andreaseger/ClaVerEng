@@ -1,11 +1,12 @@
 require 'celluloid'
 require_relative 'base'
+require_relative 'worker'
 require_relative 'doe_pattern'
 module Trainer
   class DoeHeuristic < Base
     include DoePattern
     DEFAULT_MAX_ITERATIONS=3
-    def search feature_vectors, max_interations=DEFAULT_MAX_ITERATIONS
+    def search feature_vectors, max_iterations=DEFAULT_MAX_ITERATIONS
       # split feature_vectors into folds
       folds = make_folds feature_vectors
 
@@ -30,13 +31,14 @@ module Trainer
         end
 
         # collect results - !blocking!
-        results.merge collect_results(futures)
+        results.merge! collect_results(futures)
 
         # get the pair with the best value
         best = results.invert[results.values.max]
 
+        p "best #{best}: #{results.values.max}"
         # get new search window
-        parameter, resolution = pattern_for_center best, resolution.map{|e| e/Math.sqrt(2)}, [costs, gammas]
+        parameter, resolution = pattern_for_center [best[:cost],best[:gamma]], resolution.map{|e| e/2}, [costs, gammas]
       end
 
       best_parameter = results.invert[results.values.max]

@@ -28,11 +28,11 @@ module Trainer
       values = Hash.new { |h, k| h[k] = [] }
       # get the results and put them into the Hash
       futures.map { |f|
-        model, result = f.value # this is the actuall blocking call
+        model, result = f.value # this is the actual blocking call
+        next if model.nil?
         values[cost: model.cost, gamma: model.gamma] << result
       }
       # calculate means for each parameter pair
-      #binding.pry
       values = values.map{|k,v| {k => v.instance_eval { reduce(:+) / size.to_f }}}
       # flatten array of hashed into one hash
       Hash[*values.map(&:to_a).flatten]
@@ -41,7 +41,7 @@ module Trainer
     private
 
     def train_svm feature_vector, cost, gamma
-      feature_set = build_problem feature_vectors
+      feature_set = build_problem feature_vector
       Svm.svm_train(feature_set, build_parameter(cost, gamma) )
     end
 

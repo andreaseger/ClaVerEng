@@ -1,6 +1,7 @@
 require_relative 'helper/grid_panel'
 require_relative 'preprocessors/simple'
 require_relative 'selectors/simple'
+require_relative 'trainer/doe_heuristic'
 require 'benchmark'
 
 class Runner
@@ -45,7 +46,7 @@ class Runner
       print "#{k}: "
       puts v
     end
-    panel.show!
+    panel.show! if panel
   end
 
   def fetch_and_preprocess classification
@@ -66,18 +67,14 @@ class Runner
 
     p "DOE cross_validation_search"
     #model, results = Svm.cross_validation_search(training_set, cross_set, COSTS, GAMMAS)
-    model, results = Svm.doe_search(
-      feature_vectors: feature_vectors,
-      cost_min: -5,
-      cost_max: 15,
-      gamma_min: -15,
-      gamma_max: 9,
-      folds: 3)
-
-    results.sort_by!{|r| [r[:gamma], r[:cost]] }
-    results_matrix = results.map{|e| e[:result].value}.each_slice(COSTS.size).to_a
+    trainer = Trainer::DoeHeuristic.new   costs: -5..15,
+                                          gammas: -15..9,
+                                          folds: 3
+    model, results = trainer.search feature_vectors, 5
 
     if self.panel
+      results.sort_by!{|r| [r[:gamma], r[:cost]] }
+      results_matrix = results.map{|e| e[:result].value}.each_slice(COSTS.size).to_a
       panel.add_plot(xs: COSTS.collect {|n| Math.log2(n)},
                      ys: GAMMAS.collect {|n| Math.log2(n)},
                      zs: results_matrix,
@@ -88,5 +85,6 @@ class Runner
     timestamp = Time.now.strftime('%Y-%m-%dT%l:%M')
     model.save "tmp/#{timestamp}-#{classification}-model"
     IO.write "tmp/#{timestamp}-#{classification}-dictionary", @selector.global_dictionary
+    IO.write "tmp/#{timestamp}-#{classification}-results", results
   end
 end
