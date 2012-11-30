@@ -36,7 +36,7 @@ optparse = OptionParser.new do |opts|
 
   options[:classification] = :function
   opts.on( "-c", "--classification CLASSIFICATION", String,
-                 "One of [*function*, industry, careerlevel, all]" ) do |opt|
+                 "One of [*function*, industry, career_level, all]" ) do |opt|
     options[:classification] = opt.downcase.to_sym
   end
   opts.on( '-?', '--help', 'Display this screen' ) do
