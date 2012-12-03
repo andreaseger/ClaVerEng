@@ -23,7 +23,7 @@ Dir[File.join(ROOT, 'lib', 'models','*.rb')].each {|m| require m}
 # connect to database
 require 'logger'
 #ActiveRecord::Base.logger = Logger.new("log/#{rack_env.to_s}.log")
-ActiveRecord::Base.logger = Logger.new(STDOUT)
+#ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.configurations = YAML::load(IO.read('config/database.yml'))
 ActiveRecord::Base.establish_connection(rack_env)
 

@@ -2,12 +2,14 @@ require_relative 'helper/grid_panel'
 require_relative 'preprocessors/simple'
 require_relative 'selectors/simple'
 require_relative 'trainer/doe_heuristic'
+require_relative 'trainer/grid_search'
 require 'benchmark'
 
 class Runner
   attr_accessor :preprocessor
   attr_accessor :selector
   attr_accessor :panel
+  attr_accessor :trainer
 
   COSTS = [-5, -3, -1, 0, 1, 3, 5, 8, 10, 13, 15].collect {|n| 2**n}
   GAMMAS = [-15, -12, -8, -5, -3, -1, 1, 3, 5, 7, 9].collect {|n| 2**n}
@@ -16,6 +18,10 @@ class Runner
     p args
     self.preprocessor = args.fetch(:preprocessor, Preprocessor::Simple).new
     self.selector = args.fetch(:selector, Selector::Simple).new
+    folds = args.fetch(:folds) { 3 }
+    self.trainer = args.fetch(:trainer, Trainer::GridSearch).new  costs: -5..15,
+                                                                  gammas: -15..9,
+                                                                  folds: 3
     if args[:show_plot]
       self.panel = GridPanel.new
     end
@@ -65,26 +71,33 @@ class Runner
     #   Problem.from_array(set.map(&:data), set.map(&:label))
     # }
 
-    p "DOE cross_validation_search"
+    p @trainer.name
     #model, results = Svm.cross_validation_search(training_set, cross_set, COSTS, GAMMAS)
-    trainer = Trainer::DoeHeuristic.new   costs: -5..15,
-                                          gammas: -15..9,
-                                          folds: 3
-    model, results = trainer.search feature_vectors, 5
 
-    if self.panel
-      results.sort_by!{|r| [r[:gamma], r[:cost]] }
-      results_matrix = results.map{|e| e[:result].value}.each_slice(COSTS.size).to_a
-      panel.add_plot(xs: COSTS.collect {|n| Math.log2(n)},
-                     ys: GAMMAS.collect {|n| Math.log2(n)},
-                     zs: results_matrix,
-                     plot_name: "#{classification}, samplesize: #{@samplesize}, dictionary_size: #{@dictionary_size}")
-    end
+    model, results = @trainer.search feature_vectors, 6
+
+    build_plot(results, classification) if self.panel
     #p "GeometricMean on test_set: #{model.evaluate_dataset(test_set, :evaluator => Evaluator::GeometricMean)}"
 
-    timestamp = Time.now.strftime('%Y-%m-%dT%l:%M')
-    model.save "tmp/#{timestamp}-#{classification}-model"
-    IO.write "tmp/#{timestamp}-#{classification}-dictionary", @selector.global_dictionary
-    IO.write "tmp/#{timestamp}-#{classification}-results", results
+    best = results.invert[results.values.max]
+
+    p "best accuracy: cost: #{best[:cost]} gamma:#{best[:gamma]} => results: #{results.values.max}"
+    timestamp = Time.now.strftime('%Y%m%d_%H%M')
+    model.save "tmp/#{timestamp}_#{classification}_model"
+    IO.write "tmp/#{timestamp}_#{classification}_dictionary", @selector.global_dictionary
+    IO.write "tmp/#{timestamp}_#{classification}_results", format_results(results)
+  end
+  private
+  def build_plot results, classification
+    results.sort_by!{|r| [r[:gamma], r[:cost]] }
+    results_matrix = results.map{|e| e[:result].value}.each_slice(COSTS.size).to_a
+    panel.add_plot(xs: COSTS.collect {|n| Math.log2(n)},
+                   ys: GAMMAS.collect {|n| Math.log2(n)},
+                   zs: results_matrix,
+                   plot_name: "#{classification}, samplesize: #{@samplesize}, dictionary_size: #{@dictionary_size}")
+  end
+  def format_results results
+    results.map{ |k,v| [Math.log2(k[:gamma]), "#{Math.log2(k[:cost])} #{Math.log2(k[:gamma])} #{v}"] }
+           .group_by{|e| e[0]}.values.map{|e| e.map{|f| f[1]}.join("\n")}.join "\n\n"
   end
 end

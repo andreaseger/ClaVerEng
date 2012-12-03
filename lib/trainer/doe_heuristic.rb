@@ -6,6 +6,9 @@ module Trainer
   class DoeHeuristic < Base
     include DoePattern
     DEFAULT_MAX_ITERATIONS=3
+    def name
+      "Design of Experiments Heuristic with #{number_of_folds}-fold cross validation"
+    end
     def search feature_vectors, max_iterations=DEFAULT_MAX_ITERATIONS
       # split feature_vectors into folds
       folds = make_folds feature_vectors
@@ -20,12 +23,13 @@ module Trainer
         futures = []
         parameter.each do |cost, gamma|
           # was this parameter pair already tested?
-          next if results.has_key?(cost: cost, gamma: gamma)
+          params = {cost: 2**cost, gamma: 2**gamma}
+          next if results.has_key?(params)
 
           # n-fold cross validation
           folds.each.with_index do |fold,index|
             # start async SVM training  | ( trainings_set, parameter, validation_sets)
-            futures << worker.future.train( fold, {:cost => cost, :gamma => gamma},
+            futures << worker.future.train( fold, params,
                                             folds.select.with_index{|e,ii| index!=ii } )
           end
         end
@@ -38,7 +42,7 @@ module Trainer
 
         p "best #{best}: #{results.values.max}"
         # get new search window
-        parameter, resolution = pattern_for_center [best[:cost],best[:gamma]], resolution.map{|e| e/2}, [costs, gammas]
+        parameter, resolution = pattern_for_center [Math.log2(best[:cost]),Math.log2(best[:gamma])], resolution.map{|e| e/Math.sqrt(2)}, [costs, gammas]
       end
 
       best_parameter = results.invert[results.values.max]
