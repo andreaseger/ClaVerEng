@@ -6,7 +6,7 @@ rack_env = ENV['RACK_ENV'] || :development
 
 Bundler.setup
 Bundler.require(:default, rack_env)
-print "#{rack_env}\n"
+# print "#{rack_env}\n"
 
 # load config
 %w(database.yml settings.yml).each do |f|
