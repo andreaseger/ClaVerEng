@@ -8,7 +8,6 @@ class Runner
   attr_accessor :preprocessor
   attr_accessor :selector
   attr_accessor :trainer
-  # attr_accessor :panel
 
   # COSTS = [-5, -3, -1, 0, 1, 3, 5, 8, 10, 13, 15].collect {|n| 2**n}
   # GAMMAS = [-15, -12, -8, -5, -3, -1, 1, 3, 5, 7, 9].collect {|n| 2**n}
@@ -72,12 +71,6 @@ class Runner
   def run_for_classification data, classification
     p "selecting feature vectors for #{classification} with #{@selector.class.to_s}"
     feature_vectors = @selector.generate_vectors(data,classification,@dictionary_size)
-
-    # training_set,
-    # cross_set,
-    # test_set, _ = feature_vectors.each_slice(data.size/3).map{|set|
-    #   Problem.from_array(set.map(&:data), set.map(&:label))
-    # }
 
     p @trainer.name
     model, results = @trainer.search feature_vectors, 6
