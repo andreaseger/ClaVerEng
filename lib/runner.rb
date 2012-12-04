@@ -1,5 +1,7 @@
+#TODO make this require stuff nicer and more dynamic maybe with some load/autoload stuff
 require_relative 'preprocessors/simple'
 require_relative 'selectors/simple'
+require_relative 'selectors/n_gram'
 require_relative 'trainer/doe_heuristic'
 require_relative 'trainer/grid_search'
 require 'benchmark'
@@ -30,6 +32,8 @@ class Runner
     @selector = case args[:selector]
                 when :simple
                   Selector::Simple
+                when :ngram
+                  Selector::NGram
                 else
                   Selector::Simple
                 end.new
@@ -62,12 +66,16 @@ class Runner
     end
   end
 
-  def fetch_and_preprocess classification
-    jobs = [  Job.with_language(5).correct_for_classification(classification).limit(@samplesize/2),
-              Job.with_language(5).faulty_for_classification(classification).limit(@samplesize/2)  ].flatten.shuffle
+  def fetch_and_preprocess classification, offset=0
+    jobs = [  Job.with_language(5).correct_for_classification(classification).limit(@samplesize/2).offset(offset),
+              Job.with_language(5).faulty_for_classification(classification).limit(@samplesize/2).offset(offset) ].flatten.shuffle
     @preprocessor.process(jobs, classification)
   end
 
+  def fetch_test_set classification
+    data = fetch_and_preprocess(classification, @samplesize*3)
+    @selector.generate_vectors(data, classification, @dictionary_size)
+  end
   def run_for_classification data, classification
     p "selecting feature vectors for #{classification} with #{@selector.class.to_s}"
     feature_vectors = @selector.generate_vectors(data,classification,@dictionary_size)
@@ -75,11 +83,10 @@ class Runner
     p @trainer.name
     model, results = @trainer.search feature_vectors, 6
 
-    #p "GeometricMean on test_set: #{model.evaluate_dataset(test_set, :evaluator => Evaluator::GeometricMean)}"
+    test_set = fetch_test_set classification
+    p "GeometricMean on test_set: #{model.evaluate_dataset(test_set, :evaluator => Evaluator::GeometricMean)}"
+    p "cost: #{model.cost} gamma:#{model.gamma}"
 
-    best = results.invert[results.values.max]
-
-    p "best accuracy: cost: #{best[:cost]} gamma:#{best[:gamma]} => results: #{results.values.max}"
     timestamp = Time.now.strftime('%Y%m%d_%H%M')
     model.save "tmp/#{timestamp}_#{classification}_model"
     IO.write "tmp/#{timestamp}_#{classification}_dictionary", @selector.global_dictionary
