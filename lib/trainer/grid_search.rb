@@ -5,7 +5,9 @@ module Trainer
     def name
       "Grid Search with #{number_of_folds}-fold cross validation"
     end
-
+    def label
+      "grid_search"
+    end
     def search feature_vectors,_
       # split feature_vectors into folds
       folds = make_folds feature_vectors
@@ -34,6 +36,10 @@ module Trainer
 
       model = train_svm feature_vectors, best_parameter[:cost], best_parameter[:gamma]
       return model, results
+    end
+    def format_results results
+      results.map{ |k,v| [Math.log2(k[:gamma]), "#{Math.log2(k[:cost])} #{Math.log2(k[:gamma])} #{v}"] }
+             .group_by{|e| e[0]}.values.map{|e| e.map{|f| f[1]}.join("\n")}.join "\n\n"
     end
   end
 end

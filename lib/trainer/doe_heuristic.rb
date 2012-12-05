@@ -9,6 +9,9 @@ module Trainer
     def name
       "Design of Experiments Heuristic with #{number_of_folds}-fold cross validation"
     end
+    def label
+      "doe_heuristic"
+    end
     def search feature_vectors, max_iterations=DEFAULT_MAX_ITERATIONS
       # split feature_vectors into folds
       folds = make_folds feature_vectors
@@ -49,6 +52,9 @@ module Trainer
       # retrain the model with the best results and all of the available data
       model = train_svm feature_vectors, best_parameter[:cost], best_parameter[:gamma]
       return model, results
+    end
+    def format_results results
+      results.map{ |k,v| "#{Math.log2(k[:cost])} #{Math.log2(k[:gamma])} #{v}" }.join "\n"
     end
   end
 end

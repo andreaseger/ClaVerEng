@@ -74,7 +74,8 @@ class Runner
 
   def fetch_test_set classification
     data = fetch_and_preprocess(classification, @samplesize*3)
-    @selector.generate_vectors(data, classification, @dictionary_size)
+    set = @selector.generate_vectors(data, classification, @dictionary_size)
+    Problem.from_array(set.map(&:data), set.map(&:label))
   end
   def run_for_classification data, classification
     p "selecting feature vectors for #{classification} with #{@selector.class.to_s}"
@@ -84,17 +85,12 @@ class Runner
     model, results = @trainer.search feature_vectors, 6
 
     test_set = fetch_test_set classification
-    p "GeometricMean on test_set: #{model.evaluate_dataset(test_set, :evaluator => Evaluator::GeometricMean)}"
+    p "GeometricMean on test_set: #{model.evaluate_dataset(test_set)}"
     p "cost: #{model.cost} gamma:#{model.gamma}"
 
     timestamp = Time.now.strftime('%Y%m%d_%H%M')
-    model.save "tmp/#{timestamp}_#{classification}_model"
-    IO.write "tmp/#{timestamp}_#{classification}_dictionary", @selector.global_dictionary
-    IO.write "tmp/#{timestamp}_#{classification}_results", format_results(results)
-  end
-  private
-  def format_results results
-    results.map{ |k,v| [Math.log2(k[:gamma]), "#{Math.log2(k[:cost])} #{Math.log2(k[:gamma])} #{v}"] }
-           .group_by{|e| e[0]}.values.map{|e| e.map{|f| f[1]}.join("\n")}.join "\n\n"
+    model.save "tmp/#{@trainer.label}_#{classification}_#{timestamp}_model"
+    IO.write "tmp/#{@trainer.label}_#{classification}_#{timestamp}_dictionary", @selector.global_dictionary
+    IO.write "tmp/#{@trainer.label}_#{classification}_#{timestamp}_results", @trainer.format_results(results)
   end
 end
