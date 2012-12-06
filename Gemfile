@@ -20,6 +20,7 @@ platforms :ruby do
   gem 'pg'
 end
 
+gem 'standalone_migrations'
 #gem 'nokogiri'
 
 group :test, :development do

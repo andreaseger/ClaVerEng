@@ -9,10 +9,10 @@ Bundler.require(:default, rack_env)
 # print "#{rack_env}\n"
 
 # load config
-%w(database.yml settings.yml).each do |f|
-  unless File.exists? File.join(ROOT, 'config', f)
+%w(db/config.yml config/settings.yml).each do |f|
+  unless File.exists? File.join(ROOT, f)
     require 'fileutils'
-    FileUtils.cp File.join(ROOT, 'config', "#{f}.example"), File.join(ROOT, 'config', f)
+    FileUtils.cp File.join(ROOT, "#{f}.example"), File.join(ROOT, f)
     puts "[INFO] #{f} created from sample"
   end
 end
@@ -24,7 +24,7 @@ Dir[File.join(ROOT, 'lib', 'models','*.rb')].each {|m| require m}
 require 'logger'
 #ActiveRecord::Base.logger = Logger.new("log/#{rack_env.to_s}.log")
 #ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Base.configurations = YAML::load(IO.read('config/database.yml'))
+ActiveRecord::Base.configurations = YAML::load(IO.read('db/config.yml'))
 ActiveRecord::Base.establish_connection(rack_env)
 
 require 'svm_toolkit'

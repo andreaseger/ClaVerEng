@@ -1,0 +1,10 @@
+development:
+  adapter: postgresql
+  database: testdb0
+  username: dev
+  password: Secr3t
+test:
+  adapter: postgresql
+  database: testdb0
+  username: dev_ro
+  password: Secr3t

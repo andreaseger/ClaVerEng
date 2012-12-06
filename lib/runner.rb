@@ -90,6 +90,7 @@ class Runner
 
     timestamp = Time.now.strftime('%Y%m%d_%H%M')
     model.save "tmp/#{@trainer.label}_#{classification}_#{timestamp}_model"
+    binding.pry
     IO.write "tmp/#{@trainer.label}_#{classification}_#{timestamp}_dictionary", @selector.global_dictionary
     IO.write "tmp/#{@trainer.label}_#{classification}_#{timestamp}_results", @trainer.format_results(results)
   end
