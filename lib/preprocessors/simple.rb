@@ -4,7 +4,7 @@ require 'ostruct'
 module Preprocessor
   class Simple < Preprocessor::Base
     GENDER_FILTER = %r{(\(*(m|w)(\/|\|)(w|m)\)*)|(/-*in)|\(in\)}
-    SYMBOL_FILTER = %r{/|-|–|:|\+|!|,|\.|\*|\?|/|·|\"|„|•||\|}
+    SYMBOL_FILTER = %r{/|-|–|:|\+|!|,|\.|\*|\?|/|·|\"|„|•||\|&amp;}
     WHITESPACE = /(\s| )+/
     XML_TAG_FILTER = /<(.*?)>/
     CODE_TOKEN_FILTER = /\[.*\]|\(.*\)|\{.*\}|\d+\w+/

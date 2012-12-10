@@ -4,15 +4,13 @@ require_relative 'selectors/simple'
 require_relative 'selectors/n_gram'
 require_relative 'trainer/doe_heuristic'
 require_relative 'trainer/grid_search'
+require_relative 'models/predictor'
 require 'benchmark'
 
 class Runner
   attr_accessor :preprocessor
   attr_accessor :selector
   attr_accessor :trainer
-
-  # COSTS = [-5, -3, -1, 0, 1, 3, 5, 8, 10, 13, 15].collect {|n| 2**n}
-  # GAMMAS = [-15, -12, -8, -5, -3, -1, 1, 3, 5, 7, 9].collect {|n| 2**n}
 
   def initialize args={}
     folds = args.fetch(:folds) { 3 }
@@ -46,17 +44,14 @@ class Runner
 
     benchmark={}
     if classification == :all
-      [:function, :industry, :career_level].each do |e|
-        benchmark[e] = Benchmark.measure {
-          data = fetch_and_preprocess e
-          run_for_classification(data, e)
-        }
+      [:function, :industry, :career_level].each do |c|
+        data = fetch_and_preprocess c
+        run_for_classification(data, c)
+        @selector.global_dictionary=[]
       end
     else
-      benchmark[classification] = Benchmark.measure {
-        data = fetch_and_preprocess classification
-        run_for_classification(data, classification)
-      }
+      data = fetch_and_preprocess classification
+      run_for_classification(data, classification)
     end
 
     puts
@@ -83,15 +78,25 @@ class Runner
 
     p @trainer.name
     model, results = @trainer.search feature_vectors, 6
-
     test_set = fetch_test_set classification
-    p "GeometricMean on test_set: #{model.evaluate_dataset(test_set)}"
+
+    predictor = Predictor.new(model: model,
+                                classification: classification.to_s,
+                                used_preprocessor: @preprocessor.class.to_s,
+                                used_selector: @selector.class.to_s,
+                                used_trainer: @trainer.class.to_s,
+                                dictionary: @selector.global_dictionary,
+                                selector_properties: {gram_size: 6},
+                                samplesize: @samplesize,
+                                dictionary_size: @dictionary_size )
+    predictor.overall_accuracy = model.evaluate_dataset(test_set, evaluator: Evaluator::OverallAccuracy).value
+    predictor.geometric_mean = model.evaluate_dataset(test_set, evaluator: Evaluator::GeometricMean).value
+    predictor.save
+
+    p "OverallAccuracy on test_set: #{predictor.overall_accuracy}"
+    p "GeometricMean on test_set: #{predictor.geometric_mean}"
     p "cost: #{model.cost} gamma:#{model.gamma}"
 
-    timestamp = Time.now.strftime('%Y%m%d_%H%M')
-    model.save "tmp/#{@trainer.label}_#{classification}_#{timestamp}_model"
-    binding.pry
-    IO.write "tmp/#{@trainer.label}_#{classification}_#{timestamp}_dictionary", @selector.global_dictionary
     IO.write "tmp/#{@trainer.label}_#{classification}_#{timestamp}_results", @trainer.format_results(results)
   end
 end
