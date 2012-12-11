@@ -28,8 +28,6 @@ gem 'standalone_migrations'
 group :test, :development do
   gem 'pry'
   gem 'guard-rspec'
-  # gem 'guard-jruby-rspec', git: 'git://github.com/jkutner/guard-jruby-rspec.git'
-  # gem 'guard-shell'
 
   gem 'rb-inotify', :require => false
   gem 'rb-fsevent', :require => false

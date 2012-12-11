@@ -5,7 +5,6 @@ require_relative 'selectors/n_gram'
 require_relative 'trainer/doe_heuristic'
 require_relative 'trainer/grid_search'
 require_relative 'models/predictor'
-require 'benchmark'
 
 class Runner
   attr_accessor :preprocessor
@@ -42,28 +41,28 @@ class Runner
     @dictionary_size = args.fetch(:dictionary_size,5000)
     classification = args.fetch(:classification, :function)
 
-    benchmark={}
     if classification == :all
       [:function, :industry, :career_level].each do |c|
+        @selector.reset c
         data = fetch_and_preprocess c
         run_for_classification(data, c)
-        @selector.global_dictionary=[]
       end
     else
       data = fetch_and_preprocess classification
       run_for_classification(data, classification)
     end
-
-    puts
-    benchmark.each do |k,v|
-      print "#{k}: "
-      puts v
-    end
   end
 
   def fetch_and_preprocess classification, offset=0
-    jobs = [  Job.with_language(5).correct_for_classification(classification).limit(@samplesize/2).offset(offset),
-              Job.with_language(5).faulty_for_classification(classification).limit(@samplesize/2).offset(offset) ].flatten.shuffle
+    jobs =  [ Job.with_language(5).
+                  correct_for_classification(classification).
+                  limit(@samplesize/2).
+                  offset(offset),
+              Job.with_language(5).
+                  faulty_for_classification(classification).
+                  limit(@samplesize/2)
+                  .offset(offset)
+            ].flatten.shuffle
     @preprocessor.process(jobs, classification)
   end
 
@@ -81,14 +80,14 @@ class Runner
     test_set = fetch_test_set classification
 
     predictor = Predictor.new(model: model,
-                                classification: classification.to_s,
-                                used_preprocessor: @preprocessor.class.to_s,
-                                used_selector: @selector.class.to_s,
-                                used_trainer: @trainer.class.to_s,
-                                dictionary: @selector.global_dictionary,
-                                selector_properties: {gram_size: 6},
-                                samplesize: @samplesize,
-                                dictionary_size: @dictionary_size )
+                              classification: classification,
+                              used_preprocessor: @preprocessor.class.to_s,
+                              used_selector: @selector.class.to_s,
+                              used_trainer: @trainer.class.to_s,
+                              dictionary: @selector.global_dictionary,
+                              selector_properties: {gram_size: 6},
+                              samplesize: @samplesize,
+                              dictionary_size: @dictionary_size )
     predictor.overall_accuracy = model.evaluate_dataset(test_set, evaluator: Evaluator::OverallAccuracy).value
     predictor.geometric_mean = model.evaluate_dataset(test_set, evaluator: Evaluator::GeometricMean).value
     predictor.save
