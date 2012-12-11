@@ -13,11 +13,11 @@ module Selector
     attr_accessor :classification
 
     def initialize args={}
-      self.global_dictionary = args.fetch(:global_dictionary) {[]}
+      @global_dictionary = args.fetch(:global_dictionary) {[]}
     end
 
     def generate_vectors data_set, classification, dictionary_size=DEFAULT_DICTIONARY_SIZE
-      self.classification = classification
+      @classification = classification
       words_per_data = extract_words data_set
       generate_global_dictionary words_per_data, dictionary_size
 
@@ -29,8 +29,8 @@ module Selector
       }
     end
 
-    def generate_vector data, classification, dictionary=self.global_dictionary
-      self.classification = classification
+    def generate_vector data, classification, dictionary=@global_dictionary
+      @classification = classification
       word_set = Set.new extract_words_from_data(data)
       make_vector word_set, data.send("#{classification.to_s}_id"), data.label, dictionary
     end
@@ -45,7 +45,7 @@ module Selector
       words = all_words.flatten.group_by{|e| e}.values
                .sort_by{|e| e.size}
                .map{|e| [e[0],e.size]}
-      self.global_dictionary = words.last(size).map(&:first).reverse
+      @global_dictionary = words.last(size).map(&:first).reverse
     end
 
     def extract_words data_set
@@ -59,11 +59,11 @@ module Selector
     end
 
     def reset classification
-      self.global_dictionary = []
-      self.classification = classification
+      @global_dictionary = []
+      @classification = classification
     end
     private
-    def make_vector words, classification_id, label, dictionary=self.global_dictionary
+    def make_vector words, classification_id, label, dictionary=@global_dictionary
       OpenStruct.new(
         data: dictionary.map{|dic_word|
                 words.include?(dic_word) ? 1 : 0
