@@ -40,9 +40,9 @@ module Trainer
 
     private
 
-    def train_svm feature_vector, cost, gamma
+    def train_svm feature_vector, params
       feature_set = build_problem feature_vector
-      Svm.svm_train(feature_set, build_parameter(cost, gamma) )
+      Svm.svm_train(feature_set, build_parameter(params) )
     end
 
     def build_problem set

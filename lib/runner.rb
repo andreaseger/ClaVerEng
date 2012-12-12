@@ -4,7 +4,6 @@ require_relative 'selectors/simple'
 require_relative 'selectors/n_gram'
 require_relative 'trainer/doe_heuristic'
 require_relative 'trainer/grid_search'
-require_relative 'models/predictor'
 
 class Runner
   attr_accessor :preprocessor
@@ -56,6 +55,7 @@ class Runner
     p "GeometricMean on test_set: #{predictor.geometric_mean}"
     p "cost: #{model.cost} gamma:#{model.gamma}"
 
+    timestamp = predictor.created_at.strftime '%Y-%m-%dT%l:%M'
     IO.write "tmp/#{@trainer.label}_#{classification}_#{timestamp}_results", @trainer.format_results(results)
   end
 
@@ -81,29 +81,39 @@ class Runner
   private
   def setup args
     folds = args.fetch(:folds) { 3 }
-    @trainer =  case args[:trainer]
-                when :doe
-                  Trainer::DoeHeuristic
-                when :grid
-                  Trainer::GridSearch
-                else
-                  @trainer || Trainer::GridSearch
-                end.new(costs: -5..15, gammas: -15..9, folds: folds)
+    trainer_defaults = {costs: -5..15, gammas: -15..9, folds: folds}
 
-    @preprocessor = case args[:preprocessor]
-                    when :simple
-                      Preprocessor::Simple
-                    else
-                      @preprocessor || Preprocessor::Simple
-                    end.new
-    @selector = case args[:selector]
-                when :simple
-                  Selector::Simple
-                when :ngram
-                  Selector::NGram
-                else
-                  @selector || Selector::Simple
-                end.new
+    if args[:trainer]
+      @trainer =  case args[:trainer]
+                  when :doe
+                    Trainer::DoeHeuristic
+                  when :grid
+                    Trainer::GridSearch
+                  end.new(trainer_defaults)
+    else
+      @trainer ||= Trainer::GridSearch.new(trainer_defaults)
+    end
+
+    if args[:preprocessor]
+      @preprocessor = case args[:preprocessor]
+                      when :simple
+                        Preprocessor::Simple
+                      end.new
+    else
+      @preprocessor ||= Preprocessor::Simple.new
+    end
+
+    if args[:selector]
+      @selector = case args[:selector]
+                  when :simple
+                    Selector::Simple
+                  when :ngram
+                    Selector::NGram
+                  end.new
+    else
+      @selector ||= Selector::Simple.new
+    end
+
     @samplesize = args.fetch(:samplesize){ @samplesize || 5000 }
     @dictionary_size = args.fetch(:dictionary_size) { @dictionary_size || 5000 }
   end

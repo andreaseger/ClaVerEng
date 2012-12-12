@@ -1,12 +1,12 @@
 require 'celluloid'
 require_relative 'base'
 module Trainer
-  class GridSearch < Base
+  class Linear < Base
     def name
-      "Grid Search with #{number_of_folds}-fold cross validation"
+      "Linear Search with #{number_of_folds}-fold cross validation (linear kernel)"
     end
     def label
-      "grid_search"
+      "linear_search"
     end
     def search feature_vectors,_
       # split feature_vectors into folds
@@ -16,15 +16,13 @@ module Trainer
       worker = Worker.pool(args: [{evaluator: @evaluator}] )
 
       futures = []
-      @gammas.each do |gamma|
-        @costs.each do |cost|
-          params = {cost: 2**cost, gamma: 2**gamma}
-          # n-fold cross validation
-          folds.each.with_index do |fold,index|
-            # start async SVM training  | ( trainings_set, parameter, validation_sets)
-            futures << worker.future.train( fold, params,
-                                            folds.select.with_index{|e,ii| index!=ii } )
-          end
+      @costs.each do |cost|
+        params = {cost: 2**cost, kernel: :linear}
+        # n-fold cross validation
+        folds.each.with_index do |fold,index|
+          # start async SVM training  | ( trainings_set, parameter, validation_sets)
+          futures << worker.future.train( fold, params,
+                                          folds.select.with_index{|e,ii| index!=ii } )
         end
       end
 

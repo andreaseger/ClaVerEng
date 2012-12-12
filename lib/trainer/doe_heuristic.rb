@@ -50,7 +50,7 @@ module Trainer
 
       best_parameter = results.invert[results.values.max]
       # retrain the model with the best results and all of the available data
-      model = train_svm feature_vectors, best_parameter[:cost], best_parameter[:gamma]
+      model = train_svm feature_vectors, best_parameter
       return model, results
     end
     def format_results results

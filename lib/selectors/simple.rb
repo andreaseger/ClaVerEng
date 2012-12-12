@@ -29,7 +29,7 @@ module Selector
       }
     end
 
-    def generate_vector data, classification, dictionary=@global_dictionary
+    def generate_vector data, classification, dictionary=global_dictionary
       @classification = classification
       word_set = Set.new extract_words_from_data(data)
       make_vector word_set, data.send("#{classification.to_s}_id"), data.label, dictionary
@@ -63,7 +63,7 @@ module Selector
       @classification = classification
     end
     private
-    def make_vector words, classification_id, label, dictionary=@global_dictionary
+    def make_vector words, classification_id, label, dictionary=global_dictionary
       OpenStruct.new(
         data: dictionary.map{|dic_word|
                 words.include?(dic_word) ? 1 : 0

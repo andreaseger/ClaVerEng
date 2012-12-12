@@ -1,8 +1,7 @@
 require_relative 'config/environment'
 require_relative 'lib/runner'
 
-sample_sizes = [1000,2000,3000,4000,5000]
-dictionary_sizes = [1000,2000,3000,4000,5000]
+sample_sizes = dictionary_sizes = [500,1000,2000,3000,4000,5000]
 selectors = [:simple, :ngram]
 preprocessors = [:simple]
 
