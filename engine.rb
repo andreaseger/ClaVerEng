@@ -42,5 +42,3 @@ runner = Runner.new preprocessor: options[:preprocessor],
                     trainer: options[:trainer]
 
 runner.run(options)
-# use run specific settings
-# engine.run preprocessor: AdvancedPreprocessor, selector: SimpleSelector
