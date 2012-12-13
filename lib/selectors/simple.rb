@@ -5,9 +5,10 @@ module Selector
     # CLASSIFICATIONS = { function: Pjpp::Function.count,
     #                     industry: Pjpp::Industry.count,
     #                     career_level: Pjpp::CareerLevel.count }
-    CLASSIFICATIONS_SIZE = {  function: 19,
-                              industry: 632,
-                              career_level: 8 }
+    #probably broken for most industries, dont think with a size 14370 it will work better
+    CLASSIFICATIONS_SIZE = {  function: 19,       #1..19
+                              industry: 632,      #1..14370 but not all ids used
+                              career_level: 8 }   #1..8
 
     attr_accessor :global_dictionary
     attr_accessor :classification
@@ -73,7 +74,7 @@ module Selector
     end
 
     def classification_array(id)
-      Array.new(CLASSIFICATIONS_SIZE[classification]){|n| n==id ? 1 : 0}
+      Array.new(CLASSIFICATIONS_SIZE[classification.to_sym]){|n| n==(id-1) ? 1 : 0}
     end
   end
 end
