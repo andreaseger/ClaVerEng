@@ -25,10 +25,8 @@ class Predictor  < ActiveRecord::Base
     nodes = Node[vector.size].new
     vector.each.with_index{|e,i| nodes[i] = Node.new(i,e) }
 
-    p "prediction: #{Svm.svm_predict model, nodes}"
-
-    probs=Java::double[1].new
-    p "prediction: #{Svm.svm_predict_probability model, nodes, probs} | probability: #{probs.first}"
+    probs=Java::double[model.number_classes].new #yay provide an array which will be filled with the return values.
+    return [Svm.svm_predict_probability(model, nodes, probs), probs.max]
   end
 
   def predict_meh job
@@ -48,6 +46,10 @@ class Predictor  < ActiveRecord::Base
   def model=v
     @model = v
   end
+
+  # TODO make a method which describes the different classes
+  # i.e. first_class => true, second_class => false
+  # problem this order seems to depend on the first example/problem/node used for training
 
   private
   def serialize_model
