@@ -11,6 +11,13 @@ module Trainer
     #   +------------         #   +------------
     #    -1   0   1           #    -1   0   1
 
+    #
+    # create a list of 13 points aligned in the DOE 2^d and 3^d pattern in the given window
+    # @param  center [x,y] center of the pattern window
+    # @param  resolution [double,double] margin between center and the edges in x and y direction
+    # @param  adjust=false [x,y] unless false move the pattern inside the edges of bigger window
+    #
+    # @return [Array] list of 13 points
     def pattern_for_center center, resolution, adjust=false
       x3d,y3d = center.map.with_index{|e,i|
         [ e-resolution[i],  #-1

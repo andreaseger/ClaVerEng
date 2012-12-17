@@ -33,8 +33,8 @@ class Runner
 
   #
   # create a predictor for a given classification
-  # @param  data preprocessed job data
-  # @param  classification
+  # @param  data [Array<PreprocessedData>] list of preprocessed data
+  # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
   #
   # @return
   def run_for_classification data, classification
@@ -69,10 +69,10 @@ class Runner
 
   #
   # fetch job data with a 50/50 distribution between correct and false classification
-  # @param  classification [Symbol]
+  # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
   # @param  offset=0 [Integer] Offset for the database queries
   #
-  # @return [Array] Array of preprocessed data
+  # @return [Array<PreprocessedData>]
   def fetch_and_preprocess classification, offset=0
     jobs =  [ Job.with_language(5).
                   correct_for_classification(classification).
@@ -89,7 +89,7 @@ class Runner
 
   #
   # fetch, preprocess a test set, generate feature vectors and create a libsvm Problem
-  # @param  classification [Symbol]
+  # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
   #
   # @return [Problem] libsvm Problem
   def fetch_test_set classification

@@ -23,9 +23,9 @@ class Predictor  < ActiveRecord::Base
 
   #
   # predict the label w/ probability of a given job
-  # @param  job [Jop]
+  # @param  job [Job]
   #
-  # @return [integer,double] label as Integer and the probability of this label
+  # @return [Integer,Double] label as Integer and the probability of this label
   def predict_job job
     data = preprocessor.process(job, classification)
     vector = selector.generate_vector(data, classification).data

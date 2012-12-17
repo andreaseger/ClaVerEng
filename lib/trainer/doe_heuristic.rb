@@ -12,6 +12,13 @@ module Trainer
     def label
       "doe_heuristic"
     end
+
+    #
+    # perform a parameter search with the DOE heuristic on the provided feature vectors
+    # @param  feature_vectors
+    # @param  max_iterations=DEFAULT_MAX_ITERATIONS number of iterations used in this search
+    #
+    # @return [model, results] trained svm model and the results of the search
     def search feature_vectors, max_iterations=DEFAULT_MAX_ITERATIONS
       # split feature_vectors into folds
       folds = make_folds feature_vectors

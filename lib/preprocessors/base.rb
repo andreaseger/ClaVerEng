@@ -1,8 +1,9 @@
+require_relative '../interfaces/preprocessed_data'
 module Preprocessor
   class Base
     #
     # checks if the job was classified correctly
-    # @param  job [Job]
+    # @param job [Job]
     #
     # @return [Boolean]
     def correct? job
