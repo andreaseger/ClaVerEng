@@ -1,6 +1,5 @@
 # encoding: UTF-8
 require_relative 'base'
-require 'ostruct'
 module Preprocessor
   class Simple < Preprocessor::Base
     GENDER_FILTER = %r{(\(*(m|w)(\/|\|)(w|m)\)*)|(/-*in)|\(in\)}
