@@ -6,6 +6,7 @@ gem 'rake'
 # database
 gem 'activerecord', require: 'active_record'
 gem 'activesupport', require: false
+gem 'standalone_migrations'
 
 platforms :jruby do
   gem 'celluloid'
@@ -22,7 +23,6 @@ platforms :ruby do
   gem 'pg'
 end
 
-gem 'standalone_migrations'
 #gem 'nokogiri'
 
 group :test, :development do

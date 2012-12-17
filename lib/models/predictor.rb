@@ -5,6 +5,7 @@ class Predictor  < ActiveRecord::Base
   serialize :selector_properties, JSON
   serialize :preprocessor_properties, JSON
   serialize :dictionary, JSON
+  attr_writer :model
 
   def model
     @model ||= Model.load_from_string self.serialized_model
@@ -19,32 +20,29 @@ class Predictor  < ActiveRecord::Base
   def predict_job_id id
     predict_job Job.find(id)
   end
+
+  #
+  # predict the label w/ probability of a given job
+  # @param  job [Jop]
+  #
+  # @return [integer,double] label as Integer and the probability of this label
   def predict_job job
     data = preprocessor.process(job, classification)
     vector = selector.generate_vector(data, classification).data
-    nodes = Node[vector.size].new
-    vector.each.with_index{|e,i| nodes[i] = Node.new(i,e) }
+    nodes = make_nodes(vector)
 
-    probs=Java::double[model.number_classes].new #yay provide an array which will be filled with the return values.
-    return [Svm.svm_predict_probability(model, nodes, probs), probs.max]
-  end
-
-  def predict_meh job
-    data = preprocessor.process(job, classification)
-    vector = selector.generate_vector(data, classification)
-    problem = Problem.from_array(vector.map(&:data), vector.map(&:label))
-    p Svm.svm_predict model, problem.x[0]
+    label, probs = model.predict_probability(nodes)
+    # TODO find a more reliable way to find the correct probability value for the given label
+    # but nevertheless this should be correct
+    label, probs.max
   end
 
   def gamma
     model.gamma
   end
+
   def cost
     model.cost
-  end
-
-  def model=v
-    @model = v
   end
 
   # TODO make a method which describes the different classes
@@ -58,5 +56,10 @@ class Predictor  < ActiveRecord::Base
   def selector_params
     selector_properties.merge( global_dictionary: self.dictionary,
                                classification: self.classification )
+  end
+  def make_nodes vector
+    nodes = Node[vector.size].new
+    vector.each.with_index{|e,i| nodes[i] = Node.new(i,e) }
+    nodes
   end
 end

@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/sch1zo/svm_toolkit.git
-  revision: 605d27b8c7cb5455fa7c17116344bc1258a832de
+  revision: 9083000c7cabc709cd4d86c13ef0751954a3f28e
   branch: restructure
   specs:
     svm_toolkit (1.2.1-java)

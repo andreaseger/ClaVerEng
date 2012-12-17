@@ -8,6 +8,12 @@ module Trainer
     def label
       "grid_search"
     end
+
+    #
+    # perform a grid search on the provided feature vectors
+    # @param  feature_vectors
+    #
+    # @return [model, results] trained svm model and the results of the search
     def search feature_vectors,_
       # split feature_vectors into folds
       folds = make_folds feature_vectors

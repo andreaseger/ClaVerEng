@@ -30,6 +30,13 @@ class Runner
     end
   end
 
+
+  #
+  # create a predictor for a given classification
+  # @param  data preprocessed job data
+  # @param  classification
+  #
+  # @return
   def run_for_classification data, classification
     p "selecting feature vectors for #{classification} with #{@selector.class.to_s}"
     feature_vectors = @selector.generate_vectors(data,classification,@dictionary_size)
@@ -59,6 +66,13 @@ class Runner
     IO.write "tmp/#{@trainer.label}_#{classification}_#{timestamp}_results", @trainer.format_results(results)
   end
 
+
+  #
+  # fetch job data with a 50/50 distribution between correct and false classification
+  # @param  classification [Symbol]
+  # @param  offset=0 [Integer] Offset for the database queries
+  #
+  # @return [Array] Array of preprocessed data
   def fetch_and_preprocess classification, offset=0
     jobs =  [ Job.with_language(5).
                   correct_for_classification(classification).
@@ -72,6 +86,12 @@ class Runner
     @preprocessor.process(jobs, classification)
   end
 
+
+  #
+  # fetch, preprocess a test set, generate feature vectors and create a libsvm Problem
+  # @param  classification [Symbol]
+  #
+  # @return [Problem] libsvm Problem
   def fetch_test_set classification
     data = fetch_and_preprocess(classification, @samplesize*3)
     set = @selector.generate_vectors(data, classification, @dictionary_size)

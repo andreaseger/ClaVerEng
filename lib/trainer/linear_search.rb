@@ -8,6 +8,13 @@ module Trainer
     def label
       "linear_search"
     end
+
+
+    #
+    # perform a parameter search on a linear kernel
+    # @param  feature_vectors
+    #
+    # @return [model, results] trained svm model and the results of the search
     def search feature_vectors,_
       # split feature_vectors into folds
       folds = make_folds feature_vectors

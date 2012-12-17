@@ -5,7 +5,8 @@ module Selector
     # CLASSIFICATIONS = { function: Pjpp::Function.count,
     #                     industry: Pjpp::Industry.count,
     #                     career_level: Pjpp::CareerLevel.count }
-    #probably broken for most industries, dont think with a size 14370 it will work better
+    # broken for most industries, dont think with a size 14370 it will work better
+    # probable solution could be to add a new column to industries with a continious id
     CLASSIFICATIONS_SIZE = {  function: 19,       #1..19
                               industry: 632,      #1..14370 but not all ids used
                               career_level: 8 }   #1..8
@@ -63,6 +64,7 @@ module Selector
       @global_dictionary = []
       @classification = classification
     end
+
     private
     def make_vector words, classification_id, label, dictionary=global_dictionary
       OpenStruct.new(
