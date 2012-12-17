@@ -1,6 +1,11 @@
 require 'celluloid'
 require_relative 'helper'
 module Trainer
+  #
+  # Celluloid Worker Actor, which trains and evaluates a SVM
+  #
+  # @author Andreas Eger
+  #
   class Worker
     include Celluloid
     include Helper

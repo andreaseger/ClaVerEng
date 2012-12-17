@@ -1,5 +1,10 @@
 require_relative 'simple'
 module Selector
+  #
+  # Selector which uses a n-gram dictionary to generate feature vectors
+  #
+  # @author Andreas Eger
+  #
   class NGram < Selector::Simple
     def initialize args={}
       super
@@ -9,7 +14,7 @@ module Selector
     #
     # fetches all words snippets from one data entry, removes stopwords and very short words
     # @param  data [PreprocessedData]
-    # @param  gram_size=@gram_size [Integer] gram size
+    # @param  gram_size [Integer] gram size
     #
     # @return [Array<String>]
     def extract_words_from_data data, gram_size=@gram_size

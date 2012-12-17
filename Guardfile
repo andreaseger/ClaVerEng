@@ -18,3 +18,7 @@ notification :tmux,
 #   watch(%r{lib/(.+)\.rb$})     { |m| `echo spec/#{m[1]}_spec.rb` }
 #   # watch(%r{(.*)}) {|m| raise m.to_s }
 # end
+
+guard 'yard' do
+  watch(%r{lib/.+\.rb})
+end

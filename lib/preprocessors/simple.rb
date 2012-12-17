@@ -1,19 +1,33 @@
 # encoding: UTF-8
 require_relative 'base'
 module Preprocessor
+  #
+  # Preprocessor which just cleans to text
+  #
+  # @author Andreas Eger
+  #
   class Simple < Preprocessor::Base
+    # filters most gender stuff
     GENDER_FILTER = %r{(\(*(m|w)(\/|\|)(w|m)\)*)|(/-*in)|\(in\)}
+    # filters most wierd symbols
     SYMBOL_FILTER = %r{/|-|–|:|\+|!|,|\.|\*|\?|/|·|\"|„|•||\|&amp;}
+    # filters multiple whitesspace
     WHITESPACE = /(\s| )+/
+    # filters all kind of XMl/HTML tags
     XML_TAG_FILTER = /<(.*?)>/
+    # filter for used job tokens
     CODE_TOKEN_FILTER = /\[.*\]|\(.*\)|\{.*\}|\d+\w+/
+    # ffiltr for new lines
     NEW_LINES = /(\r\n)|\r|\n/
 
     #
     # cleans provided jobs
-    # @param  jobs [Job] single Job
-    # @param  jobs [Array<Job>] list of Jobs
-    # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
+    # @overload process(jobs, classification)
+    #   @param  jobs [Job] single Job
+    #   @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
+    # @overload process(jobs, classification)
+    #   @param  jobs [Array<Job>] list of Jobs
+    #   @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
     #
     # @return [Array<PreprocessedData>] list of processed job data - or singe job data
     def process jobs, classification
@@ -25,6 +39,11 @@ module Preprocessor
       end
     end
 
+    #
+    # converts string into a cleaner version
+    # @param  title [String] job title
+    #
+    # @return [String] clean and lowercase version of input
     def clean_title title
       title.gsub(GENDER_FILTER,'').
             gsub(SYMBOL_FILTER,'').
@@ -34,6 +53,11 @@ module Preprocessor
             downcase.
             strip
     end
+    #
+    # converts string into a cleaner version
+    # @param  desc [String] job description
+    #
+    # @return [String] clean and lowercase version of input
     def clean_description desc
       desc.gsub(XML_TAG_FILTER,' ')
           .gsub(GENDER_FILTER,'')

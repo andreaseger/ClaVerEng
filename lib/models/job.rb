@@ -1,4 +1,9 @@
 require_relative 'pjpp/job'
+#
+# Wrapper Class for Pjpp:Job
+#
+# @author Andreas Eger
+#
 class Job < Pjpp::Job
   scope :checked, -> { joins(:qc_job_check => [:qc_check_status]).
                        where("ja_qc_check_status.check_status IS NOT NULL").

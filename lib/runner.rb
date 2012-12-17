@@ -5,6 +5,11 @@ require_relative 'selectors/n_gram'
 require_relative 'trainer/doe_heuristic'
 require_relative 'trainer/grid_search'
 
+#
+# Runs different SVM training setups
+#
+# @author Andreas Eger
+#
 class Runner
   attr_accessor :preprocessor
   attr_accessor :selector
@@ -70,7 +75,7 @@ class Runner
   #
   # fetch job data with a 50/50 distribution between correct and false classification
   # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
-  # @param  offset=0 [Integer] Offset for the database queries
+  # @param  offset [Integer] Offset for the database queries
   #
   # @return [Array<PreprocessedData>]
   def fetch_and_preprocess classification, offset=0

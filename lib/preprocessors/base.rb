@@ -1,5 +1,10 @@
-require_relative '../interfaces/preprocessed_data'
+require_relative '../interfaces'
 module Preprocessor
+  #
+  # Preprocessor Base Class
+  #
+  # @author Andreas Eger
+  #
   class Base
     #
     # checks if the job was classified correctly

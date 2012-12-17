@@ -1,5 +1,6 @@
 require 'factory_girl'
 require 'ostruct'
+require 'interfaces'
 
 FactoryGirl.define do
   factory :qc_job_check, class: OpenStruct do
@@ -14,10 +15,10 @@ FactoryGirl.define do
     qc_job_check
   end
 
-  factory :data, class: OpenStruct do
+  factory :data, class: PreprocessedData do
     data ["haus fooo garten baaz pferd fooo"]
     career_level_id 7
-    checked_correct true
+    label true
   end
   factory :data_w_short_words, parent: :data do
     data ["auto foo pferd bz gooo fooo 2"]

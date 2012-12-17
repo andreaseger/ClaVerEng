@@ -1,6 +1,11 @@
 require 'celluloid'
 require_relative 'base'
 module Trainer
+  #
+  # Trainer for a linear parmeter search with a LINEAR kernel
+  #
+  # @author Andreas Eger
+  #
   class Linear < Base
     def name
       "Linear Search with #{number_of_folds}-fold cross validation (linear kernel)"

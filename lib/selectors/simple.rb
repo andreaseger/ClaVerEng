@@ -1,7 +1,14 @@
-require_relative '../interfaces/all'
+require_relative '../interfaces'
 module Selector
+  #
+  # Selector which uses a simple dictionary to generate feature vectors
+  #
+  # @author Andreas Eger
+  #
   class Simple
+    # stopword file
     STOPWORD_LOCATION = './lib/stopwords.de'
+    # default dictionary size
     DEFAULT_DICTIONARY_SIZE = 5000
     # CLASSIFICATIONS = { function: Pjpp::Function.count,
     #                     industry: Pjpp::Industry.count,
@@ -23,7 +30,7 @@ module Selector
     # generates a list of feature vetors and their labels from preprocessed data
     # @param  data_set [Array<PreprocessedData>] list of preprocessed data
     # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
-    # @param  dictionary_size=DEFAULT_DICTIONARY_SIZE [Integer] Size of a dictionary to create if non exists
+    # @param  dictionary_size [Integer] Size of a dictionary to create if non exists
     #
     # @return [Array<FeatureVector>] list of feature vectors and labels
     def generate_vectors data_set, classification, dictionary_size=DEFAULT_DICTIONARY_SIZE
@@ -43,7 +50,7 @@ module Selector
     # generates a feature vector with its label
     # @param  data [PreprocessedData]
     # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
-    # @param  dictionary=global_dictionary [Array] dictionary to use for this selection
+    # @param  dictionary [Array] dictionary to use for this selection
     #
     # @return [FeatureVector]
     def generate_vector data, classification, dictionary=global_dictionary
@@ -59,7 +66,7 @@ module Selector
     #
     # generates a list of words used as dictionary 
     # @param  all_words (see #extract_words)
-    # @param  size=DEFAULT_DICTIONARY_SIZE dictionary size
+    # @param  size dictionary size
     #
     # @return [Array<String>] list of words
     def generate_global_dictionary all_words, size=DEFAULT_DICTIONARY_SIZE
@@ -104,7 +111,7 @@ module Selector
     # @param  words [Array<String>] list of words
     # @param  classification_id [Integer] classification id given for the data entry
     # @param  label [Boolean] was that classi
-    # @param  dictionary=global_dictionary
+    # @param  dictionary
     #
     # @return [FeatureVector]
     def make_vector words, classification_id, label, dictionary=global_dictionary

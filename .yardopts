@@ -1,0 +1,4 @@
+--no-private
+--exclude pjpp
+--markup-provider=kramdown
+--markup=markdown

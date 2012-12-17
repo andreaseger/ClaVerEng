@@ -1,6 +1,11 @@
 require 'celluloid'
 require_relative 'base'
 module Trainer
+  #
+  # Trainer for a grid parmeter search with the RBF kernel
+  #
+  # @author Andreas Eger
+  #
   class GridSearch < Base
     def name
       "Grid Search with #{number_of_folds}-fold cross validation"

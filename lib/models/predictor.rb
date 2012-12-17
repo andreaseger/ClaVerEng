@@ -1,5 +1,10 @@
 require 'json'
 require "active_support/inflector"
+#
+# Saves information about a SVM
+#
+# @author Andreas Eger
+#
 class Predictor  < ActiveRecord::Base
   before_save :serialize_model
   serialize :selector_properties, JSON
@@ -34,7 +39,7 @@ class Predictor  < ActiveRecord::Base
     label, probs = model.predict_probability(nodes)
     # TODO find a more reliable way to find the correct probability value for the given label
     # but nevertheless this should be correct
-    label, probs.max
+    return label, probs.max
   end
 
   def gamma

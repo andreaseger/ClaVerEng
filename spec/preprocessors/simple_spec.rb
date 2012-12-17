@@ -1,6 +1,7 @@
 # encoding: UTF-8
 require 'spec_helper'
 require 'preprocessors/simple'
+require 'interfaces'
 
 describe Preprocessor::Simple do
   it_behaves_like 'a preprocessor'

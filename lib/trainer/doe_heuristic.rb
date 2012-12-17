@@ -3,8 +3,14 @@ require_relative 'base'
 require_relative 'worker'
 require_relative 'doe_pattern'
 module Trainer
+  #
+  # Trainer for a parmeter search using a DOE heurisitc with the RBF kernel
+  #
+  # @author Andreas Eger
+  #
   class DoeHeuristic < Base
     include DoePattern
+    # default number of iterations to use during parameter search
     DEFAULT_MAX_ITERATIONS=3
     def name
       "Design of Experiments Heuristic with #{number_of_folds}-fold cross validation"
@@ -16,7 +22,7 @@ module Trainer
     #
     # perform a parameter search with the DOE heuristic on the provided feature vectors
     # @param  feature_vectors
-    # @param  max_iterations=DEFAULT_MAX_ITERATIONS number of iterations used in this search
+    # @param  max_iterations number of iterations used in this search
     #
     # @return [model, results] trained svm model and the results of the search
     def search feature_vectors, max_iterations=DEFAULT_MAX_ITERATIONS
