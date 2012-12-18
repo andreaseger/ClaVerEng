@@ -25,9 +25,9 @@ class Job < Pjpp::Job
                         where("ja_qc_job_checks.wrong_#{classification}_id IS NOT NULL").
                         includes(:qc_job_check)}
 
-  # @!method original_industry
-  # @!method original_function
-  # @!method original_career_level
+  # @!method original_industry_id
+  # @!method original_function_id
+  # @!method original_career_level_id
   %w(industry function career_level).each do |method|
     define_method "original_#{method}_id" do
        self.qc_job_check.send("wrong_#{method}_id") || self.send("#{method}_id")

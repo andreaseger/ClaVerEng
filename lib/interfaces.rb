@@ -9,9 +9,9 @@ class InterfaceHelper
   # creates setter/getter similar to attr_accesor
   # @param  name [Symbol]
   # @macro [attach] attribute
-  #   @method $1()
+  #   @method $1
   #     reads $1
-  #   @method $1=()
+  #   @method $1=
   #     saves $1
   def self.attribute name
     define_method(name) do

@@ -17,7 +17,7 @@ module Preprocessor
     XML_TAG_FILTER = /<(.*?)>/
     # filter for used job tokens
     CODE_TOKEN_FILTER = /\[.*\]|\(.*\)|\{.*\}|\d+\w+/
-    # ffiltr for new lines
+    # filter for new lines
     NEW_LINES = /(\r\n)|\r|\n/
 
     #
