@@ -1,30 +1,22 @@
 require 'spec_helper'
 
 shared_examples_for 'a preprocessor' do
-  let(:preprocessor) { described_class.new }
+  let(:preprocessor) { described_class.new(industry_map: {1423=>3, 523=>54}) }
   let(:job) { FactoryGirl.build(:job) }
   let(:jobs) { [job] }
 
   it { preprocessor.should respond_to :process }
-  it "should return an object with a data attribute" do
-    preprocessor.process(job, :function).should respond_to :data
-  end
-  it "should return an object with a label attribute" do
-    preprocessor.process(job, :function).should respond_to :label
-  end
-  it "should return an object with a industry_id attribute" do
-    preprocessor.process(job, :function).should respond_to :industry_id
-  end
-  it "should return an object with a function_id attribute" do
-    preprocessor.process(job, :function).should respond_to :function_id
-  end
-  it "should return an object with a career_level_id attribute" do
-    preprocessor.process(job, :function).should respond_to :career_level_id
+  it "should return a PreprocessedData object" do
+    preprocessor.process(job, :function).should be_a(PreprocessedData)
   end
   it "should be able to process multiple jobs" do
     preprocessor.process(jobs, :function).each do |e|
-      e.should respond_to :data
-      e.should respond_to :label
+      e.should be_a(PreprocessedData)
     end
+  end
+
+  it "should make use of a industry_map" do
+    preprocessor.expects(:map_industry_id).with(1423).returns(3)
+    preprocessor.process(jobs, :industry)
   end
 end

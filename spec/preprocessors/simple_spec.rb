@@ -6,7 +6,7 @@ require 'interfaces'
 describe Preprocessor::Simple do
   it_behaves_like 'a preprocessor'
 
-  let(:simple) { Preprocessor::Simple.new }
+  let(:simple) { Preprocessor::Simple.new(industry_map: {}) }
   it "should have process implemented" do
     expect { simple.process([], :function) }.to_not raise_error
   end

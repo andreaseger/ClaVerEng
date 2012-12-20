@@ -13,6 +13,7 @@ FactoryGirl.define do
     description "Foo Bar"
     summary "Really lot of work to do"
     qc_job_check
+    original_industry_id 1423
   end
 
   factory :data, class: PreprocessedData do

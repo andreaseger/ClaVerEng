@@ -4,6 +4,9 @@ shared_examples_for 'a selector' do
   let(:selector) { described_class.new }
   let(:data) { FactoryGirl.build(:data) }
 
+  it "should return a FeatureVector object" do
+    selector.generate_vector(data, :career_level).should be_a(FeatureVector)
+  end
   it "should create and array with 0 and 1's" do
     vector = selector.generate_vector(data, :career_level)
     vector.data.each do |e|

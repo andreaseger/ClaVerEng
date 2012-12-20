@@ -28,14 +28,10 @@ class Job < Pjpp::Job
   # @!method original_industry_id
   # @!method original_function_id
   # @!method original_career_level_id
-  %w(function career_level).each do |method|
+  %w(industry function career_level).each do |method|
     define_method "original_#{method}_id" do
        self.qc_job_check.send("wrong_#{method}_id") || self.send("#{method}_id")
     end
-  end
-
-  def original_industry_id
-    self.qc_job_check.send("wrong_#{method}_id") || self.send("#{method}_id")
   end
 
   def checked_correct?

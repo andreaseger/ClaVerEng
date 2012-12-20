@@ -16,7 +16,7 @@ class Predictor  < ActiveRecord::Base
     @model ||= Model.load_from_string self.serialized_model
   end
   def preprocessor
-    @preprocessor ||= self.used_preprocessor.constantize.new
+    @preprocessor ||= self.used_preprocessor.constantize.new preprocessor_properties
   end
   def selector
     @selector ||= self.used_selector.constantize.new selector_params
