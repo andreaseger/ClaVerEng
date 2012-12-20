@@ -6,7 +6,7 @@ require "active_support/inflector"
 # @author Andreas Eger
 #
 class Predictor  < ActiveRecord::Base
-  before_save :serialize_model
+  before_save :serialize_model, :update_settings
   serialize :selector_properties, JSON
   serialize :preprocessor_properties, JSON
   serialize :dictionary, JSON
@@ -57,6 +57,12 @@ class Predictor  < ActiveRecord::Base
   private
   def serialize_model
     self.serialized_model = model.serialize
+  end
+  def update_settings
+    self.preprocessor_properties.merge!(industry_map: preprocessor.industry_map )
+    self.selector_properties.merge!(gram_size: selector.gram_size ) if selector.respond_to? :gram_size
+    self.dictionary = selector.global_dictionary
+    self.dictionary_size = dictionary.size
   end
   def selector_params
     selector_properties.merge( global_dictionary: self.dictionary,

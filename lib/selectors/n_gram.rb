@@ -6,6 +6,8 @@ module Selector
   # @author Andreas Eger
   #
   class NGram < Selector::Simple
+    attr_reader :gram_size
+
     def initialize args={}
       super
       @gram_size = args.fetch(:gram_size) { 2 }

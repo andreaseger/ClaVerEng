@@ -74,7 +74,7 @@ module Preprocessor
     def process_job job
       PreprocessedData.new(
         data: [ clean_title(job.title), clean_description(job.description) ],
-        industry_id: job.original_industry_id,
+        industry_id: map_industry_id(job.original_industry_id),
         function_id: job.original_function_id,
         career_level_id: job.original_career_level_id,
         label: correct?(job)

@@ -55,10 +55,7 @@ class Runner
                               used_preprocessor: @preprocessor.class.to_s,
                               used_selector: @selector.class.to_s,
                               used_trainer: @trainer.class.to_s,
-                              dictionary: @selector.global_dictionary,
-                              selector_properties: {gram_size: 6},
-                              samplesize: @samplesize,
-                              dictionary_size: @dictionary_size )
+                              samplesize: @samplesize )
     predictor.overall_accuracy = model.evaluate_dataset(test_set, evaluator: Evaluator::OverallAccuracy).value
     predictor.geometric_mean = model.evaluate_dataset(test_set, evaluator: Evaluator::GeometricMean).value
     predictor.save
