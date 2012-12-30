@@ -1,5 +1,6 @@
 require 'celluloid'
 require_relative 'base'
+require_relative 'worker'
 module Trainer
   #
   # Trainer for a linear parmeter search with a LINEAR kernel
