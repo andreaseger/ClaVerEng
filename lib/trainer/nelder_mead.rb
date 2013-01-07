@@ -68,7 +68,7 @@ module Trainer
       @worker = Worker.pool(args: [{evaluator: @evaluator}] )
 
       initial_simplex
-      while done?
+      while !done?
         best, worse, worst = order
         center = [best,worse].transpose.map{|e| e.inject(&:+)/e.length.to_f}
         reflection = reflect center, worst
