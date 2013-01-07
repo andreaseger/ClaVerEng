@@ -3,6 +3,11 @@ require_relative 'base'
 require_relative 'worker'
 module Trainer
 
+  #
+  # ParameterSet for the NelderMead
+  #
+  # @author Andreas Eger
+  #
   class ParameterSet
     attr_accessor :gamma, :cost
     attr_accessor :result
@@ -34,6 +39,7 @@ module Trainer
       {gamma: gamma, cost: cost}
     end
   end
+
   #
   # Trainer for a parmeter search using the Nelder-Mead Simplex heurisitc with the RBF kernel
   #
