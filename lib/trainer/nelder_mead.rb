@@ -30,6 +30,9 @@ module Trainer
     def key
       [gamma, cost]
     end
+    def params_hash
+      {gamma: gamma, cost: cost}
+    end
   end
   #
   # Trainer for a parmeter search using the Nelder-Mead Simplex heurisitc with the RBF kernel
@@ -144,11 +147,12 @@ module Trainer
         # n-fold cross validation
         @folds.each.with_index do |fold,index|
           # start async SVM training  | ( trainings_set, parameter, validation_sets)
-          futures << worker.future.train( fold, params,
-                                          folds.select.with_index{|e,ii| index!=ii } )
+          futures << @worker.future.train( fold, parameter_set.params_hash,
+                                           folds.select.with_index{|e,ii| index!=ii } )
         end
         # collect results - !blocking!
         # and add result to cache
+        # TODO I think I have to convert/extract the specific result from collect_results
         @func[parameter_set.key] = collect_results(futures)
       end
       @func[parameter_set.key]
