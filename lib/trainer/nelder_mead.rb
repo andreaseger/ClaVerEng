@@ -1,8 +1,36 @@
 require 'celluloid'
 require_relative 'base'
 require_relative 'worker'
-require_relative 'doe_pattern'
 module Trainer
+
+  class ParameterSet
+    attr_accessor :gamma, :cost
+    attr_accessor :result
+    def initialize(gamma, cost)
+      @gamma = gamma
+      @cost = cost
+    end
+    def +(other)
+      new(self.gamma + other.gamma, self.cost + other.cost)
+    end
+    def -(other)
+      new(self.gamma - other.gamma, self.cost - other.cost)
+    end
+    def *(other)
+      case other
+      when ParameterSet:
+        new(self.gamma * other.gamma, self.cost * other.cost)
+      else
+        new(self.gamma * other, self.cost * other)
+      end
+    end
+    def <=>(other)
+      result(self) <=> result(other)
+    end
+    def serialize
+      [gamma, cost]
+    end
+  end
   #
   # Trainer for a parmeter search using the Nelder-Mead Simplex heurisitc with the RBF kernel
   #
@@ -40,27 +68,27 @@ module Trainer
       while true #TODO cancle clause missing
         best, worse, worst = order
         center = [best,worse].transpose.map{|e| e.inject(&:+)/e.length.to_f}
-        reflection = reflection(center, worst)
+        reflection = reflect center, worst
         case
         when best <= reflection && reflection <= worse
           worst = reflection
         when reflection < best
-          expansion = expansion(center, worst)
+          expansion = expand center, worst
           if expansion < reflection
             worst = expansion
           else
             worst = reflection
           end
         when reflection > worse
-          if reflection > worst
-            contraction = contraction center, worst
-          else
-            contraction = reduction center, worst
-          end
+          contraction = if reflection > worst
+                          contract_outside(center, worst)
+                        else
+                          contract_inside(center, worst)
+                        end
           if contraction < worst
             worst = contraction
           else
-            #TODO contract to best
+            worse, worst = [worse, worst].map { |e| contract_inside(best, e) }
           end
         end
         @simplex = [best, worse, worst]
@@ -75,35 +103,43 @@ module Trainer
 
     private
 
-    def initial_simplex
-      #TODO
-      @simplex = [[],[],[]]
+    def initial_simplex(x1=ParameterSet.new(),c=)
+      p= c/Math.sqrt(2) * (Math.sqrt(3)-1)/2
+      q= ParameterSet.new(p,p)
+      x2 = x1 + q + c/Math.sqrt(2) * ParameterSet.new(1,0)
+      x3 = x1 + q + c/Math.sqrt(2) * ParameterSet.new(0,1)
+      @simplex = [x1,x2,x3]
     end
 
     def order
-      #TODO check if a sort_by! exists
-      @simplex = @simplex.sort_by{|e| func(e) }
+      @simplex.each { |e| e.results = func(e) } # calculate results
+      @simplex.sort!
       return [ @simplex[0], @simplex[-2], @simplex[-1] ]
     end
 
-    def reflection(center, worst, alpha=1)
-      center.map.with_index{|e,i| e + alpha * ( e - worst[i] )}
+    def reflect(center, worst, alpha=1)
+      #center.map.with_index{|e,i| e + alpha * ( e - worst[i] )} # version for simple arrays
+      p = center + alpha * ( center - worst )
+      p.result = func(p)
+      p
     end
 
-    def expansion(center, worst, beta=2)
+    def expand(center, worst, beta=2)
       reflection center, worst, beta
     end
 
-    def contraction(center, worst, gamma=0.5)
+    def contract_outside(center, worst, gamma=0.5)
       reflection center, worst, gamma
     end
 
-    def reduction(center, worst, gamma=0.5)
-      center.map.with_index{|e,i| e + gamma * ( worst[i] - e )}
+    def contract_inside(center, worst, gamma=0.5)
+      p = center + gamma * ( worst - center )
+      p.result = func(p)
+      p
     end
 
-    def func params
-      unless @func.has_key? params
+    def func parameter_set
+      unless @func.has_key? parameter_set.serialize
         futures=[]
         # n-fold cross validation
         @folds.each.with_index do |fold,index|
@@ -113,9 +149,9 @@ module Trainer
         end
         # collect results - !blocking!
         # and add result to cache
-        @func[params] = collect_results(futures)
+        @func[parameter_set.serialize] = collect_results(futures)
       end
-      @func[params]
+      @func[parameter_set.serialize]
     end
   end
 end
