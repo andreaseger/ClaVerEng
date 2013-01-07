@@ -110,7 +110,7 @@ module Trainer
       return model, results
     end
 
-    private
+    # private
 
     def initial_simplex(x1=ParameterSet.new(0,0),c=5)
       p= c/Math.sqrt(2) * (Math.sqrt(3)-1)/2
@@ -134,11 +134,11 @@ module Trainer
     end
 
     def expand(center, worst, beta=2)
-      reflection center, worst, beta
+      reflect center, worst, beta
     end
 
     def contract_outside(center, worst, gamma=0.5)
-      reflection center, worst, gamma
+      reflect center, worst, gamma
     end
 
     def contract_inside(center, worst, gamma=0.5)
@@ -156,6 +156,7 @@ module Trainer
       _d = 1/3 * @simplex.map{ |e| (e.result - _f)**2 }.inject(&:+)
       _d <= TOLERANCE**2
     end
+
     def func parameter_set
       unless @func.has_key? parameter_set.key
         futures=[]
