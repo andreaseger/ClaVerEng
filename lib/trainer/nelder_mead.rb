@@ -27,7 +27,7 @@ module Trainer
     def <=>(other)
       result(self) <=> result(other)
     end
-    def serialize
+    def key
       [gamma, cost]
     end
   end
@@ -70,22 +70,22 @@ module Trainer
         center = [best,worse].transpose.map{|e| e.inject(&:+)/e.length.to_f}
         reflection = reflect center, worst
         case
-        when best <= reflection && reflection <= worse
+        when best >= reflection && reflection >= worse
           worst = reflection
-        when reflection < best
+        when reflection > best
           expansion = expand center, worst
-          if expansion < reflection
+          if expansion > reflection
             worst = expansion
           else
             worst = reflection
           end
-        when reflection > worse
-          contraction = if reflection > worst
+        when reflection < worse
+          contraction = if reflection < worst
                           contract_outside(center, worst)
                         else
                           contract_inside(center, worst)
                         end
-          if contraction < worst
+          if contraction > worst
             worst = contraction
           else
             worse, worst = [worse, worst].map { |e| contract_inside(best, e) }
@@ -103,7 +103,7 @@ module Trainer
 
     private
 
-    def initial_simplex(x1=ParameterSet.new(),c=)
+    def initial_simplex(x1=ParameterSet.new(0,0),c=5)
       p= c/Math.sqrt(2) * (Math.sqrt(3)-1)/2
       q= ParameterSet.new(p,p)
       x2 = x1 + q + c/Math.sqrt(2) * ParameterSet.new(1,0)
@@ -139,7 +139,7 @@ module Trainer
     end
 
     def func parameter_set
-      unless @func.has_key? parameter_set.serialize
+      unless @func.has_key? parameter_set.key
         futures=[]
         # n-fold cross validation
         @folds.each.with_index do |fold,index|
@@ -149,9 +149,9 @@ module Trainer
         end
         # collect results - !blocking!
         # and add result to cache
-        @func[parameter_set.serialize] = collect_results(futures)
+        @func[parameter_set.key] = collect_results(futures)
       end
-      @func[parameter_set.serialize]
+      @func[parameter_set.key]
     end
   end
 end
