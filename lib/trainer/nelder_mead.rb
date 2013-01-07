@@ -68,7 +68,7 @@ module Trainer
       @worker = Worker.pool(args: [{evaluator: @evaluator}] )
 
       initial_simplex
-      while true #TODO cancle clause missing
+      while done?
         best, worse, worst = order
         center = [best,worse].transpose.map{|e| e.inject(&:+)/e.length.to_f}
         reflection = reflect center, worst
@@ -141,6 +141,15 @@ module Trainer
       p
     end
 
+    TOLERANCE=10**-8
+    # def done?
+    #   @simplex.permutation(2).map { |e| (e[0]-e[1]).abs <= TOLERANCE }.all?
+    # end
+    def done?
+      _f = 1/3 * @simplex.map(&:result).inject(&:+)
+      _d = 1/3 * @simplex.map{ |e| (e.result - _f)**2 }.inject(&:+)
+      _d <= TOLERANCE**2
+    end
     def func parameter_set
       unless @func.has_key? parameter_set.key
         futures=[]
