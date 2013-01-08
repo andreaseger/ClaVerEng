@@ -8,8 +8,9 @@ gem 'activerecord', require: 'active_record'
 gem 'activesupport', require: false
 gem 'standalone_migrations'
 
+gem 'celluloid'
+
 platforms :jruby do
-  gem 'celluloid'
   gem 'activerecord-jdbcpostgresql-adapter'
   gem 'svm_toolkit',  git: 'https://github.com/sch1zo/svm_toolkit.git',
                       branch: 'restructure',

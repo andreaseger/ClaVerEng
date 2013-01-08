@@ -16,26 +16,23 @@ module Trainer
       @cost = cost
     end
     def +(other)
-      new(self.gamma + other.gamma, self.cost + other.cost)
+      self.class.new(self.gamma + other.gamma, self.cost + other.cost)
     end
     def -(other)
-      new(self.gamma - other.gamma, self.cost - other.cost)
+      self.class.new(self.gamma - other.gamma, self.cost - other.cost)
     end
     def *(other)
       case other
-      when ParameterSet:
-        new(self.gamma * other.gamma, self.cost * other.cost)
+      when ParameterSet
+        self.class.new(self.gamma * other.gamma, self.cost * other.cost)
       else
-        new(self.gamma * other, self.cost * other)
+        self.class.new(self.gamma * other, self.cost * other)
       end
     end
     def <=>(other)
       result(self) <=> result(other)
     end
     def key
-      [gamma, cost]
-    end
-    def params_hash
       {gamma: gamma, cost: cost}
     end
   end
@@ -110,8 +107,6 @@ module Trainer
       return model, results
     end
 
-    # private
-
     def initial_simplex(x1=ParameterSet.new(0,0),c=5)
       p= c/Math.sqrt(2) * (Math.sqrt(3)-1)/2
       q= ParameterSet.new(p,p)
@@ -126,14 +121,14 @@ module Trainer
       return [ @simplex[0], @simplex[-2], @simplex[-1] ]
     end
 
-    def reflect(center, worst, alpha=1)
+    def reflect(center, worst, alpha=1.0)
       #center.map.with_index{|e,i| e + alpha * ( e - worst[i] )} # version for simple arrays
-      p = center + alpha * ( center - worst )
+      p = center + ( center - worst ) * alpha
       p.result = func(p)
       p
     end
 
-    def expand(center, worst, beta=2)
+    def expand(center, worst, beta=2.0)
       reflect center, worst, beta
     end
 
@@ -142,7 +137,7 @@ module Trainer
     end
 
     def contract_inside(center, worst, gamma=0.5)
-      p = center + gamma * ( worst - center )
+      p = center + ( worst - center ) * gamma
       p.result = func(p)
       p
     end
@@ -163,13 +158,12 @@ module Trainer
         # n-fold cross validation
         @folds.each.with_index do |fold,index|
           # start async SVM training  | ( trainings_set, parameter, validation_sets)
-          futures << @worker.future.train( fold, parameter_set.params_hash,
+          futures << @worker.future.train( fold, parameter_set.key,
                                            folds.select.with_index{|e,ii| index!=ii } )
         end
         # collect results - !blocking!
         # and add result to cache
-        # TODO I think I have to convert/extract the specific result from collect_results
-        @func[parameter_set.key] = collect_results(futures)
+        @func.merge! collect_results(futures)
       end
       @func[parameter_set.key]
     end
