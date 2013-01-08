@@ -107,6 +107,12 @@ module Trainer
       return model, results
     end
 
+    #
+    # create a initial simplex (with n=3)
+    # @param  x1 ParameterSet one point
+    # @param  c Number edge length
+    #
+    # @return [Array<ParameterSet>] 3 points in form of a regular triangle
     def initial_simplex(x1=ParameterSet.new(0,0),c=5)
       p= c/Math.sqrt(2) * (Math.sqrt(3)-1)/2
       q= ParameterSet.new(p,p)
@@ -121,23 +127,39 @@ module Trainer
       return [ @simplex[0], @simplex[-2], @simplex[-1] ]
     end
 
-    def reflect(center, worst, alpha=1.0)
-      #center.map.with_index{|e,i| e + alpha * ( e - worst[i] )} # version for simple arrays
-      p = center + ( center - worst ) * alpha
+    #
+    # creates a new ParameterSet which is a reflection of the point around a center
+    # @param  center ParameterSet reflection center
+    # @param  point ParameterSet point to reflect
+    # @param  alpha Number factor to extend or contract the reflection
+    #
+    # @return [ParameterSet] reflected ParameterSet
+    def reflect(center, point, alpha=1.0)
+      #center.map.with_index{|e,i| e + alpha * ( e - point[i] )} # version for simple arrays
+      p = center + ( center - point ) * alpha
       p.result = func(p)
       p
     end
 
-    def expand(center, worst, beta=2.0)
-      reflect center, worst, beta
+    #
+    # creates a extended reflected ParameterSet
+    # (see #reflect)
+    def expand(center, point, beta=2.0)
+      reflect center, point, beta
     end
 
-    def contract_outside(center, worst, gamma=0.5)
-      reflect center, worst, gamma
+    #
+    # creates a contracted reflected ParameterSet
+    # (see #reflect)
+    def contract_outside(center, point, gamma=0.5)
+      reflect center, point, gamma
     end
 
-    def contract_inside(center, worst, gamma=0.5)
-      p = center + ( worst - center ) * gamma
+    #
+    # creates a contracted reflected ParameterSet
+    # (see #reflect)
+    def contract_inside(center, point, gamma=0.5)
+      p = center + ( point - center ) * gamma
       p.result = func(p)
       p
     end
