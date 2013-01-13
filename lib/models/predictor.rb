@@ -12,6 +12,12 @@ class Predictor  < ActiveRecord::Base
   serialize :dictionary, JSON
   attr_writer :model
 
+  def initialize(args)
+    @preprocessor = args.fetch(:preprocessor)
+    @selector = args.fetch(:selector)
+    params = args.tap{|h| h.delete(:preprocessor); h.delete(:selector)}
+    super(params)
+  end
   def model
     @model ||= Model.load_from_string self.serialized_model
   end
@@ -59,6 +65,10 @@ class Predictor  < ActiveRecord::Base
     self.serialized_model = model.serialize
   end
   def update_settings
+    self.used_preprocessor ||= preprocessor.class.to_s
+    self.used_selector ||= selector.class.to_s
+    self.preprocessor_properties ||= {}
+    self.selector_properties ||= {}
     self.preprocessor_properties.merge!(industry_map: preprocessor.industry_map )
     self.selector_properties.merge!(gram_size: selector.gram_size ) if selector.respond_to? :gram_size
     self.dictionary = selector.global_dictionary

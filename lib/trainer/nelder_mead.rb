@@ -1,6 +1,7 @@
 require 'celluloid'
 require_relative 'base'
 require_relative 'worker'
+DEBUG=true
 module Trainer
 
   #
@@ -9,6 +10,7 @@ module Trainer
   # @author Andreas Eger
   #
   class ParameterSet
+    include Comparable
     attr_accessor :gamma, :cost
     attr_accessor :result
     def initialize(gamma, cost)
@@ -29,8 +31,19 @@ module Trainer
         self.class.new(self.gamma * other, self.cost * other)
       end
     end
+    def /(other)
+      case other
+      when ParameterSet
+        self.class.new(self.gamma / other.gamma, self.cost / other.cost)
+      else
+        self.class.new(self.gamma / other, self.cost / other)
+      end
+    end
+    def to_a
+      [gamma, cost]
+    end
     def <=>(other)
-      result(self) <=> result(other)
+      self.result <=> other.result
     end
     def key
       {gamma: gamma, cost: cost}
@@ -71,9 +84,9 @@ module Trainer
       @worker = Worker.pool(args: [{evaluator: @evaluator}] )
 
       initial_simplex
-      while !done?
+      loop do
         best, worse, worst = order
-        center = [best,worse].transpose.map{|e| e.inject(&:+)/e.length.to_f}
+        center = ParameterSet.new *[best,worse].map(&:to_a).transpose.map{|e| e.inject(&:+)/e.length.to_f}
         reflection = reflect center, worst
         case
         when best >= reflection && reflection >= worse
@@ -98,12 +111,14 @@ module Trainer
           end
         end
         @simplex = [best, worse, worst]
+        break if done?
       end
 
       # get the pair with the best value
-      best_parameter = results.invert[results.values.max]
+      best_parameter = @func.invert[@func.values.max]
 
-      model = train_svm feature_vectors, best_parameter
+      binding.pry
+      model = train_svm feature_vectors, params = {cost: 2**best_parameter[:cost], gamma: 2**best_parameter[:gamma]}
       return model, results
     end
 
@@ -113,17 +128,18 @@ module Trainer
     # @param  c Number edge length
     #
     # @return [Array<ParameterSet>] 3 points in form of a regular triangle
-    def initial_simplex(x1=ParameterSet.new(0,0),c=5)
+    def initial_simplex(x1=ParameterSet.new(-4.0,-4.0),c=8)
       p= c/Math.sqrt(2) * (Math.sqrt(3)-1)/2
       q= ParameterSet.new(p,p)
-      x2 = x1 + q + c/Math.sqrt(2) * ParameterSet.new(1,0)
-      x3 = x1 + q + c/Math.sqrt(2) * ParameterSet.new(0,1)
+      x2 = x1 + q + ParameterSet.new(1.0,0.0) * (c/Math.sqrt(2))
+      x3 = x1 + q + ParameterSet.new(0.0,1.0) * (c/Math.sqrt(2))
       @simplex = [x1,x2,x3]
     end
 
     def order
-      @simplex.each { |e| e.results = func(e) } # calculate results
+      @simplex.each { |e| e.result = func(e) } # calculate results
       @simplex.sort!
+      @simplex.reverse!
       return [ @simplex[0], @simplex[-2], @simplex[-1] ]
     end
 
@@ -164,29 +180,36 @@ module Trainer
       p
     end
 
-    TOLERANCE=10**-8
-    # def done?
-    #   @simplex.permutation(2).map { |e| (e[0]-e[1]).abs <= TOLERANCE }.all?
-    # end
+    TOLERANCE=10**-2
+    #TODO find something better to do here, this either stops to early or will never stop depending on the data
     def done?
+      p 'iteration'
+      return false unless @simplex.permutation(2).map { |e|
+          l = Math.sqrt((e[0] - e[1]).to_a.map{ |f| f**2 }.inject(&:+))
+          l <= 0.5
+        }.all?
+
       _f = 1/3 * @simplex.map(&:result).inject(&:+)
       _d = 1/3 * @simplex.map{ |e| (e.result - _f)**2 }.inject(&:+)
       _d <= TOLERANCE**2
     end
 
+    #TODO fix this parameter mess, either use the real(**2) ones everywhere or the other way around
     def func parameter_set
       unless @func.has_key? parameter_set.key
         futures=[]
         # n-fold cross validation
+        params = {cost: 2**parameter_set.cost, gamma: 2**parameter_set.gamma}
         @folds.each.with_index do |fold,index|
           # start async SVM training  | ( trainings_set, parameter, validation_sets)
-          futures << @worker.future.train( fold, parameter_set.key,
-                                           folds.select.with_index{|e,ii| index!=ii } )
+          futures << @worker.future.train( fold, params,
+                                           @folds.select.with_index{|e,ii| index!=ii } )
         end
         # collect results - !blocking!
         # and add result to cache
-        @func.merge! collect_results(futures)
+        @func[parameter_set.key] = collect_results(futures)[params]
       end
+      p "#{parameter_set.key}: #{@func[parameter_set.key]}" if DEBUG
       @func[parameter_set.key]
     end
   end

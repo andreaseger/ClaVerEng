@@ -4,6 +4,7 @@ require_relative 'selectors/simple'
 require_relative 'selectors/n_gram'
 require_relative 'trainer/doe_heuristic'
 require_relative 'trainer/grid_search'
+require_relative 'trainer/nelder_mead'
 
 #
 # Runs different SVM training setups
@@ -52,8 +53,8 @@ class Runner
 
     predictor = Predictor.new(model: model,
                               classification: classification,
-                              used_preprocessor: @preprocessor.class.to_s,
-                              used_selector: @selector.class.to_s,
+                              preprocessor: @preprocessor,
+                              selector: @selector,
                               used_trainer: @trainer.class.to_s,
                               samplesize: @samplesize )
     predictor.overall_accuracy = model.evaluate_dataset(test_set, evaluator: Evaluator::OverallAccuracy).value
@@ -111,6 +112,8 @@ class Runner
                     Trainer::DoeHeuristic
                   when :grid
                     Trainer::GridSearch
+                  when :nelder_mead
+                    Trainer::NelderMead
                   end.new(trainer_defaults)
     else
       @trainer ||= Trainer::GridSearch.new(trainer_defaults)
