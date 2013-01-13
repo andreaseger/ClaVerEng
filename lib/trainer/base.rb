@@ -62,6 +62,10 @@ module Trainer
       Hash[*values.map(&:to_a).flatten]
     end
 
+    def format_results(results)
+      results.to_json
+    end
+
     private
 
     def train_svm feature_vector, params
