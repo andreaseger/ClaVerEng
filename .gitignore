@@ -17,5 +17,5 @@ tmp
 _yardoc
 doc/
 
-config/database.yml
+db/config.yml
 config/settings.yml
