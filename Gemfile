@@ -10,6 +10,9 @@ gem 'standalone_migrations'
 
 gem 'celluloid'
 
+# Preprocessor & Selectors
+gem 'svm_helper', git: 'git://github.com/sch1zo/svm_helper.git'
+
 platforms :jruby do
   gem 'activerecord-jdbcpostgresql-adapter'
   gem 'svm_toolkit',  git: 'https://github.com/sch1zo/svm_toolkit.git',

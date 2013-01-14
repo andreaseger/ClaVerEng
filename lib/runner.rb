@@ -1,7 +1,3 @@
-#TODO make this require stuff nicer and more dynamic maybe with some load/autoload stuff
-require_relative 'preprocessors/simple'
-require_relative 'selectors/simple'
-require_relative 'selectors/n_gram'
 require_relative 'trainer/doe_heuristic'
 require_relative 'trainer/grid_search'
 require_relative 'trainer/nelder_mead'
