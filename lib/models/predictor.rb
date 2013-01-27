@@ -63,6 +63,7 @@ class Predictor  < ActiveRecord::Base
   private
   def serialize_model
     self.serialized_model = model.serialize
+    binding.pry
   end
   def update_settings
     self.used_preprocessor ||= preprocessor.class.to_s

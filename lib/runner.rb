@@ -42,7 +42,6 @@ class Runner
 
     p @trainer.name
     model, results, params = @trainer.search feature_vectors, 6
-    test_set = fetch_test_set classification
 
     predictor = Predictor.new(model: model,
                               classification: classification,
@@ -50,6 +49,8 @@ class Runner
                               selector: @selector,
                               used_trainer: @trainer.class.to_s,
                               samplesize: @samplesize )
+
+    test_set = fetch_test_set classification
     predictor.overall_accuracy = Evaluator::OverallAccuracy.new(model, true).evaluate_dataset(test_set)
     predictor.geometric_mean = Evaluator::GeometricMean.new(model, true).evaluate_dataset(test_set)
     predictor.save
@@ -102,6 +103,8 @@ class Runner
 
     if args[:trainer]
       @trainer =  case args[:trainer]
+                  when :linear
+                    Linear
                   when :doe
                     DoeHeuristic
                   when :grid
