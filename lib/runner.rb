@@ -1,13 +1,10 @@
-require_relative 'trainer/doe_heuristic'
-require_relative 'trainer/grid_search'
-require_relative 'trainer/nelder_mead'
-
 #
 # Runs different SVM training setups
 #
 # @author Andreas Eger
 #
 class Runner
+  include SvmTrainer
   attr_accessor :preprocessor
   attr_accessor :selector
   attr_accessor :trainer
@@ -44,7 +41,7 @@ class Runner
     feature_vectors = @selector.generate_vectors(data,classification,@dictionary_size)
 
     p @trainer.name
-    model, results = @trainer.search feature_vectors, 6
+    model, results, params = @trainer.search feature_vectors, 6
     test_set = fetch_test_set classification
 
     predictor = Predictor.new(model: model,
@@ -53,13 +50,13 @@ class Runner
                               selector: @selector,
                               used_trainer: @trainer.class.to_s,
                               samplesize: @samplesize )
-    predictor.overall_accuracy = model.evaluate_dataset(test_set, evaluator: Evaluator::OverallAccuracy).value
-    predictor.geometric_mean = model.evaluate_dataset(test_set, evaluator: Evaluator::GeometricMean).value
+    predictor.overall_accuracy = Evaluator::OverallAccuracy.new(model, true).evaluate_dataset(test_set)
+    predictor.geometric_mean = Evaluator::GeometricMean.new(model, true).evaluate_dataset(test_set)
     predictor.save
 
-    p "OverallAccuracy on test_set: #{predictor.overall_accuracy}"
+    p "OverallAccuracy on test_set: #{"%.2f" % (predictor.overall_accuracy*100.0)}%"
     p "GeometricMean on test_set: #{predictor.geometric_mean}"
-    p "cost: #{model.cost} gamma:#{model.gamma}"
+    p "cost: #{2**params.cost} gamma:#{2**params.gamma}"
 
     timestamp = predictor.created_at.strftime '%Y-%m-%dT%l:%M'
     IO.write "tmp/#{@trainer.label}_#{classification}_#{timestamp}_results", @trainer.format_results(results)
@@ -94,7 +91,8 @@ class Runner
   def fetch_test_set classification
     data = fetch_and_preprocess(classification, @samplesize*3)
     set = @selector.generate_vectors(data, classification, @dictionary_size)
-    Problem.from_array(set.map(&:data), set.map(&:label))
+    problem = Libsvm::Problem.new
+    problem.tap{|p| p.set_examples(set.map(&:label), set.map{|e| Libsvm::Node.features(e.data)})}
   end
 
   private
@@ -105,14 +103,14 @@ class Runner
     if args[:trainer]
       @trainer =  case args[:trainer]
                   when :doe
-                    Trainer::DoeHeuristic
+                    DoeHeuristic
                   when :grid
-                    Trainer::GridSearch
+                    GridSearch
                   when :nelder_mead
-                    Trainer::NelderMead
+                    NelderMead
                   end.new(trainer_defaults)
     else
-      @trainer ||= Trainer::GridSearch.new(trainer_defaults)
+      @trainer ||= GridSearch.new(trainer_defaults)
     end
 
     if args[:preprocessor]

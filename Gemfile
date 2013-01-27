@@ -1,33 +1,26 @@
 # A sample Gemfile
 source "https://rubygems.org"
 
-gem 'rake'
-
 # database
 gem 'activerecord', require: 'active_record'
 gem 'activesupport', require: false
 gem 'standalone_migrations'
 
-gem 'celluloid'
-
 # Preprocessor & Selectors
-gem 'svm_helper', git: 'git://github.com/sch1zo/svm_helper.git'
+gem 'svm_helper', github: 'sch1zo/svm_helper'
+
+# Trainer
+gem 'svm_trainer', '>=0.1.0', git: 'git@github.com:sch1zo/svm_trainer.git'
+#gem 'svm_trainer', '>=0.1.0', git: '/home/sch1zo/code/master/svm_trainer'
 
 platforms :jruby do
   gem 'activerecord-jdbcpostgresql-adapter'
-  gem 'svm_toolkit',  git: 'https://github.com/sch1zo/svm_toolkit.git',
-                      branch: 'restructure',
-                      require: false
-
-  # gem 'svm_toolkit',  git: '/home/aeger/master/svm_toolkit',
-  #                     branch: 'restructure',
-  #                     require: false
+  gem "jrb-libsvm", '>=0.1.0', github: 'sch1zo/jrb-libsvm', require: 'jrb-libsvm'
 end
 platforms :ruby do
   gem 'pg'
+  gem "rb-libsvm", '>=0.1.0',  github: 'sch1zo/rb-libsvm', require: 'libsvm'
 end
-
-#gem 'nokogiri'
 
 group :test, :development do
   gem 'yard'
@@ -38,13 +31,13 @@ group :test, :development do
   gem 'guard-rspec'
   gem 'guard-yard'
 
-  gem 'rb-inotify', :require => false
+  gem 'rb-inotify', '~> 0.8.8', :require => false
   gem 'rb-fsevent', :require => false
   gem 'rb-fchange', :require => false
 end
 
 group :test do
+  gem 'rake'
   gem 'mocha', require: 'mocha/api'
-  gem 'factory_girl', '~> 4.0'
 end
 
