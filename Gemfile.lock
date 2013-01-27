@@ -12,7 +12,7 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_helper.git
-  revision: 385f30901f9523deb662d0480fb5cd1fb2f28f12
+  revision: 108fd013ea40dcd5a02ff9ee40ac182cf30e2792
   specs:
     svm_helper (0.0.1)
 
