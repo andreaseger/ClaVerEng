@@ -39,10 +39,9 @@ class Predictor  < ActiveRecord::Base
   # @return [Integer,Double] label as Integer and the probability of this label
   def predict_job job
     data = preprocessor.process(job, classification)
-    vector = selector.generate_vector(data, classification).data
-    nodes = make_nodes(vector)
+    features = Libsvm::Node.features(selector.generate_vector(data, classification).data)
 
-    label, probs = model.predict_probability(nodes)
+    label, probs = model.predict_probability(features)
     # TODO find a more reliable way to find the correct probability value for the given label
     # but nevertheless this should be correct
     return label, probs.max
@@ -79,8 +78,6 @@ class Predictor  < ActiveRecord::Base
                                classification: self.classification )
   end
   def make_nodes vector
-    nodes = Node[vector.size].new
-    vector.each.with_index{|e,i| nodes[i] = Node.new(i,e) }
-    nodes
+    
   end
 end
