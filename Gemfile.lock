@@ -12,13 +12,13 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_helper.git
-  revision: 108fd013ea40dcd5a02ff9ee40ac182cf30e2792
+  revision: 973f780a5608c3411cbfdc757b16e8a53092ae97
   specs:
-    svm_helper (0.0.1)
+    svm_helper (0.0.2)
 
 GIT
   remote: git@github.com:sch1zo/svm_trainer.git
-  revision: a2e840e9ddb76a256d0875a7d595f73cad0c2731
+  revision: 3733f54f863d9b283c3bccf58474a1a9aa7cfded
   specs:
     svm_trainer (0.1.0)
       celluloid
@@ -128,7 +128,7 @@ GEM
     rspec-core (2.12.2)
     rspec-expectations (2.12.1)
       diff-lcs (~> 1.1.3)
-    rspec-mocks (2.12.1)
+    rspec-mocks (2.12.2)
     slop (3.4.3)
     spoon (0.0.1)
     sprockets (2.2.2)
@@ -169,6 +169,6 @@ DEPENDENCIES
   rb-inotify (~> 0.8.8)
   rb-libsvm (>= 0.1.0)!
   standalone_migrations
-  svm_helper!
+  svm_helper (~> 0.0.2)!
   svm_trainer (>= 0.1.0)!
   yard

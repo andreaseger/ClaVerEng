@@ -37,11 +37,11 @@ class Runner
   #
   # @return
   def run_for_classification data, classification
-    p "selecting feature vectors for #{classification} with #{@selector.class.to_s}"
+    p "selecting feature vectors for #{classification} with #{@selector.class.to_s}" if @verbose
     feature_vectors = @selector.generate_vectors(data,classification,@dictionary_size)
 
-    p @trainer.name
-    model, results, params = @trainer.search feature_vectors, 6
+    p @trainer.name if @verbose
+    model, results, params = @trainer.search feature_vectors, 30
 
     predictor = Predictor.new(model: model,
                               classification: classification,
@@ -51,16 +51,17 @@ class Runner
                               samplesize: @samplesize )
 
     test_set = fetch_test_set classification
-    predictor.overall_accuracy = Evaluator::OverallAccuracy.new(model, true).evaluate_dataset(test_set)
-    predictor.geometric_mean = Evaluator::GeometricMean.new(model, true).evaluate_dataset(test_set)
+    predictor.overall_accuracy = Evaluator::OverallAccuracy.new(model, @verbose).evaluate_dataset(test_set)
+    predictor.geometric_mean = Evaluator::GeometricMean.new(model, @verbose).evaluate_dataset(test_set)
     predictor.save
 
-    p "OverallAccuracy on test_set: #{"%.2f" % (predictor.overall_accuracy*100.0)}%"
-    p "GeometricMean on test_set: #{predictor.geometric_mean}"
-    p "cost: #{2**params.cost} gamma:#{2**params.gamma}"
+    p "OverallAccuracy on test_set: #{"%.2f" % (predictor.overall_accuracy*100.0)}%" if @verbose
+    p "GeometricMean on test_set: #{predictor.geometric_mean}" if @verbose
+    p "cost: #{2**params.cost} gamma:#{2**params.gamma}" if @verbose
 
     timestamp = predictor.created_at.strftime '%Y-%m-%dT%l:%M'
     IO.write "tmp/#{@trainer.label}_#{classification}_#{timestamp}_results", @trainer.format_results(results)
+    predictor
   end
 
 
@@ -79,7 +80,7 @@ class Runner
                   faulty_for_classification(classification).
                   limit(@samplesize/2)
                   .offset(offset)
-            ].flatten.shuffle
+            ].flatten#.shuffle
     @preprocessor.process(jobs, classification)
   end
 
@@ -92,8 +93,7 @@ class Runner
   def fetch_test_set classification
     data = fetch_and_preprocess(classification, @samplesize*3)
     set = @selector.generate_vectors(data, classification, @dictionary_size)
-    problem = Libsvm::Problem.new
-    problem.tap{|p| p.set_examples(set.map(&:label), set.map{|e| Libsvm::Node.features(e.data)})}
+    Libsvm::Problem.new.tap{|p| p.set_examples(set.map(&:label), set.map{|e| Libsvm::Node.features(e.data)})}
   end
 
   private
@@ -138,5 +138,6 @@ class Runner
 
     @samplesize = args.fetch(:samplesize){ @samplesize || 5000 }
     @dictionary_size = args.fetch(:dictionary_size) { @dictionary_size || 5000 }
+    @verbose = args.fetch(:verbose) {false}
   end
 end
