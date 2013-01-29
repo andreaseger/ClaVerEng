@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'runner'
 
 describe Runner do
-  subject(:runner) {Runner.new(dictionary_size: 100, samplesize: 100)}
+  subject(:runner) {Runner.new(dictionary_size: 100, max_samplesize: 100)}
   context "fetch_and_preprocess" do
     it "should preprocess the jobs" do
       runner.preprocessor.expects(:process)
@@ -22,19 +22,16 @@ describe Runner do
     end
   end
   context "fetch_test_set" do
-    it "should call fetch_and_preprocess" do
-      runner.expects(:fetch_and_preprocess).returns([PreprocessedData.new(data: %w(foo bla meh), label: false, function_id: 3), PreprocessedData.new(data: %w(foo bar baz), label: true, function_id: 4)])
-      runner.fetch_test_set(:function)
-    end
     it "should generate feature vectors" do
-      runner.stubs(:fetch_and_preprocess)
+      runner.stubs(:fetch_jobs)
+      runner.preprocessor.stubs(:process)
       runner.selector.expects(:generate_vectors).returns([FeatureVector.new(data: [1,0,1], label: 0), FeatureVector.new(data: [1,0,0], label: 1)])
       runner.fetch_test_set(:function)
     end
-    it "should return a libsvm problem" do
+    it "should return a libsvm problem", :slow do
       runner.fetch_test_set(:function).should be_a(Libsvm::Problem)
     end
-    it "should return a libsvm problem with 2 features" do
+    it "should return a libsvm problem with 2 features", :slow do
       runner.selector.stubs(:generate_vectors).returns([FeatureVector.new(data: [1,0,1], label: 0), FeatureVector.new(data: [1,0,0], label: 1)])
       runner.fetch_test_set(:function).l.should == 2
     end

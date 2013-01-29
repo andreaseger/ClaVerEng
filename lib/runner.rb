@@ -21,11 +21,13 @@ class Runner
       [:function, :industry, :career_level].each do |c|
         @selector.reset c
         data = fetch_and_preprocess c
-        run_for_classification(data, c)
+        pred = run_for_classification(data, c)
+        p pred.id if @verbose
       end
     else
       data = fetch_and_preprocess classification
-      run_for_classification(data, classification)
+      p run_for_classification(data, classification)
+      p pred.id if @verbose
     end
   end
 
@@ -37,18 +39,19 @@ class Runner
   #
   # @return
   def run_for_classification data, classification
+    p "using #{data.size} jobs for classification: #{classification}" if @verbose
     p "selecting feature vectors for #{classification} with #{@selector.class.to_s}" if @verbose
     feature_vectors = @selector.generate_vectors(data,classification,@dictionary_size)
 
     p @trainer.name if @verbose
-    model, results, params = @trainer.search feature_vectors, 30
+    model, results, params = @trainer.search feature_vectors.shuffle, 30
 
     predictor = Predictor.new(model: model,
                               classification: classification,
                               preprocessor: @preprocessor,
                               selector: @selector,
                               used_trainer: @trainer.class.to_s,
-                              samplesize: @samplesize )
+                              samplesize: data.size )
 
     test_set = fetch_test_set classification
     predictor.overall_accuracy = Evaluator::OverallAccuracy.new(model, @verbose).evaluate_dataset(test_set)
@@ -71,16 +74,8 @@ class Runner
   # @param  offset [Integer] Offset for the database queries
   #
   # @return [Array<PreprocessedData>]
-  def fetch_and_preprocess classification, offset=0
-    jobs =  [ Job.with_language(5).
-                  correct_for_classification(classification).
-                  limit(@samplesize/2).
-                  offset(offset),
-              Job.with_language(5).
-                  faulty_for_classification(classification).
-                  limit(@samplesize/2)
-                  .offset(offset)
-            ].flatten#.shuffle
+  def fetch_and_preprocess classification, offset=nil
+    jobs = fetch_jobs(classification, 6, @max_samplesize/2, offset)
     @preprocessor.process(jobs, classification)
   end
 
@@ -91,11 +86,20 @@ class Runner
   #
   # @return [Problem] libsvm Problem
   def fetch_test_set classification
-    data = fetch_and_preprocess(classification, @samplesize*3)
+    data = @preprocessor.process(fetch_jobs(classification), classification)
     set = @selector.generate_vectors(data, classification, @dictionary_size)
     Libsvm::Problem.new.tap{|p| p.set_examples(set.map(&:label), set.map{|e| Libsvm::Node.features(e.data)})}
   end
 
+  def fetch_jobs(classification, language = 6, limit = nil, offset = nil)
+    faulty = Job.with_language(language).faulty_for_classification(classification)
+    faulty = faulty.limit(limit) if limit
+    faulty = faulty.offset(offset) if offset
+
+    correct =  Job.with_language(language).correct_for_classification(classification).limit(faulty.size)
+    correct = correct.offset(offset) if offset
+    faulty + correct
+  end
   private
   def setup args
     folds = args.fetch(:folds) { 3 }
@@ -136,8 +140,8 @@ class Runner
       @selector ||= Selector::Simple.new
     end
 
-    @samplesize = args.fetch(:samplesize){ @samplesize || 5000 }
-    @dictionary_size = args.fetch(:dictionary_size) { @dictionary_size || 5000 }
-    @verbose = args.fetch(:verbose) {false}
+    @max_samplesize = args.fetch(:max_samplesize){ @max_samplesize || 1000 }
+    @dictionary_size = args.fetch(:dictionary_size) { @dictionary_size || 1000 }
+    @verbose = args.fetch(:verbose) {@verbose || false}
   end
 end

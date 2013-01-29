@@ -9,8 +9,8 @@ optparse = OptionParser.new do |opts|
   opts.on( "-s", "--selector NAME", "Which Selector to use. [Simple]" ) do |opt|
     options[:selector] = opt.downcase.to_sym
   end
-  opts.on( "-n", "--samplesize SIZE", Integer, "Number of jobs to use." ) do |opt|
-    options[:samplesize] = opt
+  opts.on( "-n", "--max_samplesize SIZE", Integer, "max number of jobs to use." ) do |opt|
+    options[:max_samplesize] = opt
   end
   opts.on( "-d", "--dictionary-size SIZE", Integer,
                  "Number of unique words in the dictionary" ) do |opt|
@@ -39,6 +39,6 @@ require_relative 'lib/runner'
 p options
 runner = Runner.new preprocessor: options[:preprocessor],
                     selector: options[:selector],
-                    trainer: options[:trainer]
+                    trainer: options[:trainer], verbose: true
 
 runner.run(options)

@@ -19,7 +19,7 @@ class Predictor  < ActiveRecord::Base
     super(params)
   end
   def model
-    @model ||= Model.load_from_string self.serialized_model
+    @model ||= Libsvm::Model.parse self.serialized_model
   end
   def preprocessor
     @preprocessor ||= self.used_preprocessor.constantize.new preprocessor_properties

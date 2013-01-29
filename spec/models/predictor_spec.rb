@@ -4,7 +4,7 @@ require 'models/predictor.rb'
 
 describe Predictor do
   before(:all) do
-    @runner = Runner.new(dictionary_size: 100, samplesize: 100)
+    @runner = Runner.new(dictionary_size: 100, max_samplesize: 50)
     data = @runner.fetch_and_preprocess(:function)
     vectors = @runner.selector.generate_vectors(data, :function, 100)
     @model,_,@params = @runner.trainer.search(vectors,30)
