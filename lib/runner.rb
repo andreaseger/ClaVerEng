@@ -21,13 +21,13 @@ class Runner
       [:function, :industry, :career_level].each do |c|
         @selector.reset c
         data = fetch_and_preprocess c
-        pred = run_for_classification(data, c)
-        p pred.id if @verbose
+        predictor = run_for_classification(data, c)
+        puts predictor.id if @verbose
       end
     else
       data = fetch_and_preprocess classification
-      p run_for_classification(data, classification)
-      p pred.id if @verbose
+      predictor = run_for_classification(data, classification)
+      puts predictor.id if @verbose
     end
   end
 
@@ -39,11 +39,11 @@ class Runner
   #
   # @return
   def run_for_classification data, classification
-    p "using #{data.size} jobs for classification: #{classification}" if @verbose
-    p "selecting feature vectors for #{classification} with #{@selector.class.to_s}" if @verbose
+    puts "using #{data.size} jobs for classification: #{classification}" if @verbose
+    puts "selecting feature vectors for #{classification} with #{@selector.class.to_s}" if @verbose
     feature_vectors = @selector.generate_vectors(data,classification,@dictionary_size)
 
-    p @trainer.name if @verbose
+    puts @trainer.name if @verbose
     model, results, params = @trainer.search feature_vectors.shuffle, 30
 
     predictor = Predictor.new(model: model,
@@ -58,9 +58,9 @@ class Runner
     predictor.geometric_mean = Evaluator::GeometricMean.new(model, @verbose).evaluate_dataset(test_set)
     predictor.save
 
-    p "OverallAccuracy on test_set: #{"%.2f" % (predictor.overall_accuracy*100.0)}%" if @verbose
-    p "GeometricMean on test_set: #{predictor.geometric_mean}" if @verbose
-    p "cost: #{2**params.cost} gamma:#{2**params.gamma}" if @verbose
+    puts "OverallAccuracy on test_set: #{"%.2f" % (predictor.overall_accuracy*100.0)}%" if @verbose
+    puts "GeometricMean on test_set: #{predictor.geometric_mean}" if @verbose
+    puts "cost: #{2**params.cost} gamma:#{2**params.gamma}" if @verbose
 
     timestamp = predictor.created_at.strftime '%Y-%m-%dT%l:%M'
     IO.write "tmp/#{@trainer.label}_#{classification}_#{timestamp}_results", @trainer.format_results(results)

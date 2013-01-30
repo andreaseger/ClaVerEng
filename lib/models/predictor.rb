@@ -70,14 +70,11 @@ class Predictor  < ActiveRecord::Base
     self.selector_properties ||= {}
     self.preprocessor_properties.merge!(industry_map: preprocessor.industry_map )
     self.selector_properties.merge!(gram_size: selector.gram_size ) if selector.respond_to? :gram_size
-    self.dictionary = selector.global_dictionary
+    self.dictionary = selector.global_dictionary.map { |e| e.force_encoding("UTF-8") }
     self.dictionary_size = dictionary.size
   end
   def selector_params
     selector_properties.merge( global_dictionary: self.dictionary,
                                classification: self.classification )
-  end
-  def make_nodes vector
-    
   end
 end
