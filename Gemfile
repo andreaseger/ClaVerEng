@@ -22,6 +22,9 @@ platforms :ruby do
   gem "rb-libsvm", '>=0.1.0',  github: 'sch1zo/rb-libsvm', require: 'libsvm'
 end
 
+group :api do
+  gem 'sinatra', require: false
+end
 group :test, :development do
   gem 'yard'
   gem 'kramdown'
