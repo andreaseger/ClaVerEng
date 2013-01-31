@@ -10,10 +10,6 @@ class Individual < Base
   attr_accessor :selector
   attr_accessor :trainer
 
-  def initialize args={}
-    setup(args)
-  end
-
   def run args={}
     setup(args)
     classification = args.fetch(:classification, :function)

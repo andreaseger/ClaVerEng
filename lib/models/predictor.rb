@@ -10,7 +10,7 @@ class Predictor  < ActiveRecord::Base
   serialize :selector_properties, JSON
   serialize :preprocessor_properties, JSON
   serialize :dictionary, JSON
-  attr_writer :model
+  attr_writer :model, :preprocessor, :selector
 
   def initialize(args)
     @preprocessor = args.fetch(:preprocessor)
@@ -58,6 +58,13 @@ class Predictor  < ActiveRecord::Base
   # TODO make a method which describes the different classes
   # i.e. first_class => true, second_class => false
   # problem this order seems to depend on the first example/problem/node used for training
+
+  def test_model test_set
+    self.tap do |p|
+      p.overall_accuracy = Evaluator::OverallAccuracy.new(p.model, @verbose).evaluate_dataset(test_set)
+      p.geometric_mean = Evaluator::GeometricMean.new(p.model, @verbose).evaluate_dataset(test_set)
+    end
+  end
 
   private
   def serialize_model
