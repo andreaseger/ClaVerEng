@@ -1,45 +1,36 @@
-class Batch < Base
+require_relative 'base'
+module Runner
+  class Batch < Base
+    def initialize(args={})
+      super()
+      @preprocessor = create_preprocessor(args.fetch(:preprocessor){:simple})
 
-  def batch
+      @selectors = Array(args.fetch(:selectors){ :simple }).map{|s| create_selector(s)}
+      @trainers = Array(args.fetch(:trainers){ [:linear, :nelder_mead] }).map { |t| create_trainer(t) }
 
-    data = 
-    classifications.each do |classification|
-      test_set = fetch_test_set classification
-      dic_sizes.each do |dic_size|
-        feature_vectors = @selector.generate_vectors(data, classification, dic_size)
-        @trainers.each do |trainer|
-          predictor = find_best_predictor(trainer, feature_vectors)
-          predictor.test_model test_set
-          predictor.save
+      @classifications = Array(args.fetch(:classifications){ :function })
+      @dictionary_sizes = Array(args.fetch(:dictionary_sizes){ 500 })
+      @samplesize = args.fetch(:samplesize){400}
+    end
+
+    def batch
+      @classifications.each do |classification|
+        test_data = fetch_test_set classification
+
+        jobs = fetch_jobs classification, @samplesize
+        data = @preprocessor.process jobs, classification
+        @dictionary_sizes.each do |dic_size|
+          @selectors.each do |selector|
+            feature_vectors = selector.generate_vectors(data, classification, dic_size)
+            test_set = create_test_problem test_data, selector, classification
+            @trainers.each do |trainer|
+              predictor, results = make_best_predictor(trainer, feature_vectors, test_set, @preprocessor, selector, classification)
+              print_and_save_results(predictor, results, classification, trainer.label)
+            end
+            selector.reset
+          end
         end
       end
     end
-  end
-
-  def find_best_predictor(trainer, feature_vectors)
-    model, results, params = trainer.search feature_vectors
-    Predictor.new(selector: @selector, preprocessor: @preprocessor,model: model, used_trainer: trainer.class.to_s, samplesize: feature_vectors.size)
-  end
-
-  def run(preprocessor, selector, size)
-    feature_vectors = get_feature_vectors(preprocessor, selector, classification, size)
-    @trainers.each do |trainer|
-    end
-  end
-
-  def get_feature_vectors(preprocessor, selector, classification, size, dictionary_size)
-    jobs = fetch_jobs classification, size
-    data = preprocessor.process jobs, classification
-    selector.generate_vectors(data, classification, dictionary_size)
-  end
-
-  def get_helper(preprocessor, selector)
-    [create_preprocessor(preprocessor),
-    create_selector(selector)]
-  end
-  def setup args
-    @trainers = args.fetch(:trainers){ [:linear, :nelder_mead] }.map { |t| create_trainer(t) }
-    @preprocessor = create_preprocessor(args[:preprocessor])
-    @selector = create_selector(args[:selector])
   end
 end

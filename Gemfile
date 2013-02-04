@@ -7,7 +7,7 @@ gem 'activesupport', require: false
 gem 'standalone_migrations'
 
 # Preprocessor & Selectors
-gem 'svm_helper', '~>0.0.3', github: 'sch1zo/svm_helper'
+gem 'svm_helper', '~>0.0.5', github: 'sch1zo/svm_helper'
 
 # Trainer
 gem 'svm_trainer', '>=0.1.0', git: 'git@github.com:sch1zo/svm_trainer.git'

@@ -59,10 +59,10 @@ class Predictor  < ActiveRecord::Base
   # i.e. first_class => true, second_class => false
   # problem this order seems to depend on the first example/problem/node used for training
 
-  def test_model test_set
+  def test_model test_set, verbose=false
     self.tap do |p|
-      p.overall_accuracy = Evaluator::OverallAccuracy.new(p.model, @verbose).evaluate_dataset(test_set)
-      p.geometric_mean = Evaluator::GeometricMean.new(p.model, @verbose).evaluate_dataset(test_set)
+      p.overall_accuracy = SvmTrainer::Evaluator::OverallAccuracy.new(p.model, verbose).evaluate_dataset(test_set)
+      p.geometric_mean = SvmTrainer::Evaluator::GeometricMean.new(p.model, verbose).evaluate_dataset(test_set)
     end
   end
 

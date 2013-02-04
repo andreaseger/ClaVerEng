@@ -12,9 +12,9 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_helper.git
-  revision: ad144a87b99e001121e807dd2f4f5f87294121dc
+  revision: 1893e843972719fe6d7b69d42a51697f9dd11ed2
   specs:
-    svm_helper (0.0.3)
+    svm_helper (0.0.5)
 
 GIT
   remote: git@github.com:sch1zo/svm_trainer.git
@@ -169,6 +169,6 @@ DEPENDENCIES
   rb-inotify (~> 0.8.8)
   rb-libsvm (>= 0.1.0)!
   standalone_migrations
-  svm_helper (~> 0.0.3)!
+  svm_helper (~> 0.0.5)!
   svm_trainer (>= 0.1.0)!
   yard
