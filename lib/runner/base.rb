@@ -30,14 +30,14 @@ module Runner
       [predictor, results]
     end
 
-    def print_and_save_results predictor, results, classification, label
+    def print_and_save_results predictor, results, filename
       l "OverallAccuracy on test_set: #{"%.2f" % (predictor.overall_accuracy*100.0)}%"
       l "GeometricMean on test_set: #{predictor.geometric_mean}"
       l "cost: #{predictor.cost} gamma:#{predictor.gamma}"
       l "cost: #{Math.log2(predictor.cost)} gamma:#{Math.log2(predictor.gamma)} || log2"
 
-      timestamp = Time.now.strftime '%Y-%m-%dT%l:%M'
-      IO.write "tmp/#{predictor.id}_#{label}_#{classification}_#{timestamp}_results", results
+      IO.write "tmp/#{filename}", results
+      filename
     end
 
     #

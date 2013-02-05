@@ -12,15 +12,15 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_helper.git
-  revision: 1893e843972719fe6d7b69d42a51697f9dd11ed2
+  revision: 799e42c83addc909364d08a5e4a8ce8e4259dc0a
   specs:
-    svm_helper (0.0.5)
+    svm_helper (0.0.6)
 
 GIT
   remote: git@github.com:sch1zo/svm_trainer.git
-  revision: 8e13033ddb4a12c24f900ba818000dec892be363
+  revision: 87eba412c2a13cbdc2a1ead958c0651bdd69ea5c
   specs:
-    svm_trainer (0.1.1)
+    svm_trainer (0.1.2)
       celluloid
 
 GEM
@@ -169,6 +169,6 @@ DEPENDENCIES
   rb-inotify (~> 0.8.8)
   rb-libsvm (>= 0.1.0)!
   standalone_migrations
-  svm_helper (~> 0.0.5)!
-  svm_trainer (>= 0.1.1)!
+  svm_helper (~> 0.0.6)!
+  svm_trainer (>= 0.1.2)!
   yard
