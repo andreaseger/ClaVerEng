@@ -4,7 +4,8 @@ require_relative 'lib/runner/batch'
 runner = Runner::Batch.new preprocessor: :simple,
                                           selectors: [:simple, :ngram],
                                           trainers: [:linear, :grid],
-                                          classifications: :career_level,
-                                          dictionary_size: 400
+                                          classifications: :industry,
+                                          dictionary_sizes: 400,
+                                          samplesizes: [800]
 
 runner.batch

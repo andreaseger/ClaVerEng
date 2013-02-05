@@ -11,7 +11,7 @@ module Runner
       test_set = fetch_test_set classification
       predictor, results = make_best_predictor @trainer, feature_vectors, test_set
 
-      print_and_save_results(predictor, results, classification, @trainer.label)
+      print_and_save_results(predictor, @trainer.format_results(results), classification, @trainer.label)
     end
 
     def get_helpers preprocessor, selector

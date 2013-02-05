@@ -31,14 +31,13 @@ module Runner
     end
 
     def print_and_save_results predictor, results, classification, label
-      l "results for #{label} on #{classification}, with dictionary_size:#{predictor.dictionary_size}"
       l "OverallAccuracy on test_set: #{"%.2f" % (predictor.overall_accuracy*100.0)}%"
       l "GeometricMean on test_set: #{predictor.geometric_mean}"
       l "cost: #{predictor.cost} gamma:#{predictor.gamma}"
       l "cost: #{Math.log2(predictor.cost)} gamma:#{Math.log2(predictor.gamma)} || log2"
 
       timestamp = Time.now.strftime '%Y-%m-%dT%l:%M'
-      IO.write "tmp/#{label}_#{classification}_#{timestamp}_results", results
+      IO.write "tmp/#{predictor.id}_#{label}_#{classification}_#{timestamp}_results", results
     end
 
     #
@@ -46,7 +45,7 @@ module Runner
     # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
     #
     # @return [Problem] libsvm Problem
-    def fetch_test_set classification
+    def fetch_test_data classification
       data = @preprocessor.process(fetch_jobs(classification), classification)
     end
     def create_test_problem data, selector, classification
