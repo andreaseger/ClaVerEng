@@ -19,12 +19,15 @@ optparse = OptionParser.new do |opts|
 
   options[:classification] = :function
   opts.on( "-c", "--classification CLASSIFICATION", String,
-                 "One of [*function*, industry, career_level, all]" ) do |opt|
+                 "One of [*function*, industry, career_level]" ) do |opt|
     options[:classification] = opt.downcase.to_sym
   end
 
   opts.on( "-t", "--trainer TRAINER", String, "either *grid*, *doe* or *nelder_mead* " ) do |opt|
     options[:trainer] = opt.downcase.to_sym
+  end
+  opts.on( "-v", "--verbose", "print verbose output" ) do |opt|
+    options[:verbose] = true
   end
   opts.on( '-?', '--help', 'Display this screen' ) do
     puts opts
@@ -34,11 +37,8 @@ end
 optparse.parse!
 
 require_relative 'config/environment'
-require_relative 'lib/runner'
+require_relative 'lib/runner/single'
 
-p options
-runner = Runner.new preprocessor: options[:preprocessor],
-                    selector: options[:selector],
-                    trainer: options[:trainer], verbose: true
+runner = Runner::Single.new(verbose: options[:verbose])
 
-runner.run(options)
+runner.run(options[:preprocessor], options[:selector], options[:trainer], options)
