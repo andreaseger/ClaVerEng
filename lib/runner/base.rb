@@ -30,6 +30,19 @@ module Runner
       [predictor, results]
     end
 
+    def make_filename(settings)
+      [ settings[:predictor_id],
+        settings[:trainer],
+        settings[:classification],
+        settings[:selector],
+        settings[:preprocessor],
+        settings[:dictionary_size],
+        settings[:samplesize],
+        settings[:timestamp],
+        'results'
+      ].join '_'
+    end
+
     def print_and_save_results predictor, results, filename
       l "OverallAccuracy on test_set: #{"%.2f" % (predictor.overall_accuracy*100.0)}%"
       l "GeometricMean on test_set: #{predictor.geometric_mean}"

@@ -13,19 +13,6 @@ module Runner
       @samplesizes = Array(args.fetch(:samplesizes){ 400 })
     end
 
-    def make_filename(settings)
-      [ settings[:predictor_id],
-        settings[:trainer],
-        settings[:classification],
-        settings[:selector],
-        settings[:preprocessor],
-        settings[:dictionary_size],
-        settings[:samplesize],
-        settings[:timestamp],
-        'results'
-      ].join '_'
-    end
-
     def batch
       result_files = []
       @classifications.each do |classification|
@@ -40,11 +27,19 @@ module Runner
               test_set = create_test_problem test_data, selector, classification
               @trainers.each do |t|
                 trainer = create_trainer t
-                settings = {classification: classification, trainer: trainer.label, selector: selector.label, preprocessor: @preprocessor.label, dictionary_size: dic_size, samplesize: samplesize}
+                settings = {classification: classification,
+                                  trainer: trainer.label,
+                                  selector: selector.label,
+                                  preprocessor: @preprocessor.label,
+                                  dictionary_size: dic_size,
+                                  samplesize: samplesize}
                 l settings
-                predictor, results = make_best_predictor(trainer, feature_vectors, test_set, @preprocessor, selector, classification)
+                predictor, results = make_best_predictor( trainer, feature_vectors,
+                                                                              test_set, @preprocessor,
+                                                                              selector, classification)
 
-                filename = make_filename(settings.merge(predictor_id: predictor.id, timestamp: Time.now.strftime('%Y%m%d_%H%M')))
+                filename = make_filename(settings.merge(predictor_id: predictor.id,
+                                                                                timestamp: Time.now.strftime('%Y%m%d_%H%M')))
                 result_files << print_and_save_results(predictor, trainer.format_results(results), filename)
               end
             end

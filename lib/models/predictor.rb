@@ -52,7 +52,7 @@ class Predictor  < ActiveRecord::Base
   end
 
   def cost
-    model.cost
+    model.c
   end
 
   # TODO make a method which describes the different classes
