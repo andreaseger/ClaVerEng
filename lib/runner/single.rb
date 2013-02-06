@@ -9,10 +9,6 @@ module Runner
 
       feature_vectors = get_feature_vectors(classification, samplesize, dic_size)
       test_set = fetch_test_set classification
-      predictor, results = make_best_predictor( trainer, feature_vectors,
-                                                                    test_set, @preprocessor,
-                                                                    @selector, classification)
-
       settings = {classification: classification,
                         trainer: trainer.label,
                         selector: @selector.label,
@@ -20,10 +16,16 @@ module Runner
                         dictionary_size: dic_size,
                         samplesize: samplesize}
       l settings
+
+      predictor, results = make_best_predictor( trainer, feature_vectors,
+                                                                    test_set, @preprocessor,
+                                                                    @selector, classification)
+
+
       filename = make_filename(settings.merge(predictor_id: predictor.id,
                                                                       timestamp: Time.now.strftime('%Y%m%d_%H%M')))
 
-      print_and_save_results(predictor, trainer.format_results(results), filename) if @verbose
+      print_and_save_results(predictor, trainer.format_results(results), filename)
 
       predictor
     end

@@ -19,7 +19,7 @@ platforms :jruby do
 end
 platforms :ruby do
   gem 'pg'
-  gem "rb-libsvm", '>=0.1.0',  github: 'sch1zo/rb-libsvm', require: 'libsvm'
+  gem "rb-libsvm", '>=1.1.1',  github: 'sch1zo/rb-libsvm', require: 'libsvm'
 end
 
 group :test, :development do

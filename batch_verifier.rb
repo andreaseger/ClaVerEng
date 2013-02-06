@@ -38,9 +38,9 @@ end
 runner = Runner::Batch.new preprocessor: :simple,
                                           selectors: [:simple, :ngram],
                                           trainers: [:grid, :nelder_mead],
-                                          classifications: :function,
-                                          dictionary_sizes: 300,
-                                          samplesizes: 400
+                                          classifications: [:function, :career_level, :industry],
+                                          dictionary_sizes: 600,
+                                          samplesizes: 800
 
 time = Time.now.strftime '%Y%m%d_%H%M'
 meh = runner.batch

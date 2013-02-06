@@ -48,11 +48,11 @@ class Predictor  < ActiveRecord::Base
   end
 
   def gamma
-    model.gamma
+    model.param.gamma
   end
 
   def cost
-    model.c
+    model.param.c
   end
 
   # TODO make a method which describes the different classes

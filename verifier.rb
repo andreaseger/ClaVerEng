@@ -26,6 +26,7 @@ optparse = OptionParser.new do |opts|
   opts.on( "-t", "--trainer TRAINER", String, "either *grid*, *doe* or *nelder_mead* " ) do |opt|
     options[:trainer] = opt.downcase.to_sym
   end
+  options[:verbose] = false
   opts.on( "-v", "--verbose", "print verbose output" ) do |opt|
     options[:verbose] = true
   end

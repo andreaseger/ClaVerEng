@@ -18,7 +18,7 @@ module Runner
     #
     # @return [Predictor]
     def make_best_predictor(trainer, feature_vectors, test_set, preprocessor=@preprocessor, selector=@selector, classification=@classification)
-      model, results, _ = trainer.search feature_vectors, 15
+      model, results, _ = trainer.search feature_vectors.shuffle, 15
       predictor = Predictor.new(selector: selector,
         preprocessor: preprocessor,
         model: model,

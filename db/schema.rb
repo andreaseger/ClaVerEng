@@ -13,133 +13,6 @@
 
 ActiveRecord::Schema.define(:version => 20121206153807) do
 
-  create_table "career_levels", :force => true do |t|
-    t.integer "sortno",         :limit => 2,   :null => false
-    t.string  "label",          :limit => 64,  :null => false
-    t.string  "comment",                       :null => false
-    t.string  "urlified",       :limit => 256, :null => false
-    t.string  "name",           :limit => 250, :null => false
-    t.string  "urlified_en_gb", :limit => 256, :null => false
-    t.string  "urlified_fr",    :limit => 256, :null => false
-    t.string  "urlified_it",    :limit => 256, :null => false
-    t.string  "urlified_en_us", :limit => 256, :null => false
-    t.string  "urlified_es",    :limit => 256, :null => false
-    t.string  "urlified_nl",    :limit => 256, :null => false
-  end
-
-  add_index "career_levels", ["urlified"], :name => "career_levels_urlified", :unique => true
-
-  create_table "companies", :force => true do |t|
-    t.string   "name",             :limit => 250,                     :null => false
-    t.integer  "parent_id"
-    t.integer  "owner_id",                                            :null => false
-    t.integer  "company_class_id", :limit => 2,                       :null => false
-    t.string   "url",              :limit => 250
-    t.string   "career_url",       :limit => 500
-    t.string   "description",      :limit => 1000
-    t.string   "note",             :limit => 1000
-    t.integer  "jobs_count",                                          :null => false
-    t.datetime "last_checked",                                        :null => false
-    t.datetime "created_at",                                          :null => false
-    t.datetime "updated_at",                                          :null => false
-    t.integer  "main_industry_id"
-    t.integer  "main_geocode_id",                                     :null => false
-    t.boolean  "deleted",                                             :null => false
-    t.string   "urlified",         :limit => 256
-    t.boolean  "disabled",                                            :null => false
-    t.integer  "lft"
-    t.integer  "rgt"
-    t.boolean  "has_logo",                         :default => false, :null => false
-  end
-
-  add_index "companies", ["lft"], :name => "index_companies_on_lft"
-  add_index "companies", ["urlified"], :name => "companies_urlified", :unique => true
-
-  create_table "companies_industries", :id => false, :force => true do |t|
-    t.integer "company_id",               :null => false
-    t.integer "industry_id", :limit => 2, :null => false
-  end
-
-  add_index "companies_industries", ["company_id", "industry_id"], :name => "index_companies_industries_on_company_id_and_industry_id", :unique => true
-  add_index "companies_industries", ["company_id"], :name => "companies_industries_company"
-
-  create_table "country_versions", :force => true do |t|
-    t.string "name",  :limit => 16, :null => false
-    t.string "label", :limit => 32, :null => false
-  end
-
-  create_table "education_fields", :force => true do |t|
-    t.integer "sortno", :limit => 2
-    t.string  "label",  :limit => 100, :null => false
-  end
-
-  create_table "education_fields_jobs", :id => false, :force => true do |t|
-    t.integer "education_field_id", :limit => 2, :null => false
-    t.integer "job_id",                          :null => false
-  end
-
-  add_index "education_fields_jobs", ["job_id"], :name => "education_fields_jobs_job_id"
-
-  create_table "functions", :force => true do |t|
-    t.integer "sortno",          :limit => 2,   :null => false
-    t.string  "label",           :limit => 100, :null => false
-    t.boolean "industry_affine"
-    t.string  "urlified",        :limit => 256, :null => false
-    t.string  "name",            :limit => 250, :null => false
-    t.string  "urlified_en_gb",  :limit => 256, :null => false
-    t.string  "urlified_fr",     :limit => 256, :null => false
-    t.string  "urlified_it",     :limit => 256, :null => false
-    t.string  "urlified_en_us",  :limit => 256, :null => false
-    t.string  "urlified_es",     :limit => 256, :null => false
-    t.string  "urlified_nl",     :limit => 256, :null => false
-  end
-
-  add_index "functions", ["urlified"], :name => "functions_urlified", :unique => true
-
-  create_table "graduations", :force => true do |t|
-    t.integer "sortno", :limit => 2,   :null => false
-    t.string  "label",  :limit => 100, :null => false
-  end
-
-  create_table "graduations_jobs", :id => false, :force => true do |t|
-    t.integer "graduation_id", :limit => 2, :null => false
-    t.integer "job_id",                     :null => false
-  end
-
-  add_index "graduations_jobs", ["job_id"], :name => "graduations_jobs_job_id"
-
-  create_table "industries", :force => true do |t|
-    t.string  "label",          :limit => 256,  :null => false
-    t.integer "level",          :limit => 2,    :null => false
-    t.integer "parent_id",      :limit => 2
-    t.integer "gparent_id",     :limit => 2
-    t.integer "ggparent_id",    :limit => 2
-    t.string  "synonyms",       :limit => 1000
-    t.string  "urlified",       :limit => 256,  :null => false
-    t.string  "name",           :limit => 250,  :null => false
-    t.string  "label_en_gb",    :limit => 256,  :null => false
-    t.string  "synonyms_en_gb", :limit => 1000
-    t.string  "urlified_en_gb", :limit => 256,  :null => false
-    t.string  "label_fr",       :limit => 256,  :null => false
-    t.string  "synonyms_fr",    :limit => 1000
-    t.string  "urlified_fr",    :limit => 256,  :null => false
-    t.string  "label_it",       :limit => 256,  :null => false
-    t.string  "synonyms_it",    :limit => 1000
-    t.string  "urlified_it",    :limit => 256,  :null => false
-    t.string  "label_en_us",    :limit => 256,  :null => false
-    t.string  "synonyms_en_us", :limit => 1000
-    t.string  "urlified_en_us", :limit => 256,  :null => false
-    t.string  "label_es",       :limit => 256,  :null => false
-    t.string  "synonyms_es",    :limit => 1000
-    t.string  "urlified_es",    :limit => 256,  :null => false
-    t.string  "label_nl",       :limit => 256,  :null => false
-    t.string  "synonyms_nl",    :limit => 1000
-    t.string  "urlified_nl",    :limit => 256,  :null => false
-  end
-
-  add_index "industries", ["parent_id"], :name => "industries_parent_id"
-  add_index "industries", ["urlified"], :name => "idx_industries_urlified", :unique => true
-
   create_table "ja_qc_check_status", :force => true do |t|
     t.integer "qc_job_check_id"
     t.boolean "check_status"
@@ -165,42 +38,13 @@ ActiveRecord::Schema.define(:version => 20121206153807) do
 
   add_index "ja_qc_job_checks", ["job_id"], :name => "index_ja_qc_job_checks_on_job_id", :unique => true
 
-  create_table "job_languages", :force => true do |t|
-    t.integer "job_id",                         :null => false
-    t.integer "language_id",       :limit => 2, :null => false
-    t.integer "language_skill_id", :limit => 2, :null => false
-  end
-
-  add_index "job_languages", ["job_id"], :name => "job_languages_job_id"
-
-  create_table "job_salary_ranges", :force => true do |t|
-    t.integer "sortno",             :limit => 2,   :null => false
-    t.string  "label",              :limit => 100, :null => false
-    t.integer "min_salary",                        :null => false
-    t.integer "max_salary",                        :null => false
-    t.string  "urlified",           :limit => 256, :null => false
-    t.integer "country_version_id", :limit => 2,   :null => false
-    t.integer "slider_position"
-    t.string  "slider_label",       :limit => 16
-    t.integer "slider_salary"
-  end
-
-  add_index "job_salary_ranges", ["urlified"], :name => "job_salary_ranges_urlified", :unique => true
-
-  create_table "job_status", :force => true do |t|
-    t.integer "sortno",         :limit => 2,   :null => false
-    t.string  "name",           :limit => 250, :null => false
-    t.string  "label",          :limit => 250, :null => false
-    t.string  "external_label"
-  end
-
   create_table "jobs", :force => true do |t|
     t.string   "title",                            :limit => 250,                     :null => false
     t.boolean  "confidential",                                                        :null => false
     t.string   "url",                              :limit => 1000
     t.string   "description",                      :limit => nil,                     :null => false
     t.string   "summary",                          :limit => 1000,                    :null => false
-    t.integer  "company_id"
+    t.integer  "company_id",                                                          :null => false
     t.integer  "language_id",                                                         :null => false
     t.integer  "career_level_id",                  :limit => 2,                       :null => false
     t.integer  "job_salary_range_id",              :limit => 2
@@ -244,7 +88,6 @@ ActiveRecord::Schema.define(:version => 20121206153807) do
     t.string   "visible_location",                 :limit => 250
     t.text     "routing_email_addresses"
     t.integer  "employer_company_id"
-    t.string   "source_title"
     t.integer  "job_premium_type_id",              :limit => 2,                       :null => false
     t.datetime "job_status_changed_at",                                               :null => false
     t.boolean  "send_job_alert_mail"
@@ -272,6 +115,8 @@ ActiveRecord::Schema.define(:version => 20121206153807) do
     t.integer  "job_applications_count",                           :default => 0
     t.integer  "job_applications_new_count",                       :default => 0
     t.integer  "job_trial_id"
+    t.integer  "poster_company_id"
+    t.string   "poster_company_name",              :limit => 250
   end
 
   add_index "jobs", ["company_id"], :name => "jobs_company_id"
@@ -290,6 +135,7 @@ ActiveRecord::Schema.define(:version => 20121206153807) do
   add_index "jobs", ["job_trial_id"], :name => "index_jobs_on_job_trial_id"
   add_index "jobs", ["job_type_id"], :name => "index_jobs_on_job_type_id"
   add_index "jobs", ["lock_admin_id"], :name => "index_jobs_on_lock_admin_id"
+  add_index "jobs", ["poster_company_id"], :name => "index_jobs_on_poster_company_id"
   add_index "jobs", ["poster_id"], :name => "jobs_poster_id"
   add_index "jobs", ["publish_exports"], :name => "index_jobs_on_publish_exports"
   add_index "jobs", ["publish_search_engines"], :name => "index_jobs_on_publish_search_engines"
