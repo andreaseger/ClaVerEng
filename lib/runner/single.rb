@@ -7,7 +7,7 @@ module Runner
       classification = params.fetch(:classification){ :function }
       samplesize, dic_size = [params.fetch(:max_samplesize){500}, params.fetch(:dictionary_size){500}]
 
-      feature_vectors = get_feature_vectors(classification, samplesize, dic_size)
+      feature_vectors = get_feature_vectors(classification, samplesize, dic_size).shuffle
       test_set = fetch_test_set classification
       settings = {classification: classification,
                         trainer: trainer.label,

@@ -19,7 +19,7 @@ module Runner
         test_data = fetch_test_data classification
         @samplesizes.each do |samplesize|
           jobs = fetch_jobs classification, samplesize
-          data = @preprocessor.process jobs, classification
+          data = @preprocessor.process(jobs, classification).shuffle
           @dictionary_sizes.each do |dic_size|
             @selectors.each do |selector|
               selector.reset
