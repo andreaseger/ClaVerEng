@@ -28,7 +28,7 @@ class GnuplotHelper
   def create_compare_plot files, svg=false
     datapath = BASE
     plot_path = "#{datapath}/plots_#{@time}"
-    FileUtils.mkdir plot_path unless File.dicrectory?(plot_path)
+    FileUtils.mkdir plot_path unless File.directory?(plot_path)
     files.each_slice(2).each do |meh|
       grid, other = meh.map { |e| File.basename(e) }
       setting = unwrap_filename grid
@@ -58,7 +58,8 @@ class GnuplotHelper
     end
   end
 end
-type, filenames = ARGV
+
+type, *filenames = ARGV
 
 g = GnuplotHelper.new
 case type
