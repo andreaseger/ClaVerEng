@@ -8,6 +8,7 @@ GIT
   remote: git://github.com/sch1zo/rb-libsvm.git
   revision: 9d473bed1658b564c09e906d82cffb02b4d13c85
   specs:
+    rb-libsvm (1.1.1)
 
 GIT
   remote: git://github.com/sch1zo/svm_helper.git
@@ -88,6 +89,7 @@ GEM
     mocha (0.13.2)
       metaclass (~> 0.0.1)
     multi_json (1.5.0)
+    pg (0.14.1)
     pry (0.9.11.4)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -147,6 +149,7 @@ GEM
 
 PLATFORMS
   java
+  ruby
 
 DEPENDENCIES
   activerecord

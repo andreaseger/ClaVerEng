@@ -10,21 +10,24 @@ def fetch_jobs(classification, limit = nil, offset = nil, language = 6)
   faulty + correct
 end
 
-jobs={function: fetch_jobs(:function),industry: fetch_jobs(:industry), career_level: fetch_jobs(:career_level)}
+def evaluate model, problem
+  [SvmTrainer::Evaluator::AccuracyOver(0.6).new(model, true).evaluate_dataset(problem),
+   SvmTrainer::Evaluator::AccuracyOver(0.7).new(model, true).evaluate_dataset(problem),
+   SvmTrainer::Evaluator::AccuracyOver(0.8).new(model, true).evaluate_dataset(problem),
+   SvmTrainer::Evaluator::AccuracyOver(0.9).new(model, true).evaluate_dataset(problem)]
+end
 
 require 'csv'
 c=ARGV.first
-CSV.open("tmp/reeval_#{c}_results.xls",'wb',col_sep: "\t") do |csv|
-  Predictor.where(classification: c).all.each do |p|
-    data = p.preprocessor.process(jobs[p.classification.to_sym],p.classification)
+jobs = fetch_jobs(c.to_sym)
+CSV.open("tmp/#{c}_results.csv",'wb') do |csv|
+  Predictor.where(classification: c).order('overall_accuracy desc').limit(10).each do |p|
+    GC.start
+    data = p.preprocessor.process(jobs,p.classification)
     set = p.selector.generate_vectors(data, p.classification)
-    problem = Libsvm::Problem.new.tap{|p| p.set_examples(set.map(&:label), set.map{|e| Libsvm::Node.features(e.data)})}
-    more_over = [SvmTrainer::Evaluator::AccuracyOver(0.6).new(p.model, true).evaluate_dataset(problem),
-                 SvmTrainer::Evaluator::AccuracyOver(0.7).new(p.model, true).evaluate_dataset(problem),
-                 SvmTrainer::Evaluator::AccuracyOver(0.8).new(p.model, true).evaluate_dataset(problem),
-                 SvmTrainer::Evaluator::AccuracyOver(0.9).new(p.model, true).evaluate_dataset(problem)]
-    csv << [p.id, p.classification, p.used_preprocessor, p.used_selector, p.used_trainer, p.dictionary_size, p.samplesize, p.overall_accuracy, p.geometric_mean, more_over, p.created_at].flatten
+    problem = Libsvm::Problem.new.tap{|p| p.set_examples(set.map(&:label),
+                                                         set.map{|e| Libsvm::Node.features(e.data)}
+                                                        )}
+    csv << [p.id, p.classification, p.used_preprocessor, p.used_selector, p.used_trainer, p.dictionary_size, p.samplesize, p.overall_accuracy, p.geometric_mean, evaluate(p.model, problem), p.created_at].flatten
   end
 end
-
-
