@@ -13,6 +13,70 @@
 
 ActiveRecord::Schema.define(:version => 20121206153807) do
 
+  create_table "career_levels", :force => true do |t|
+    t.integer "sortno",         :limit => 2,   :null => false
+    t.string  "label",          :limit => 64,  :null => false
+    t.string  "comment",                       :null => false
+    t.string  "urlified",       :limit => 256, :null => false
+    t.string  "name",           :limit => 250, :null => false
+    t.string  "urlified_en_gb", :limit => 256, :null => false
+    t.string  "urlified_fr",    :limit => 256, :null => false
+    t.string  "urlified_it",    :limit => 256, :null => false
+    t.string  "urlified_en_us", :limit => 256, :null => false
+    t.string  "urlified_es",    :limit => 256, :null => false
+    t.string  "urlified_nl",    :limit => 256, :null => false
+  end
+
+  add_index "career_levels", ["urlified"], :name => "career_levels_urlified", :unique => true
+
+  create_table "functions", :force => true do |t|
+    t.integer "sortno",          :limit => 2,   :null => false
+    t.string  "label",           :limit => 100, :null => false
+    t.boolean "industry_affine"
+    t.string  "urlified",        :limit => 256, :null => false
+    t.string  "name",            :limit => 250, :null => false
+    t.string  "urlified_en_gb",  :limit => 256, :null => false
+    t.string  "urlified_fr",     :limit => 256, :null => false
+    t.string  "urlified_it",     :limit => 256, :null => false
+    t.string  "urlified_en_us",  :limit => 256, :null => false
+    t.string  "urlified_es",     :limit => 256, :null => false
+    t.string  "urlified_nl",     :limit => 256, :null => false
+  end
+
+  add_index "functions", ["urlified"], :name => "functions_urlified", :unique => true
+
+  create_table "industries", :force => true do |t|
+    t.string  "label",          :limit => 256,  :null => false
+    t.integer "level",          :limit => 2,    :null => false
+    t.integer "parent_id",      :limit => 2
+    t.integer "gparent_id",     :limit => 2
+    t.integer "ggparent_id",    :limit => 2
+    t.string  "synonyms",       :limit => 1000
+    t.string  "urlified",       :limit => 256,  :null => false
+    t.string  "name",           :limit => 250,  :null => false
+    t.string  "label_en_gb",    :limit => 256,  :null => false
+    t.string  "synonyms_en_gb", :limit => 1000
+    t.string  "urlified_en_gb", :limit => 256,  :null => false
+    t.string  "label_fr",       :limit => 256,  :null => false
+    t.string  "synonyms_fr",    :limit => 1000
+    t.string  "urlified_fr",    :limit => 256,  :null => false
+    t.string  "label_it",       :limit => 256,  :null => false
+    t.string  "synonyms_it",    :limit => 1000
+    t.string  "urlified_it",    :limit => 256,  :null => false
+    t.string  "label_en_us",    :limit => 256,  :null => false
+    t.string  "synonyms_en_us", :limit => 1000
+    t.string  "urlified_en_us", :limit => 256,  :null => false
+    t.string  "label_es",       :limit => 256,  :null => false
+    t.string  "synonyms_es",    :limit => 1000
+    t.string  "urlified_es",    :limit => 256,  :null => false
+    t.string  "label_nl",       :limit => 256,  :null => false
+    t.string  "synonyms_nl",    :limit => 1000
+    t.string  "urlified_nl",    :limit => 256,  :null => false
+  end
+
+  add_index "industries", ["parent_id"], :name => "industries_parent_id"
+  add_index "industries", ["urlified"], :name => "idx_industries_urlified", :unique => true
+
   create_table "ja_qc_check_status", :force => true do |t|
     t.integer "qc_job_check_id"
     t.boolean "check_status"

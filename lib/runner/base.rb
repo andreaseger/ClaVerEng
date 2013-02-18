@@ -38,8 +38,7 @@ module Runner
         settings[:preprocessor],
         settings[:dictionary_size],
         settings[:samplesize],
-        settings[:timestamp],
-        'results'
+        settings[:timestamp]
       ].join '_'
     end
 
@@ -49,7 +48,7 @@ module Runner
       l "cost: #{predictor.cost} gamma:#{predictor.gamma}"
       l "cost: #{Math.log2(predictor.cost)} gamma:#{Math.log2(predictor.gamma)} || log2"
 
-      IO.write "tmp/#{filename}", results
+      IO.write "results/#{filename}", results
       filename
     end
 
