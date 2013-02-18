@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/sch1zo/jrb-libsvm.git
-  revision: 6733b49ea90b2e31a8d8330717d9d1b896a09b21
+  revision: 5062438d623812f941c9cad3c40289efc590d634
   specs:
-    jrb-libsvm (0.1.0-java)
+    jrb-libsvm (0.1.1-java)
 
 GIT
   remote: git://github.com/sch1zo/rb-libsvm.git
@@ -17,9 +17,9 @@ GIT
 
 GIT
   remote: git@github.com:sch1zo/svm_trainer.git
-  revision: 4e47358bda1d7e7efb70481449b04a0d082c7c99
+  revision: 36ede4b81da2e07ed6e1cb99555d357e4ef97a8f
   specs:
-    svm_trainer (0.1.2)
+    svm_trainer (0.1.5)
       celluloid
 
 GEM
@@ -155,7 +155,7 @@ DEPENDENCIES
   github-markup
   guard-rspec
   guard-yard
-  jrb-libsvm (>= 0.1.0)!
+  jrb-libsvm (>= 0.1.1)!
   kramdown
   mocha
   pg
@@ -167,5 +167,5 @@ DEPENDENCIES
   rb-libsvm (>= 1.1.1)!
   standalone_migrations
   svm_helper (~> 0.0.6)!
-  svm_trainer (>= 0.1.2)!
+  svm_trainer (>= 0.1.5)!
   yard
