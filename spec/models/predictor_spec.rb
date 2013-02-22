@@ -1,27 +1,21 @@
 require 'spec_helper'
-require 'runner'
+require 'runner/single'
 require 'models/predictor.rb'
 
 describe Predictor do
   before(:all) do
-    @runner = Runner.new(dictionary_size: 100, max_samplesize: 50)
-    data = @runner.fetch_and_preprocess(:function)
-    vectors = @runner.selector.generate_vectors(data, :function, 100)
-    @model,_,@params = @runner.trainer.search(vectors,30)
+    runner = Runner::Single.new(verbose: false)
+    Predictor.any_instance.stubs(:save)
+    @predictor = runner.run(:simple, :simple, :linear, {classification: :function, max_samplesize: 100, dictionary_size: 100} )
   end
-  subject(:predictor) { Predictor.new(model: @model, classification: :function,
-                              preprocessor: @runner.preprocessor, selector: @runner.selector,
-                              used_trainer: @runner.trainer.class.to_s, samplesize: 100 ) }
+  #before(:each) { @predictor.stubs(:save) }
+  #this will basically produce crap but thats not important
+  subject(:predictor) { @predictor }
   %w(model preprocessor predict_job predict_job_id).each do |method|
     it { should respond_to(method) }
   end
-  it "should serialize the model before save" do
-    predictor.serialized_model.should be_nil
-    predictor.save
-    predictor.serialized_model.should_not be_nil
-  end
   it "should update its settings before save" do
-    settings = %w(used_preprocessor used_selector dictionary dictionary_size preprocessor_properties selector_properties)
+    settings = %w(serialized_model used_preprocessor used_selector dictionary dictionary_size preprocessor_properties selector_properties)
     settings.each {|e| predictor.send(e).should be_nil}
     predictor.save
     settings.each {|e| predictor.send(e).should_not be_nil}

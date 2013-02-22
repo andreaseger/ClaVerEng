@@ -1,26 +1,26 @@
 GIT
   remote: git://github.com/sch1zo/jrb-libsvm.git
-  revision: 6733b49ea90b2e31a8d8330717d9d1b896a09b21
+  revision: 5062438d623812f941c9cad3c40289efc590d634
   specs:
-    jrb-libsvm (0.1.0-java)
+    jrb-libsvm (0.1.1-java)
 
 GIT
   remote: git://github.com/sch1zo/rb-libsvm.git
-  revision: 4866bc8ca64b43a0dd4eb4dd16256f25bbb88d79
+  revision: 9d473bed1658b564c09e906d82cffb02b4d13c85
   specs:
-    rb-libsvm (1.1.0)
+    rb-libsvm (1.1.1)
 
 GIT
   remote: git://github.com/sch1zo/svm_helper.git
-  revision: 274dfdacf887877fb51058cb25f6a75bc769811e
+  revision: 799e42c83addc909364d08a5e4a8ce8e4259dc0a
   specs:
-    svm_helper (0.0.2)
+    svm_helper (0.0.6)
 
 GIT
   remote: git@github.com:sch1zo/svm_trainer.git
-  revision: 3733f54f863d9b283c3bccf58474a1a9aa7cfded
+  revision: 36ede4b81da2e07ed6e1cb99555d357e4ef97a8f
   specs:
-    svm_trainer (0.1.0)
+    svm_trainer (0.1.5)
       celluloid
 
 GEM
@@ -44,9 +44,9 @@ GEM
       activesupport (= 3.2.11)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
-    activerecord-jdbc-adapter (1.2.5)
-    activerecord-jdbcpostgresql-adapter (1.2.5)
-      activerecord-jdbc-adapter (~> 1.2.5)
+    activerecord-jdbc-adapter (1.2.6)
+    activerecord-jdbcpostgresql-adapter (1.2.6)
+      activerecord-jdbc-adapter (~> 1.2.6)
       jdbc-postgres (>= 9.1, < 9.3)
     activesupport (3.2.11)
       i18n (~> 0.6)
@@ -119,7 +119,7 @@ GEM
     rb-fsevent (0.9.3)
     rb-inotify (0.8.8)
       ffi (>= 0.5.0)
-    rdoc (3.12)
+    rdoc (3.12.1)
       json (~> 1.4)
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
@@ -145,7 +145,7 @@ GEM
     tilt (1.3.3)
     timers (1.1.0)
     tzinfo (0.3.35)
-    yard (0.8.3)
+    yard (0.8.4.1)
 
 PLATFORMS
   java
@@ -158,7 +158,7 @@ DEPENDENCIES
   github-markup
   guard-rspec
   guard-yard
-  jrb-libsvm (>= 0.1.0)!
+  jrb-libsvm (>= 0.1.1)!
   kramdown
   mocha
   pg
@@ -167,8 +167,8 @@ DEPENDENCIES
   rb-fchange
   rb-fsevent
   rb-inotify (~> 0.8.8)
-  rb-libsvm (>= 0.1.0)!
+  rb-libsvm (>= 1.1.1)!
   standalone_migrations
-  svm_helper (~> 0.0.2)!
-  svm_trainer (>= 0.1.0)!
+  svm_helper (~> 0.0.6)!
+  svm_trainer (>= 0.1.5)!
   yard
