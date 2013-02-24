@@ -25,16 +25,28 @@ class Job < Pjpp::Job
                         where("ja_qc_job_checks.wrong_#{classification}_id IS NOT NULL").
                         includes(:qc_job_check)}
 
-  # @!method original_industry_id
-  # @!method original_function_id
-  # @!method original_career_level_id
-  %w(industry function career_level).each do |method|
-    define_method "original_#{method}_id" do
-       self.qc_job_check.try(:send, "wrong_#{method}_id") || self.send("#{method}_id")
+  CLASSIFICATION_IDS ={ function: Pjpp::Function.pluck(:id),
+                                        career_level: Pjpp::CareerLevel.pluck(:id),
+                                        industry: Pjpp::Industry.pluck(:id) }
+
+  def act_as_false?
+    @act_as_false
+  end
+  def act_as_false!
+    @act_as_false = true
+  end
+  def classification_id(classification)
+    if @act_as_false
+      CLASSIFICATION_IDS[classification.to_sym].reject{|e| e == self.send("#{classification}_id")}.sample
+    else
+      self.send("#{classification}_id")
     end
   end
-
-  def checked_correct?
-    self.qc_job_check.qc_check_status.check_status
+  def label(classification)
+    if @act_as_false || (qc = self.qc_job_check).nil?
+      false
+    else
+      qc.send("wrong_#{classification}_id").nil?
+    end
   end
 end
