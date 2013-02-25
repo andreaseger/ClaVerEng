@@ -2,6 +2,7 @@ GIT
   remote: git://github.com/sch1zo/jrb-libsvm.git
   revision: 5062438d623812f941c9cad3c40289efc590d634
   specs:
+    jrb-libsvm (0.1.1-java)
 
 GIT
   remote: git://github.com/sch1zo/rb-libsvm.git
@@ -43,6 +44,10 @@ GEM
       activesupport (= 3.2.12)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
+    activerecord-jdbc-adapter (1.2.7)
+    activerecord-jdbcpostgresql-adapter (1.2.7)
+      activerecord-jdbc-adapter (~> 1.2.7)
+      jdbc-postgres (>= 9.1, < 9.3)
     activesupport (3.2.12)
       i18n (~> 0.6)
       multi_json (~> 1.0)
@@ -56,6 +61,7 @@ GEM
     erubis (2.7.0)
     facter (1.6.17)
     ffi (1.4.0)
+    ffi (1.4.0-java)
     github-markup (0.7.5)
     guard (1.6.2)
       listen (>= 0.6.0)
@@ -71,8 +77,10 @@ GEM
       yard (>= 0.7.0)
     hike (1.2.1)
     i18n (0.6.1)
+    jdbc-postgres (9.2.1002.1)
     journey (1.0.4)
     json (1.7.7)
+    json (1.7.7-java)
     kramdown (0.14.2)
     listen (0.7.2)
     lumberjack (1.0.2)
@@ -86,6 +94,11 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
+    pry (0.9.12-java)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
+      spoon (~> 0.0)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -117,6 +130,7 @@ GEM
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.13.0)
     slop (3.4.3)
+    spoon (0.0.1)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -134,6 +148,7 @@ GEM
     yard (0.8.4.1)
 
 PLATFORMS
+  java
   ruby
 
 DEPENDENCIES
