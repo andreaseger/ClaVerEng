@@ -7,15 +7,15 @@ gem 'activesupport', require: false
 gem 'standalone_migrations'
 
 # Preprocessor & Selectors
-gem 'svm_helper', '~>0.0.6', github: 'sch1zo/svm_helper'
+gem 'svm_helper', '~>0.0.7', github: 'sch1zo/svm_helper'
 
 # Trainer
-gem 'svm_trainer', '>=0.1.2', git: 'git@github.com:sch1zo/svm_trainer.git'
+gem 'svm_trainer', '>=0.1.5', git: 'git@github.com:sch1zo/svm_trainer.git'
 #gem 'svm_trainer', '>=0.1.0', git: '/home/sch1zo/code/master/svm_trainer'
 
 platforms :jruby do
   gem 'activerecord-jdbcpostgresql-adapter'
-  gem "jrb-libsvm", '>=0.1.0', github: 'sch1zo/jrb-libsvm', require: 'jrb-libsvm'
+  gem "jrb-libsvm", '>=0.1.1', github: 'sch1zo/jrb-libsvm', require: 'jrb-libsvm'
 end
 platforms :ruby do
   gem 'pg'

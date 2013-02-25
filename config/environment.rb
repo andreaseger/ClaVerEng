@@ -17,12 +17,12 @@ Bundler.require(:default, rack_env)
   end
 end
 
-# load models
-Dir[File.join(ROOT, 'lib', 'models','*.rb')].each {|m| require m}
-
 # connect to database
 require 'logger'
 #ActiveRecord::Base.logger = Logger.new("log/#{rack_env.to_s}.log")
 #ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Base.configurations = YAML::load(IO.read('db/config.yml'))
+ActiveRecord::Base.configurations = YAML::load(IO.read(File.join(ROOT,'db/config.yml')))
 ActiveRecord::Base.establish_connection(rack_env)
+
+# load models
+Dir[File.join(ROOT, 'lib', 'models','*.rb')].each {|m| require m}

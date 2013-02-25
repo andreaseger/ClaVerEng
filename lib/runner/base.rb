@@ -58,7 +58,7 @@ module Runner
     #
     # @return [Problem] libsvm Problem
     def fetch_test_data classification
-      data = @preprocessor.process(fetch_jobs(classification), classification)
+      data = @preprocessor.process(fetch_jobs(classification, 5000, 10000), classification)
     end
     def create_test_problem data, selector, classification
       set = selector.generate_vectors(data, classification, @dictionary_size)
@@ -74,14 +74,17 @@ module Runner
     # @param  language [Integer] language_id, see pjpp
     #
     # @return [Array<Job>]
-    def fetch_jobs(classification, limit = nil, offset = nil, language = 6)
-      faulty = Job.with_language(language).faulty_for_classification(classification)
-      faulty = faulty.limit(limit/2) if limit
-      faulty = faulty.offset(offset) if offset
+    def fetch_jobs(classification, limit = 100, offset = 0, language = 6)
+      correct = Job.with_language(language).correct_for_classification(classification)
+      correct = correct.limit(limit/2) if limit
+      correct = correct.offset(offset) if offset > 0
 
-      correct =  Job.with_language(language).correct_for_classification(classification).limit(faulty.size)
-      correct = correct.offset(offset) if offset
-      faulty + correct
+      faulty = Job.with_language(language).correct_for_classification(classification)
+      faulty = faulty.limit(limit/2) if limit
+      faulty = faulty.offset(offset + limit/2)
+      faulty = faulty.map { |e| e.act_as_false!; e }
+
+      correct + faulty
     end
 
 

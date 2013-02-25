@@ -22,6 +22,8 @@ module Runner
                                                                     @selector, classification)
 
 
+      p evaluate(predictor.model, test_set)
+
       filename = make_filename(settings.merge(predictor_id: predictor.id,
                                                                       timestamp: Time.now.strftime('%Y%m%d_%H%M')))
 
@@ -40,6 +42,12 @@ module Runner
     end
     def fetch_test_set classification
       create_test_problem(fetch_test_data(classification), @selector, classification)
+    end
+    def evaluate model, problem
+      [SvmTrainer::Evaluator::AccuracyOver(0.6).new(model, true).evaluate_dataset(problem),
+       SvmTrainer::Evaluator::AccuracyOver(0.7).new(model, true).evaluate_dataset(problem),
+       SvmTrainer::Evaluator::AccuracyOver(0.8).new(model, true).evaluate_dataset(problem),
+       SvmTrainer::Evaluator::AccuracyOver(0.9).new(model, true).evaluate_dataset(problem)]
     end
   end
 end
