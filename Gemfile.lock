@@ -18,9 +18,9 @@ GIT
 
 GIT
   remote: git@github.com:sch1zo/svm_trainer.git
-  revision: fce82b5d370bdf69cc734a1ce8e93b0922fa90a3
+  revision: 954713a35c88bf4aa31201112c59b7cf01e6fb47
   specs:
-    svm_trainer (0.1.5)
+    svm_trainer (0.1.6)
       celluloid
 
 GEM
@@ -170,5 +170,5 @@ DEPENDENCIES
   rb-libsvm (>= 1.1.1)!
   standalone_migrations
   svm_helper (~> 0.0.7)!
-  svm_trainer (>= 0.1.5)!
+  svm_trainer (>= 0.1.6)!
   yard
