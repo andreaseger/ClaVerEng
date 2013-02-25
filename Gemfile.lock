@@ -17,8 +17,8 @@ GIT
     svm_helper (0.0.7)
 
 GIT
-  remote: git@github.com:sch1zo/svm_trainer.git
-  revision: 954713a35c88bf4aa31201112c59b7cf01e6fb47
+  remote: git://github.com/sch1zo/svm_trainer.git
+  revision: 612cd743e6128e53c90645743f9a239dcac1d441
   specs:
     svm_trainer (0.1.6)
       celluloid

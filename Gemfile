@@ -10,7 +10,7 @@ gem 'standalone_migrations'
 gem 'svm_helper', '~>0.0.7', github: 'sch1zo/svm_helper'
 
 # Trainer
-gem 'svm_trainer', '>=0.1.6', git: 'git@github.com:sch1zo/svm_trainer.git'
+gem 'svm_trainer', '>=0.1.6', github: 'sch1zo/svm_trainer'
 
 platforms :jruby do
   gem 'activerecord-jdbcpostgresql-adapter'
