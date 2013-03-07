@@ -29,10 +29,10 @@ module Runner
 
       evaluator = SvmTrainer::Evaluator::AllInOne.new(predictor.model)
       evaluator.evaluate_dataset(test_set)
-      puts "overall_accuracy: " + evaluator.overall_accuracy
-      puts "geometric_mean: " + evaluator.geometric_mean
-      puts "histogram" + evaluator.histogram.inspect
-      puts "faulty_histogram" + evaluator.faulty_histogram.inspect
+      puts "overall_accuracy: #{evaluator.overall_accuracy}"
+      puts "geometric_mean: #{evaluator.geometric_mean}"
+      puts "histogram: #{evaluator.histogram.inspect}"
+      puts "faulty_histogram: #{evaluator.faulty_histogram.inspect}"
 
       predictor
     end
