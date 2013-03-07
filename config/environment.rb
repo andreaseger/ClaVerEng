@@ -2,10 +2,11 @@
 require 'bundler'
 
 ROOT ||= File.join(File.dirname(__FILE__), '..')
+rack_env = ENV['RACK_ENV'] || :development
 
 Bundler.setup
 Bundler.require(:default, rack_env)
-# print "#{rack_env}\n"
+print "#{rack_env}\n"
 
 # load config
 %w(db/config.yml config/settings.yml).each do |f|

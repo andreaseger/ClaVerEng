@@ -61,8 +61,10 @@ class Predictor  < ActiveRecord::Base
 
   def test_model test_set, verbose=false
     self.tap do |p|
-      p.overall_accuracy = SvmTrainer::Evaluator::OverallAccuracy.new(p.model, verbose).evaluate_dataset(test_set)
-      p.geometric_mean = SvmTrainer::Evaluator::GeometricMean.new(p.model, verbose).evaluate_dataset(test_set)
+      evaluator = SvmTrainer::Evaluator::AllInOne.new(p.model, :overall_accuracy, verbose)
+      evaluator.evaluate_dataset(test_set)
+      p.overall_accuracy = evaluator.overall_accuracy
+      p.geometric_mean = evaluator.geometric_mean
     end
   end
 
@@ -75,7 +77,7 @@ class Predictor  < ActiveRecord::Base
     self.used_selector ||= selector.class.to_s
     self.preprocessor_properties ||= {}
     self.selector_properties ||= {}
-    self.preprocessor_properties.merge!(industry_map: preprocessor.industry_map )
+    self.preprocessor_properties.merge!(industry_map: preprocessor.industry_map ) if preprocessor.respond_to? :industry_map
     self.selector_properties.merge!(gram_size: selector.gram_size ) if selector.respond_to? :gram_size
     self.dictionary = selector.global_dictionary.map { |e| e.force_encoding("UTF-8") }
     self.dictionary_size = dictionary.size
