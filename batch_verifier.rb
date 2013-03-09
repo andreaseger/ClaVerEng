@@ -1,4 +1,4 @@
-require_relative 'config/environment'
+require_relative 'config/setup'
 require_relative 'lib/runner/batch'
 
 runner = Runner::Batch.new  preprocessor: :simple,

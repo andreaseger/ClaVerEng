@@ -9,7 +9,7 @@ Bundler.require(:default, rack_env)
 print "#{rack_env}\n"
 
 # load config
-%w(db/config.yml config/settings.yml).each do |f|
+%w(db/config.yml).each do |f|
   unless File.exists? File.join(ROOT, f)
     require 'fileutils'
     FileUtils.cp File.join(ROOT, "#{f}.example"), File.join(ROOT, f)
@@ -26,3 +26,5 @@ ActiveRecord::Base.establish_connection(:pjpp_copy)
 
 # load models
 Dir[File.join(ROOT, 'lib', 'models','*.rb')].each {|m| require m}
+
+Predictor.establish_connection(rack_env)
