@@ -10,22 +10,29 @@ module Runner
       feature_vectors = get_feature_vectors(classification, samplesize, dic_size).shuffle
       test_set = fetch_test_set classification
       settings = {classification: classification,
-                        trainer: trainer.label,
-                        selector: @selector.label,
-                        preprocessor: @preprocessor.label,
-                        dictionary_size: dic_size,
-                        samplesize: samplesize}
+                  trainer: trainer.label,
+                  selector: @selector.label,
+                  preprocessor: @preprocessor.label,
+                  dictionary_size: dic_size,
+                  samplesize: samplesize}
       l settings
 
       predictor, results = make_best_predictor( trainer, feature_vectors,
-                                                                    test_set, @preprocessor,
-                                                                    @selector, classification)
+                                                test_set, @preprocessor,
+                                                @selector, classification)
 
 
       filename = make_filename(settings.merge(predictor_id: predictor.id,
-                                                                      timestamp: Time.now.strftime('%Y%m%d_%H%M')))
+                                              timestamp: Time.now.strftime('%Y%m%d_%H%M')))
 
       print_and_save_results(predictor, trainer.format_results(results), filename)
+
+      evaluator = SvmTrainer::Evaluator::AllInOne.new(predictor.model)
+      evaluator.evaluate_dataset(test_set)
+      puts "overall_accuracy: #{evaluator.overall_accuracy}"
+      puts "geometric_mean: #{evaluator.geometric_mean}"
+      puts "histogram: #{evaluator.histogram.inspect}"
+      puts "faulty_histogram: #{evaluator.faulty_histogram.inspect}"
 
       predictor
     end
