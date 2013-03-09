@@ -37,7 +37,7 @@ optparse = OptionParser.new do |opts|
 end
 optparse.parse!
 
-require_relative 'config/environment'
+require_relative 'config/setup'
 require_relative 'lib/runner/single'
 
 runner = Runner::Single.new(verbose: options[:verbose])
