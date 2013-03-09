@@ -119,8 +119,15 @@ module Runner
     # @param  p [Symbol]
     #
     # @return [Preprocessor]
-    def get_preprocessor_klass(p)
-      Preprocessor::Simple
+    def get_preprocessor_klass(preprocessor)
+      case preprocessor
+      when :simple
+        Preprocessor::Simple
+      when :industry_map
+        Preprocessor::WithIndustryMap
+      else
+        Preprocessor::WithIndustryMap
+      end
     end
 
     def create_selector(selector, params={})
@@ -137,6 +144,8 @@ module Runner
         Selector::Simple
       when :ngram
         Selector::NGram
+      when :binary_encoded
+        Selector::WithBinaryEncoding
       else
         Selector::Simple
       end
