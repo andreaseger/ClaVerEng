@@ -32,6 +32,7 @@ module Runner
       l "overall_accuracy: #{evaluator.overall_accuracy}"
       l "geometric_mean: #{evaluator.geometric_mean}"
       l "histogram: #{evaluator.full_histogram.sort}"
+      p=predictor
       l [p.id, p.classification, p.used_preprocessor, p.used_selector, p.used_trainer, p.dictionary_size, p.samplesize, p.created_at, p.gamma, p.cost].flatten
 
       predictor
