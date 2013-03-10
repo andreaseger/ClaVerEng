@@ -21,4 +21,4 @@ doc/
 db/config.yml
 db/*.db
 
-results
+results/*
