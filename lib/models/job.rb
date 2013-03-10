@@ -26,8 +26,8 @@ class Job < Pjpp::Job
                         includes(:qc_job_check)}
 
   CLASSIFICATION_IDS ={ function: Pjpp::Function.pluck(:id),
-                                        career_level: Pjpp::CareerLevel.pluck(:id),
-                                        industry: Pjpp::Industry.pluck(:id) }
+                        career_level: Pjpp::CareerLevel.pluck(:id),
+                        industry: Pjpp::Industry.pluck(:id) }
 
   def act_as_false?
     @act_as_false

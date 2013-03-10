@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require_relative 'config/setup'
 require_relative 'lib/runner/batch'
 
