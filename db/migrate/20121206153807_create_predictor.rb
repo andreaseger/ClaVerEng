@@ -27,7 +27,7 @@ class CreatePredictor < ActiveRecord::Migration
 
       t.timestamps
     end
-    execute "ALTER TABLE predictors ADD CONSTRAINT CK_Classification CHECK (classification IN ('function', 'industry', 'career_level'))"
+    #execute "ALTER TABLE predictors ADD CONSTRAINT CK_Classification CHECK (classification IN ('function', 'industry', 'career_level'))"
     add_index :predictors, :classification
   end
 

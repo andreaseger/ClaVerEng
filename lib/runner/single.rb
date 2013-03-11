@@ -2,7 +2,7 @@ require_relative 'base'
 module Runner
   class Single < Base
     def run(preprocessor, selector, trainer_sym, params={})
-      @preprocessor, @selector = get_helpers(preprocessor, selector)
+      @preprocessor, @selector = get_helpers(preprocessor, selector, params)
       trainer = create_trainer(trainer_sym)
       classification = params.fetch(:classification){ :function }
       samplesize, dic_size = [params.fetch(:max_samplesize){500}, params.fetch(:dictionary_size){500}]
@@ -29,16 +29,17 @@ module Runner
 
       evaluator = SvmTrainer::Evaluator::AllInOne.new(predictor.model)
       evaluator.evaluate_dataset(test_set)
-      puts "overall_accuracy: #{evaluator.overall_accuracy}"
-      puts "geometric_mean: #{evaluator.geometric_mean}"
-      puts "histogram: #{evaluator.histogram.inspect}"
-      puts "faulty_histogram: #{evaluator.faulty_histogram.inspect}"
+      l "overall_accuracy: #{evaluator.overall_accuracy}"
+      l "geometric_mean: #{evaluator.geometric_mean}"
+      l "histogram: #{evaluator.full_histogram.sort}"
+      p=predictor
+      l [p.id, p.classification, p.used_preprocessor, p.used_selector, p.used_trainer, p.dictionary_size, p.samplesize, p.created_at, p.gamma, p.cost].flatten
 
       predictor
     end
 
-    def get_helpers preprocessor, selector
-      [create_preprocessor(preprocessor), create_selector(selector)]
+    def get_helpers preprocessor, selector, params
+      [create_preprocessor(preprocessor), create_selector(selector, params)]
     end
     def get_feature_vectors(classification, size, dictionary_size)
       jobs = fetch_jobs classification, size

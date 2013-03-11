@@ -1,31 +1,11 @@
 #!/usr/bin/env ruby
 
-require './config/environment'
+require './config/setup'
+require 'benchmark'
 
-def fetch_jobs(classification, limit = 100, offset = 0, language = 6)
-  correct = Job.with_language(language).correct_for_classification(classification)
-  correct = correct.limit(limit/2) if limit
-  correct = correct.offset(offset) if offset > 0
+require './lib/runner/base'
 
-  faulty = Job.with_language(language).correct_for_classification(classification)
-  faulty = faulty.limit(limit/2) if limit
-  faulty = faulty.offset(offset + limit/2)
-  faulty = faulty.map { |e| e.act_as_false!; e }
-
-  correct + faulty
-end
-
-def evaluate model, problem
-  [SvmTrainer::Evaluator::AccuracyOver(0.6).new(model, true).evaluate_dataset(problem),
-   SvmTrainer::Evaluator::AccuracyOver(0.7).new(model, true).evaluate_dataset(problem),
-   SvmTrainer::Evaluator::AccuracyOver(0.8).new(model, true).evaluate_dataset(problem),
-   SvmTrainer::Evaluator::AccuracyOver(0.9).new(model, true).evaluate_dataset(problem),
-   SvmTrainer::Evaluator::AccuracyOverFalse(0.6).new(model, true).evaluate_dataset(problem),
-   SvmTrainer::Evaluator::AccuracyOverFalse(0.7).new(model, true).evaluate_dataset(problem),
-   SvmTrainer::Evaluator::AccuracyOverFalse(0.8).new(model, true).evaluate_dataset(problem),
-   SvmTrainer::Evaluator::AccuracyOverFalse(0.9).new(model, true).evaluate_dataset(problem)]
-end
-
+r = Runner::Base.new
 # require 'csv'
 # c=ARGV.first
 # jobs = fetch_jobs(c.to_sym)
@@ -41,13 +21,27 @@ end
 #   end
 # end
 
-id = ARGV.first
-p = Predictor.find(id.to_i)
+p = if ARGV.empty?
+      Predictor.last
+    else
+      id = ARGV.first
+      Predictor.find(id.to_i)
+    end
 
-jobs = fetch_jobs(p.classification, 5000, 10000)
-data = p.preprocessor.process(jobs,p.classification)
-set = p.selector.generate_vectors(data, p.classification)
-problem = Libsvm::Problem.new.tap{|p| p.set_examples(set.map(&:label),
-                                                     set.map{|e| Libsvm::Node.features(e.data)}
-                                                    )}
-puts [p.id, p.classification, p.used_preprocessor, p.used_selector, p.used_trainer, p.dictionary_size, p.samplesize, p.overall_accuracy, p.geometric_mean, evaluate(p.model, problem), p.created_at].flatten
+Benchmark.bm(15) do |x|
+  x.report("fetch jobs:") { @jobs = r.fetch_jobs(p.classification, 10000, 20000) }
+  x.report("preprocess:") { @data = p.preprocessor.process(@jobs,p.classification) }
+  x.report("make vectors:") { @set = p.selector.generate_vectors(@data, p.classification) }
+  x.report("make problem:") { @problem = Libsvm::Problem.new.tap{|p|
+                              p.set_examples(@set.map(&:label),
+                                             @set.map{|e| Libsvm::Node.features(e.data)}
+                              )} }
+  x.report("evaluate:") { @evaluator = SvmTrainer::Evaluator::AllInOne.new(p.model)
+                          @evaluator.evaluate_dataset(@problem) }
+end
+puts "overall_accuracy: #{@evaluator.overall_accuracy}"
+puts "geometric_mean: #{@evaluator.geometric_mean}"
+# puts "histogram: #{@evaluator.full_histogram}"
+puts "histogram: \n#{@evaluator.full_histogram.sort}"
+
+puts [p.id, p.classification, p.used_preprocessor, p.used_selector, p.used_trainer, p.dictionary_size, p.samplesize, p.created_at, p.gamma, p.cost].flatten

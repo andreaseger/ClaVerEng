@@ -5,7 +5,7 @@ require "active_support/inflector"
 #
 # @author Andreas Eger
 #
-class Predictor  < ActiveRecord::Base
+class Predictor < ActiveRecord::Base
   before_save :serialize_model, :update_settings
   serialize :selector_properties, JSON
   serialize :preprocessor_properties, JSON

@@ -19,6 +19,6 @@ _yardoc
 doc/
 
 db/config.yml
-config/settings.yml
+db/*.db
 
-results
+results/*

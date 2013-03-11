@@ -58,7 +58,7 @@ module Runner
     #
     # @return [Problem] libsvm Problem
     def fetch_test_data classification
-      data = @preprocessor.process(fetch_jobs(classification, 5000, 10000), classification)
+      data = @preprocessor.process(fetch_jobs(classification, 10000, 20000), classification)
     end
     def create_test_problem data, selector, classification
       set = selector.generate_vectors(data, classification, @dictionary_size)
@@ -75,14 +75,19 @@ module Runner
     #
     # @return [Array<Job>]
     def fetch_jobs(classification, limit = 100, offset = 0, language = 6)
-      correct = Job.with_language(language).correct_for_classification(classification)
-      correct = correct.limit(limit/2) if limit
-      correct = correct.offset(offset) if offset > 0
+      offset += 1000
+      correct= Job.with_language(language)
+                  .correct_for_classification(classification)
+                  .limit(limit/2)
+                  .order('ja_qc_job_checks.created_at ASC')
+                  .offset(offset) if offset > 0
 
-      faulty = Job.with_language(language).correct_for_classification(classification)
-      faulty = faulty.limit(limit/2) if limit
-      faulty = faulty.offset(offset + limit/2)
-      faulty = faulty.map { |e| e.act_as_false!; e }
+      faulty = Job.with_language(language)
+                  .correct_for_classification(classification)
+                  .limit(limit/2)
+                  .order('ja_qc_job_checks.created_at ASC')
+                  .offset(offset + limit/2)
+                  .map { |e| e.act_as_false!; e }
 
       correct + faulty
     end
@@ -119,8 +124,15 @@ module Runner
     # @param  p [Symbol]
     #
     # @return [Preprocessor]
-    def get_preprocessor_klass(p)
-      Preprocessor::Simple
+    def get_preprocessor_klass(preprocessor)
+      case preprocessor
+      when :simple
+        Preprocessor::Simple
+      when :industry_map
+        Preprocessor::WithIndustryMap
+      else
+        Preprocessor::WithIndustryMap
+      end
     end
 
     def create_selector(selector, params={})
@@ -137,6 +149,8 @@ module Runner
         Selector::Simple
       when :ngram
         Selector::NGram
+      when :binary_encoded
+        Selector::WithBinaryEncoding
       else
         Selector::Simple
       end
