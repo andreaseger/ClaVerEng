@@ -14,16 +14,16 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_helper.git
-  revision: b0bf47ff3e63e07685994278097335d6bdbbbf52
-  ref: b0bf47f
+  revision: 2f2faf03f1b2578bbc168cb71dfcd5d92e0dce3b
+  ref: 2f2faf0
   branch: optimize_preprocessing
   specs:
     svm_helper (0.0.10)
 
 GIT
   remote: git://github.com/sch1zo/svm_trainer.git
-  revision: 3b5aa13d8b726f91b69db24829296076ad5bd033
-  ref: 3b5aa13
+  revision: ab4ae2073ec954bffabfba266b79ac3b551b6aae
+  ref: ab4ae20
   branch: removed_celluloid
   specs:
     svm_trainer (0.1.8)

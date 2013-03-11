@@ -57,8 +57,8 @@ module Runner
     # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
     #
     # @return [Problem] libsvm Problem
-    def fetch_test_data classification
-      data = @preprocessor.process(fetch_jobs(classification, 10000, 20000), classification)
+    def fetch_test_data classification, count=10000, offset=20000
+      data = @preprocessor.process(fetch_jobs(classification, count, offset), classification)
     end
     def create_test_problem data, selector, classification
       set = selector.generate_vectors(data, classification, @dictionary_size)
