@@ -1,5 +1,11 @@
-development:
+pjpp_copy:
   adapter: postgresql
   database: development
   username: user
   password: password
+
+development:
+  adapter: sqlite3
+  database: 'db/predictors.sqlite3.db'
+  pool: 5
+  timeout: 5000
