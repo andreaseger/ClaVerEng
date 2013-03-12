@@ -1,32 +1,27 @@
 GIT
   remote: git://github.com/sch1zo/jrb-libsvm.git
-  revision: 5062438d623812f941c9cad3c40289efc590d634
+  revision: 7beba0304ea9eba809f1fa039f8d1bc64acfa4c1
   specs:
     jrb-libsvm (0.1.1-java)
 
 GIT
   remote: git://github.com/sch1zo/rb-libsvm.git
-  revision: eeb772f3a54c111a15dbeef3045b9129d7c4492a
-  ref: eeb772f
-  branch: openmp_svc
+  revision: 7b2cc490dec3296ee9317558fc96ad416637f103
   specs:
     rb-libsvm (1.1.2)
 
 GIT
   remote: git://github.com/sch1zo/svm_helper.git
-  revision: 2f2faf03f1b2578bbc168cb71dfcd5d92e0dce3b
-  ref: 2f2faf0
-  branch: optimize_preprocessing
+  revision: 5bbea2929cb543b25d7e30e160ddba83c358f175
   specs:
-    svm_helper (0.0.10)
+    svm_helper (0.0.11)
+      parallel (~> 0.6.2)
 
 GIT
   remote: git://github.com/sch1zo/svm_trainer.git
-  revision: ab4ae2073ec954bffabfba266b79ac3b551b6aae
-  ref: ab4ae20
-  branch: removed_celluloid
+  revision: bb2c14591cdb1cca9d4fa0c4ed16c4c91593f351
   specs:
-    svm_trainer (0.1.8)
+    svm_trainer (0.1.9)
 
 GEM
   remote: https://rubygems.org/
@@ -73,27 +68,28 @@ GEM
       pry (>= 0.9.10)
       terminal-table (>= 1.4.3)
       thor (>= 0.14.6)
-    guard-rspec (2.4.1)
+    guard-rspec (2.5.0)
       guard (>= 1.1)
       rspec (~> 2.11)
     guard-yard (2.0.1)
       guard (>= 1.1.0)
       yard (>= 0.7.0)
     hike (1.2.1)
-    i18n (0.6.1)
+    i18n (0.6.4)
     jdbc-postgres (9.2.1002.1)
     jdbc-sqlite3 (3.7.2.1)
     journey (1.0.4)
     json (1.7.7)
     json (1.7.7-java)
-    kramdown (0.14.2)
-    listen (0.7.2)
+    kramdown (1.0.1)
+    listen (0.7.3)
     lumberjack (1.0.2)
     metaclass (0.0.1)
     method_source (0.8.1)
-    mocha (0.13.2)
+    mocha (0.13.3)
       metaclass (~> 0.0.1)
     multi_json (1.6.1)
+    parallel (0.6.2)
     pg (0.14.1)
     pry (0.9.12)
       coderay (~> 1.0.5)
@@ -124,7 +120,7 @@ GEM
     rb-fsevent (0.9.3)
     rb-inotify (0.9.0)
       ffi (>= 0.5.0)
-    rdoc (3.12.1)
+    rdoc (3.12.2)
       json (~> 1.4)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
@@ -134,7 +130,7 @@ GEM
     rspec-expectations (2.13.0)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.13.0)
-    slop (3.4.3)
+    slop (3.4.4)
     spoon (0.0.1)
     sprockets (2.2.2)
       hike (~> 1.2)
@@ -142,15 +138,15 @@ GEM
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
     sqlite3 (1.3.7)
-    standalone_migrations (2.0.3)
-      activerecord (~> 3.2.6)
-      railties (~> 3.2.6)
+    standalone_migrations (2.0.5)
+      activerecord (~> 3.2.11)
+      railties (~> 3.2.11)
       rake
     terminal-table (1.4.5)
     thor (0.17.0)
-    tilt (1.3.3)
-    tzinfo (0.3.35)
-    yard (0.8.4.1)
+    tilt (1.3.5)
+    tzinfo (0.3.37)
+    yard (0.8.5.2)
 
 PLATFORMS
   java
@@ -164,7 +160,7 @@ DEPENDENCIES
   github-markup
   guard-rspec
   guard-yard
-  jrb-libsvm (>= 0.1.1)!
+  jrb-libsvm (~> 0.1.1)!
   kramdown
   mocha
   pg
@@ -173,9 +169,9 @@ DEPENDENCIES
   rb-fchange
   rb-fsevent
   rb-inotify (~> 0.9)
-  rb-libsvm (>= 1.1.2)!
+  rb-libsvm (~> 1.1.2)!
   sqlite3
   standalone_migrations
-  svm_helper (~> 0.0.10)!
-  svm_trainer (~> 0.1.8)!
+  svm_helper (~> 0.0.11)!
+  svm_trainer (~> 0.1.9)!
   yard

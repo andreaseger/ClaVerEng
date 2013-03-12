@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require './config/setup'
-require 'benchmark'
 
 require './lib/runner/base'
 
@@ -28,20 +27,19 @@ p = if ARGV.empty?
       Predictor.find(id.to_i)
     end
 
-Benchmark.bm(15) do |x|
-  x.report("fetch jobs:") { @jobs = r.fetch_jobs(p.classification, 10000, 20000) }
-  x.report("preprocess:") { @data = p.preprocessor.process(@jobs,p.classification) }
-  x.report("make vectors:") { @set = p.selector.generate_vectors(@data, p.classification) }
-  x.report("make problem:") { @problem = Libsvm::Problem.new.tap{|p|
-                              p.set_examples(@set.map(&:label),
-                                             @set.map{|e| Libsvm::Node.features(e.data)}
-                              )} }
-  x.report("evaluate:") { @evaluator = SvmTrainer::Evaluator::AllInOne.new(p.model)
-                          @evaluator.evaluate_dataset(@problem) }
-end
-puts "overall_accuracy: #{@evaluator.overall_accuracy}"
-puts "geometric_mean: #{@evaluator.geometric_mean}"
-# puts "histogram: #{@evaluator.full_histogram}"
-puts "histogram: \n#{@evaluator.full_histogram.sort}"
+jobs = r.fetch_jobs(p.classification, 10000, 20000)
+data = p.preprocessor.process(jobs,p.classification)
+set = p.selector.generate_vectors(data, p.classification)
+problem = Libsvm::Problem.new.tap{|p|
+            p.set_examples(set.map(&:label),
+                           set.map{|e| Libsvm::Node.features(e.data)}
+            )}
+evaluator = SvmTrainer::Evaluator::AllInOne.new(p.model)
+                        evaluator.evaluate_dataset(problem)
+
+puts "overall_accuracy: #{evaluator.overall_accuracy}"
+puts "geometric_mean: #{evaluator.geometric_mean}"
+# puts "histogram: #{evaluator.full_histogram}"
+puts "histogram: \n#{evaluator.full_histogram.sort}"
 
 puts [p.id, p.classification, p.used_preprocessor, p.used_selector, p.used_trainer, p.dictionary_size, p.samplesize, p.created_at, p.gamma, p.cost].flatten

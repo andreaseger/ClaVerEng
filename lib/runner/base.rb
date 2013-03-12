@@ -117,7 +117,7 @@ module Runner
     end
 
     def create_preprocessor(preprocessor, params={})
-      get_preprocessor_klass(preprocessor).new(params)
+      get_preprocessor_klass(preprocessor).new(params.reverse_merge(parallel: true))
     end
     #
     # fetch preprocessor class, only one kind implemented so will always return Preprocessor::Simple
@@ -136,7 +136,7 @@ module Runner
     end
 
     def create_selector(selector, params={})
-      get_selector_klass(selector).new(params)
+      get_selector_klass(selector).new(params.reverse_merge(parallel: true))
     end
     #
     # fetch Selector class from :symbol

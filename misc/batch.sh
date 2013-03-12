@@ -25,3 +25,9 @@ time be ruby verifier.rb -p simple -s binary_encoded -n 6000 -d 600 -c function 
 # samplesize
 time be ruby verifier.rb -p industry_map -s simple -n 3000 -d 600 -c function -t nelder_mead -v
 time be ruby verifier.rb -p industry_map -s simple -n 9000 -d 600 -c function -t nelder_mead -v
+
+# more samplesize w/o parameter search
+# $cost=
+# $gamma=
+# time be ruby train.rb -p industry_map -s simple -n 12000 -d 600 -c function -t --cost $cost --gamma $gamma -v
+# time be ruby train.rb -p industry_map -s simple -n 15000 -d 600 -c function -t --cost $cost --gamma $gamma -v
