@@ -1,10 +1,4 @@
 GIT
-  remote: git://github.com/sch1zo/jrb-libsvm.git
-  revision: 7beba0304ea9eba809f1fa039f8d1bc64acfa4c1
-  specs:
-    jrb-libsvm (0.1.1-java)
-
-GIT
   remote: git://github.com/sch1zo/rb-libsvm.git
   revision: 7b2cc490dec3296ee9317558fc96ad416637f103
   specs:
@@ -160,7 +154,7 @@ DEPENDENCIES
   github-markup
   guard-rspec
   guard-yard
-  jrb-libsvm (~> 0.1.1)!
+  jrb-libsvm (~> 0.1.2)
   kramdown
   mocha
   pg

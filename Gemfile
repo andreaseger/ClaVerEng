@@ -15,7 +15,8 @@ gem 'svm_trainer', '~>0.1.9', github: 'sch1zo/svm_trainer'
 platforms :jruby do
   gem 'activerecord-jdbcpostgresql-adapter'
   gem 'activerecord-jdbcsqlite3-adapter'
-  gem "jrb-libsvm", '~>0.1.1', github: 'sch1zo/jrb-libsvm', require: 'jrb-libsvm'
+  gem "jrb-libsvm", '~>0.1.2'
+  # gem "jrb-libsvm", '~>0.1.2', github: 'sch1zo/jrb-libsvm', require: 'jrb-libsvm'
 end
 platforms :ruby do
   gem 'pg'
