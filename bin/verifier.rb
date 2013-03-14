@@ -4,11 +4,11 @@ require 'optparse'
 
 options={}
 optparse = OptionParser.new do |opts|
-  opts.on( "-p", "--preprocessor NAME", "Which Preprocessor to use. [Simple]" ) do |opt|
+  opts.on( "-p", "--preprocessor NAME", "Which Preprocessor to use. [Simple,IDMapping]" ) do |opt|
     options[:preprocessor] = opt.downcase.to_sym
   end
 
-  opts.on( "-s", "--selector NAME", "Which Selector to use. [Simple]" ) do |opt|
+  opts.on( "-s", "--selector NAME", "Which Selector to use. [simple,ngram,binary_encoded]" ) do |opt|
     options[:selector] = opt.downcase.to_sym
   end
   opts.on( "-g", "--gram SIZE", Integer, "n-gram size." ) do |opt|
@@ -31,10 +31,7 @@ optparse = OptionParser.new do |opts|
   opts.on( "-t", "--trainer TRAINER", String, "either *grid*, *doe* or *nelder_mead* " ) do |opt|
     options[:trainer] = opt.downcase.to_sym
   end
-  options[:verbose] = false
-  opts.on( "-v", "--verbose", "print verbose output" ) do |opt|
-    options[:verbose] = true
-  end
+
   opts.on( '-?', '--help', 'Display this screen' ) do
     puts opts
     exit
@@ -45,6 +42,6 @@ optparse.parse!
 require_relative 'config/setup'
 require_relative 'lib/runner/single'
 
-runner = Runner::Single.new(verbose: options[:verbose])
+runner = Runner::Single.new
 
 runner.run(options[:preprocessor], options[:selector], options[:trainer], options)

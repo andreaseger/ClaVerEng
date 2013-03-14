@@ -2,12 +2,8 @@ module Runner
   class Base
     include SvmTrainer
 
-    def initialize(args={})
-      @verbose = args.fetch(:verbose){true}
-    end
-
     def l msg
-      puts msg if @verbose
+      puts msg
     end
 
     #
@@ -17,55 +13,60 @@ module Runner
     # @param  test_set [Libsvm::Problem] will be used to make the final evaluation of tha SVM model
     #
     # @return [Predictor]
-    def make_best_predictor(trainer, feature_vectors, test_set, preprocessor=@preprocessor, selector=@selector, classification=@classification)
+    def create_predictor(trainer, feature_vectors, test_set, preprocessor=@preprocessor, selector=@selector, classification=@classification)
       model, results, _ = trainer.search feature_vectors, 15
-      predictor = Predictor.new(selector: selector,
+      predictor = Predictor::Model.new(
+        selector: selector,
         preprocessor: preprocessor,
         model: model,
         classification: classification,
-        used_trainer: trainer.class.to_s,
+        trainer_class: trainer.class.to_s,
         samplesize: feature_vectors.size)
-      predictor.test_model test_set, @verbose
+      evaluator = Evaluator::AllInOne.new(model)
+      evaluator.evaluate_dataset(test_set)
+      predictor.metrics = evaluator.metrics
       predictor.save
       [predictor, results]
     end
 
-    def make_filename(settings)
-      [ settings[:predictor_id],
-        settings[:trainer],
-        settings[:classification],
-        settings[:selector],
-        settings[:preprocessor],
-        settings[:dictionary_size],
-        settings[:samplesize],
-        settings[:timestamp]
-      ].join '_'
+    def get_feature_vectors(size, dictionary_size)
+      jobs = fetch_jobs size
+      data = @preprocessor.process jobs
+      @selector.generate_vectors(data, dictionary_size)
     end
-
-    def print_and_save_results predictor, results, filename
-      l "OverallAccuracy on test_set: #{"%.2f" % (predictor.overall_accuracy*100.0)}%"
-      l "GeometricMean on test_set: #{predictor.geometric_mean}"
-      l "cost: #{predictor.cost} gamma:#{predictor.gamma}"
-      l "cost: #{Math.log2(predictor.cost)} gamma:#{Math.log2(predictor.gamma)} || log2"
-
-      IO.write "results/#{filename}", results
-      filename
+    def fetch_test_set
+      create_test_problem fetch_test_data
     end
 
     #
     # fetch, preprocess a test set, generate feature vectors and create a libsvm Problem
+    # assumes @selector already has a dictionary
     # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
     #
     # @return [Problem] libsvm Problem
-    def fetch_test_data classification, count=10000, offset=20000
-      data = @preprocessor.process(fetch_jobs(classification, count, offset), classification)
+    def fetch_test_data count=10000, offset=20000
+      @preprocessor.process(fetch_jobs(count, offset))
     end
-    def create_test_problem data, selector, classification
-      set = selector.generate_vectors(data, classification, @dictionary_size)
+    def create_test_problem data
+      set = @selector.generate_vectors data
       Libsvm::Problem.new.tap{|p| p.set_examples(set.map(&:label), set.map{|e| Libsvm::Node.features(e.data)})}
     end
 
 
+    CLASSIFICATION_IDS ={ function: DB[:functions].map(:id).sort,
+                          career_level: DB[:functions].map(:id).sort,
+                          industry: DB[:functions].map(:id).sort }
+    JOBS_SQL = <<-SQL
+      SELECT title, description, function_id, industry_id, career_level_id
+        FROM jobs j
+      INNER JOIN ja_qc_job_checks jc ON j.id = jc.job_id
+      INNER JOIN ja_qc_check_status cs ON jc.id = cs.qc_job_check_id
+      WHERE j.language_id = ?
+        AND cs.check_status IS NOT NULL
+      ORDER BY jc.created_at ASC
+      LIMIT ?
+      OFFSET ?;
+    SQL
     #
     # fetch job data with a 50/50 distribution between correct and false classification
     # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
@@ -73,23 +74,23 @@ module Runner
     # @param  offset [Integer] offset the results
     # @param  language [Integer] language_id, see pjpp
     #
-    # @return [Array<Job>]
-    def fetch_jobs(classification, limit = 100, offset = 0, language = 6)
+    # @return [Array<Hash>]
+    def fetch_jobs(limit = 100, offset = 0, language = 6)
+      # skip the 1000 oldest jobs
       offset += 1000
-      correct= Job.with_language(language)
-                  .correct_for_classification(classification)
-                  .limit(limit/2)
-                  .order('ja_qc_job_checks.created_at ASC')
-                  .offset(offset) if offset > 0
+      jobs = DB[JOBS_SQL, language, limit, offset].all
 
-      faulty = Job.with_language(language)
-                  .correct_for_classification(classification)
-                  .limit(limit/2)
-                  .order('ja_qc_job_checks.created_at ASC')
-                  .offset(offset + limit/2)
-                  .map { |e| e.act_as_false!; e }
-
-      correct + faulty
+      jobs.map.with_index do |job,index|
+        if index.even?
+          id = job[:"#{@classification}_id"]
+          label = true
+        else
+          #select a random false id
+          id = CLASSIFICATION_IDS[@classification.to_sym].reject{|e| e == job[:"#{@classification}_id"]}.sample
+          label = false
+        end
+        { title: job[:title], description: job[:description], id: id, label: label }
+      end
     end
 
 
@@ -112,26 +113,17 @@ module Runner
       when :nelder_mead
         NelderMead
       else
-        GridSearch
+        NelderMead
       end
     end
 
     def create_preprocessor(preprocessor, params={})
-      get_preprocessor_klass(preprocessor).new(params.reverse_merge(parallel: true))
-    end
-    #
-    # fetch preprocessor class, only one kind implemented so will always return Preprocessor::Simple
-    # @param  p [Symbol]
-    #
-    # @return [Preprocessor]
-    def get_preprocessor_klass(preprocessor)
-      case preprocessor
-      when :simple
-        Preprocessor::Simple
-      when :industry_map
-        Preprocessor::WithIndustryMap
+      if @classification == :industry && preprocessor == :id_map
+        #TODO decouple this from Pjpp::Industry
+        id_map = args.fetch(:id_map){ Hash[CLASSIFICATION_IDS[@classification].map.with_index{|e,i| [e,i]}] }
+        Preprocessor::IDMapping.new(id_map, params.reverse_merge(parallel: true))
       else
-        Preprocessor::WithIndustryMap
+        Preprocessor::Simple.new(params.reverse_merge(parallel: true))
       end
     end
 
@@ -145,8 +137,6 @@ module Runner
     # @return [Selector]
     def get_selector_klass(selector)
       case selector
-      when :simple
-        Selector::Simple
       when :ngram
         Selector::NGram
       when :binary_encoded

@@ -8,23 +8,16 @@ Bundler.setup
 Bundler.require(:default, rack_env)
 print "#{rack_env}\n"
 
-# load config
-%w(db/config.yml).each do |f|
-  unless File.exists? File.join(ROOT, f)
-    require 'fileutils'
-    FileUtils.cp File.join(ROOT, "#{f}.example"), File.join(ROOT, f)
-    puts "[INFO] #{f} created from sample"
-  end
+#TODO load this from a file
+if File.exists? './settings.json'
+  DB = Sequel.connect(JSON.parse(IO.read('./settings.json')))
+else
+  puts <<-EOF.gsub(/^ {4}/,'')
+    no settings.json file found
+    should contain content similar to:
+    {
+      "sequel-uri": "postgres://username:password@host:port/database"
+    }
+  EOF
 end
 
-# connect to database
-require 'logger'
-#ActiveRecord::Base.logger = Logger.new("log/#{rack_env.to_s}.log")
-#ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Base.configurations = YAML::load(IO.read(File.join(ROOT,'db/config.yml')))
-ActiveRecord::Base.establish_connection(:pjpp_copy)
-
-# load models
-Dir[File.join(ROOT, 'lib', 'models','*.rb')].each {|m| require m}
-
-Predictor.establish_connection(rack_env)

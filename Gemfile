@@ -2,27 +2,31 @@
 source "https://rubygems.org"
 
 # database
-gem 'activerecord', require: 'active_record'
+# gem 'activerecord', require: 'active_record'
+# gem 'standalone_migrations'
+
+gem 'sequel'
 gem 'activesupport', require: false
-gem 'standalone_migrations'
+
 
 # Preprocessor & Selectors
-gem 'svm_helper', '~>0.1.0'
+# gem 'svm_helper', '~>0.1.0'
+gem 'svm_helper', '~>0.1.0', github: 'sch1zo/svm_helper', branch: 'no_job_dependencies'
 
 # Trainer
-gem 'svm_trainer', '~>0.1.9', github: 'sch1zo/svm_trainer'
+gem 'svm_trainer', '~>0.1.10', github: 'sch1zo/svm_trainer'
 
 gem 'svm_predictor', '~>0.0.1', git: 'git@github.com:sch1zo/svm_predictor.git'
 
-platforms :jruby do
-  gem 'activerecord-jdbcpostgresql-adapter'
-  gem 'activerecord-jdbcsqlite3-adapter'
-  gem "jrb-libsvm", '~>0.1.2'
-  # gem "jrb-libsvm", '~>0.1.2', github: 'sch1zo/jrb-libsvm', require: 'jrb-libsvm'
-end
+# platforms :jruby do
+#   gem 'activerecord-jdbcpostgresql-adapter'
+#   gem 'activerecord-jdbcsqlite3-adapter'
+#   gem "jrb-libsvm", '~>0.1.2'
+#   # gem "jrb-libsvm", '~>0.1.2', github: 'sch1zo/jrb-libsvm', require: 'jrb-libsvm'
+# end
 platforms :ruby do
   gem 'pg'
-  gem 'sqlite3'
+  # gem 'sqlite3'
   gem "rb-libsvm", '~>1.1.2',  github: 'sch1zo/rb-libsvm', require: 'libsvm'
 end
 
