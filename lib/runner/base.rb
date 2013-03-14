@@ -54,8 +54,8 @@ module Runner
 
 
     CLASSIFICATION_IDS ={ function: DB[:functions].map(:id).sort,
-                          career_level: DB[:functions].map(:id).sort,
-                          industry: DB[:functions].map(:id).sort }
+                          career_level: DB[:career_levels].map(:id).sort,
+                          industry: DB[:industries].map(:id).sort }
     JOBS_SQL = <<-SQL
       SELECT title, description, function_id, industry_id, career_level_id
         FROM jobs j
@@ -78,9 +78,8 @@ module Runner
     def fetch_jobs(limit = 100, offset = 0, language = 6)
       # skip the 1000 oldest jobs
       offset += 1000
-      jobs = DB[JOBS_SQL, language, limit, offset].all
 
-      jobs.map.with_index do |job,index|
+      DB[JOBS_SQL, language, limit, offset].map.with_index do |job,index|
         if index.even?
           id = job[:"#{@classification}_id"]
           label = true
@@ -118,17 +117,18 @@ module Runner
     end
 
     def create_preprocessor(preprocessor, params={})
+      params = {parallel: true}.merge params
       if @classification == :industry && preprocessor == :id_map
         #TODO decouple this from Pjpp::Industry
         id_map = args.fetch(:id_map){ Hash[CLASSIFICATION_IDS[@classification].map.with_index{|e,i| [e,i]}] }
-        Preprocessor::IDMapping.new(id_map, params.reverse_merge(parallel: true))
+        Preprocessor::IDMapping.new(id_map, params)
       else
-        Preprocessor::Simple.new(params.reverse_merge(parallel: true))
+        Preprocessor::Simple.new(params)
       end
     end
 
     def create_selector(selector, params={})
-      get_selector_klass(selector).new(params.reverse_merge(parallel: true))
+      get_selector_klass(selector).new(@classification, {parallel: true}.merge(params))
     end
     #
     # fetch Selector class from :symbol

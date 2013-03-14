@@ -2,12 +2,7 @@
 source "https://rubygems.org"
 
 # database
-# gem 'activerecord', require: 'active_record'
-# gem 'standalone_migrations'
-
 gem 'sequel'
-gem 'activesupport', require: false
-
 
 # Preprocessor & Selectors
 # gem 'svm_helper', '~>0.1.0'
@@ -16,6 +11,7 @@ gem 'svm_helper', '~>0.1.0', github: 'sch1zo/svm_helper', branch: 'no_job_depend
 # Trainer
 gem 'svm_trainer', '~>0.1.10', github: 'sch1zo/svm_trainer'
 
+# Predictor
 gem 'svm_predictor', '~>0.0.1', git: 'git@github.com:sch1zo/svm_predictor.git'
 
 # platforms :jruby do
@@ -26,7 +22,7 @@ gem 'svm_predictor', '~>0.0.1', git: 'git@github.com:sch1zo/svm_predictor.git'
 # end
 platforms :ruby do
   gem 'pg'
-  # gem 'sqlite3'
+  # gem 'sequel_pg'
   gem "rb-libsvm", '~>1.1.2',  github: 'sch1zo/rb-libsvm', require: 'libsvm'
 end
 

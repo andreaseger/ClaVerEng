@@ -108,7 +108,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport
   github-markup
   guard-rspec
   guard-yard

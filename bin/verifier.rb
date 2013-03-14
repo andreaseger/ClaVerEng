@@ -39,8 +39,9 @@ optparse = OptionParser.new do |opts|
 end
 optparse.parse!
 
-require_relative 'config/setup'
-require_relative 'lib/runner/single'
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..'))
+require 'config/setup'
+require 'lib/runner/single'
 
 runner = Runner::Single.new
 
