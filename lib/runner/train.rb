@@ -2,9 +2,10 @@ require_relative 'single'
 module Runner
   class Train < Single
     def train options
-      @preprocessor, @selector = get_helpers(options[:preprocessor],
-                                             options[:selector], options)
-      classification = options[:classification]
+      classification = params.fetch(:classification){ :function }
+
+      @preprocessor = create_preprocessor(preprocessor, classification)
+      @selector = create_selector(selector, classification, params)
 
       @feature_vectors = get_feature_vectors(classification,
                                               options[:max_samplesize],
