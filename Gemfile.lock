@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_helper.git
-  revision: a85b81a5d0f2d0b381be3d859416fed60d579d1f
+  revision: ee3865f28dee0e709de9548d4e62882fd953e1c8
   branch: no_job_dependencies
   specs:
     svm_helper (0.1.0)
@@ -20,9 +20,9 @@ GIT
 
 GIT
   remote: git@github.com:sch1zo/svm_predictor.git
-  revision: d8db12c8f79f38a21e73abb5dec5eaee900390c7
+  revision: 56812bf7165bb089eb5bcc0a443a4107c4ab0239
   specs:
-    svm_predictor (0.0.1)
+    svm_predictor (0.0.2)
       activesupport
       sinatra
       sinatra-contrib
@@ -122,6 +122,6 @@ DEPENDENCIES
   rb-libsvm (~> 1.1.2)!
   sequel
   svm_helper (~> 0.1.0)!
-  svm_predictor (~> 0.0.1)!
+  svm_predictor (~> 0.0.2)!
   svm_trainer (~> 0.1.10)!
   yard

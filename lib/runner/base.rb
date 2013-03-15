@@ -15,13 +15,15 @@ module Runner
     # @return [Predictor]
     def create_predictor(trainer, feature_vectors, test_set, preprocessor=@preprocessor, selector=@selector, classification=@classification)
       model, results, _ = trainer.search feature_vectors, 15
-      predictor = Predictor::Model.new(
+      predictor = SvmPredictor::Model.new(
         selector: selector,
         preprocessor: preprocessor,
-        model: model,
+        svm: model,
         classification: classification,
         trainer_class: trainer.class.to_s,
-        samplesize: feature_vectors.size)
+        properties: { samplesize: feature_vectors.size },
+        basedir: SETTINGS['basedir']
+      )
       evaluator = Evaluator::AllInOne.new(model)
       evaluator.evaluate_dataset(test_set)
       predictor.metrics = evaluator.metrics
@@ -52,21 +54,6 @@ module Runner
       Libsvm::Problem.new.tap{|p| p.set_examples(set.map(&:label), set.map{|e| Libsvm::Node.features(e.data)})}
     end
 
-
-    CLASSIFICATION_IDS ={ function: DB[:functions].map(:id).sort,
-                          career_level: DB[:career_levels].map(:id).sort,
-                          industry: DB[:industries].map(:id).sort }
-    JOBS_SQL = <<-SQL
-      SELECT title, description, function_id, industry_id, career_level_id
-        FROM jobs j
-      INNER JOIN ja_qc_job_checks jc ON j.id = jc.job_id
-      INNER JOIN ja_qc_check_status cs ON jc.id = cs.qc_job_check_id
-      WHERE j.language_id = ?
-        AND cs.check_status IS NOT NULL
-      ORDER BY jc.created_at ASC
-      LIMIT ?
-      OFFSET ?;
-    SQL
     #
     # fetch job data with a 50/50 distribution between correct and false classification
     # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
@@ -79,7 +66,7 @@ module Runner
       # skip the 1000 oldest jobs
       offset += 1000
 
-      DB[JOBS_SQL, language, limit, offset].map.with_index do |job,index|
+      sql(JOBS_SQL, language, limit, offset).map.with_index do |job,index|
         if index.even?
           id = job[:"#{@classification}_id"]
           label = true
@@ -145,5 +132,29 @@ module Runner
         Selector::Simple
       end
     end
+
+    private
+    JOBS_SQL = <<-SQL
+      SELECT title, description, function_id, industry_id, career_level_id
+        FROM jobs j
+      INNER JOIN ja_qc_job_checks jc ON j.id = jc.job_id
+      INNER JOIN ja_qc_check_status cs ON jc.id = cs.qc_job_check_id
+      WHERE j.language_id = ?
+        AND cs.check_status IS NOT NULL
+      ORDER BY jc.created_at ASC
+      LIMIT ?
+      OFFSET ?;
+    SQL
+    def self.sql(*args)
+      # Sequel.postgres(SETTINGS['database'].merge(logger: Logger.new($stdout))) {|db| db[*args] }
+      Sequel.postgres(SETTINGS['database']) {|db| db[*args] }
+    end
+    def sql(*args)
+      self.class.sql(*args)
+    end
+    CLASSIFICATION_IDS = {
+      function: sql(:functions).map(:id).sort,
+      career_level: sql(:career_levels).map(:id).sort,
+      industry: sql(:industries).map(:id).sort }
   end
 end

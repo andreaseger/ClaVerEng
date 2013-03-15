@@ -12,14 +12,12 @@ require 'logger'
 #TODO load this from a file
 config = File.join(ROOT,'config','settings.json')
 if File.exists? config
-  DB = Sequel.connect(JSON.parse(IO.read(config))['sequel-uri'], loggers: [Logger.new($stdout)])
+  SETTINGS = JSON.parse(IO.read(config))
+  #DB = Sequel.connect(SETTINGS['sequel-uri'], loggers: [Logger.new($stdout)])
 else
   puts <<-EOF.gsub(/^ {4}/,'')
-    no #{config} file found
-    should contain content similar to:
-    {
-      "sequel-uri": "postgres://username:password@host:port/database"
-    }
+    no settings file found
+    have a look at config settings.json.example
   EOF
 end
 
