@@ -5,8 +5,7 @@ source "https://rubygems.org"
 gem 'sequel'
 
 # Preprocessor & Selectors
-# gem 'svm_helper', '~>0.1.0'
-gem 'svm_helper', '~>0.1.0', github: 'sch1zo/svm_helper', branch: 'no_job_dependencies'
+gem 'svm_helper', '>= 0.1.1'
 
 # Trainer
 gem 'svm_trainer', '~>0.1.10', github: 'sch1zo/svm_trainer'
