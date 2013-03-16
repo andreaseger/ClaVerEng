@@ -8,11 +8,12 @@ Bundler.setup
 Bundler.require(:default, rack_env)
 print "#{rack_env}\n"
 
-require 'logger'
 #TODO load this from a file
-config = File.join(ROOT,'config','settings.json')
+config_path = File.join(ROOT,'config','settings.json')
 if File.exists? config
   SETTINGS = JSON.parse(IO.read(config))
+  # correctly set the basedir relative to the config file
+  SETTINGS['basedir'] = File.realdirpath File.join(File.dirname(config_path), SETTINGS['basedir'])
   #DB = Sequel.connect(SETTINGS['sequel-uri'], loggers: [Logger.new($stdout)])
 else
   puts <<-EOF.gsub(/^ {4}/,'')

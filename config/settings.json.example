@@ -5,6 +5,8 @@
     "password": "password",
     "database": "database"
   },
-  "basedir": "results"
+
+  "basedir": "../results" // relative to this file
+  "function_predictor": "346-predictor.json" // relative to basedir
 }
 

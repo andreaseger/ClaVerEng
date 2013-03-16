@@ -8,10 +8,10 @@ gem 'sequel'
 gem 'svm_helper', '>= 0.1.1'
 
 # Trainer
-gem 'svm_trainer', '~>0.1.10', github: 'sch1zo/svm_trainer'
+gem 'svm_trainer', '>= 0.1.10', github: 'sch1zo/svm_trainer'
 
 # Predictor
-gem 'svm_predictor', '~>0.0.2', git: 'git@github.com:sch1zo/svm_predictor.git'
+gem 'svm_predictor', '>= 0.0.3', git: 'git@github.com:sch1zo/svm_predictor.git'
 
 # platforms :jruby do
 #   gem 'activerecord-jdbcpostgresql-adapter'
@@ -22,7 +22,7 @@ gem 'svm_predictor', '~>0.0.2', git: 'git@github.com:sch1zo/svm_predictor.git'
 platforms :ruby do
   gem 'pg'
   # gem 'sequel_pg'
-  gem "rb-libsvm", '~>1.1.2',  github: 'sch1zo/rb-libsvm', require: 'libsvm'
+  gem "rb-libsvm", '>= 1.1.2',  github: 'sch1zo/rb-libsvm', require: 'libsvm'
 end
 
 group :test, :development do
