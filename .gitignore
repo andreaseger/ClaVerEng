@@ -18,7 +18,5 @@ tmp
 _yardoc
 doc/
 
-db/config.yml
-config/settings.yml
-
-results
+results/*
+config/settings.json

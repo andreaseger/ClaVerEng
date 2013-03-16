@@ -1,13 +1,18 @@
+#!/usr/bin/env ruby
+
 require 'optparse'
 
 options={}
 optparse = OptionParser.new do |opts|
-  opts.on( "-p", "--preprocessor NAME", "Which Preprocessor to use. [Simple]" ) do |opt|
+  opts.on( "-p", "--preprocessor NAME", "Which Preprocessor to use. [Simple,IDMapping]" ) do |opt|
     options[:preprocessor] = opt.downcase.to_sym
   end
 
-  opts.on( "-s", "--selector NAME", "Which Selector to use. [Simple]" ) do |opt|
+  opts.on( "-s", "--selector NAME", "Which Selector to use. [simple,ngram,binary_encoded]" ) do |opt|
     options[:selector] = opt.downcase.to_sym
+  end
+  opts.on( "-g", "--gram SIZE", Integer, "n-gram size." ) do |opt|
+    options[:gram_size] = opt.to_i
   end
   opts.on( "-n", "--max_samplesize SIZE", Integer, "max number of jobs to use." ) do |opt|
     options[:max_samplesize] = opt
@@ -26,10 +31,7 @@ optparse = OptionParser.new do |opts|
   opts.on( "-t", "--trainer TRAINER", String, "either *grid*, *doe* or *nelder_mead* " ) do |opt|
     options[:trainer] = opt.downcase.to_sym
   end
-  options[:verbose] = false
-  opts.on( "-v", "--verbose", "print verbose output" ) do |opt|
-    options[:verbose] = true
-  end
+
   opts.on( '-?', '--help', 'Display this screen' ) do
     puts opts
     exit
@@ -37,9 +39,10 @@ optparse = OptionParser.new do |opts|
 end
 optparse.parse!
 
-require_relative 'config/environment'
-require_relative 'lib/runner/single'
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..'))
+require 'config/setup'
+require 'lib/runner/single'
 
-runner = Runner::Single.new(verbose: options[:verbose])
+runner = Runner::Single.new
 
 runner.run(options[:preprocessor], options[:selector], options[:trainer], options)
