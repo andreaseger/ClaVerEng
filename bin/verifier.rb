@@ -14,8 +14,8 @@ optparse = OptionParser.new do |opts|
   opts.on( "-g", "--gram SIZE", Integer, "n-gram size." ) do |opt|
     options[:gram_size] = opt.to_i
   end
-  opts.on( "-n", "--max_samplesize SIZE", Integer, "max number of jobs to use." ) do |opt|
-    options[:max_samplesize] = opt
+  opts.on( "-n", "--samplesize SIZE", Integer, "number of jobs to use." ) do |opt|
+    options[:samplesize] = opt
   end
   opts.on( "-d", "--dictionary-size SIZE", Integer,
                  "Number of unique words in the dictionary" ) do |opt|

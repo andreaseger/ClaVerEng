@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_trainer.git
-  revision: b1431648705fc2a3777d119062b16f7670a6b1cd
+  revision: 5aacbe83aa29f199d0b542a147bde76885d55a53
   specs:
     svm_trainer (0.1.10)
 
@@ -52,7 +52,7 @@ GEM
     method_source (0.8.1)
     mocha (0.13.3)
       metaclass (~> 0.0.1)
-    multi_json (1.6.1)
+    multi_json (1.7.0)
     parallel (0.6.2)
     pg (0.14.1)
     pry (0.9.12)

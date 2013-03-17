@@ -3,7 +3,7 @@ module Runner
   class Single < Base
     def run(preprocessor, selector, trainer_sym, params={})
       @classification = params.fetch(:classification){ :function }
-      samplesize = params.fetch(:max_samplesize) { 1000 }
+      samplesize = params.fetch(:samplesize) { 1000 }
       dictionary_size = params.fetch(:dictionary_size) { 600 }
 
       @preprocessor = create_preprocessor(preprocessor)
