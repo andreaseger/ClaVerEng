@@ -14,8 +14,8 @@ optparse = OptionParser.new do |opts|
   opts.on( "-g", "--gram SIZE", Integer, "n-gram size." ) do |opt|
     options[:gram_size] = opt.to_i
   end
-  opts.on( "-n", "--max_samplesize SIZE", Integer, "max number of jobs to use." ) do |opt|
-    options[:max_samplesize] = opt
+  opts.on( "-n", "--samplesize SIZE", Integer, "number of jobs to use." ) do |opt|
+    options[:samplesize] = opt
   end
   opts.on( "-d", "--dictionary-size SIZE", Integer,
                  "Number of unique words in the dictionary" ) do |opt|
@@ -30,6 +30,11 @@ optparse = OptionParser.new do |opts|
 
   opts.on( "-t", "--trainer TRAINER", String, "either *grid*, *doe* or *nelder_mead* " ) do |opt|
     options[:trainer] = opt.downcase.to_sym
+  end
+
+  options[:git]=true
+  opts.on( "-b", "--no-git", "don't make a commit for the results" ) do |opt|
+    options[:git]=false
   end
 
   opts.on( '-?', '--help', 'Display this screen' ) do

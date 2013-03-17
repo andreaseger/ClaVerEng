@@ -6,13 +6,13 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_trainer.git
-  revision: b1431648705fc2a3777d119062b16f7670a6b1cd
+  revision: f8792d2585412dcd530e55a955e2185105aa479b
   specs:
     svm_trainer (0.1.10)
 
 GIT
   remote: git@github.com:sch1zo/svm_predictor.git
-  revision: c07d12340c7a3639c5ca5121537f7cc2db5d3180
+  revision: fde65078e09f7ba5c453d3563c91c11590e997f9
   specs:
     svm_predictor (0.0.3)
       activesupport
@@ -52,7 +52,7 @@ GEM
     method_source (0.8.1)
     mocha (0.13.3)
       metaclass (~> 0.0.1)
-    multi_json (1.6.1)
+    multi_json (1.7.0)
     parallel (0.6.2)
     pg (0.14.1)
     pry (0.9.12)
@@ -102,6 +102,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport
   github-markup
   guard-rspec
   guard-yard

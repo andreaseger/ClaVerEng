@@ -10,8 +10,8 @@ print "#{rack_env}\n"
 
 #TODO load this from a file
 config_path = File.join(ROOT,'config','settings.json')
-if File.exists? config
-  SETTINGS = JSON.parse(IO.read(config))
+if File.exists? config_path
+  SETTINGS = JSON.parse(IO.read(config_path))
   # correctly set the basedir relative to the config file
   SETTINGS['basedir'] = File.realdirpath File.join(File.dirname(config_path), SETTINGS['basedir'])
   #DB = Sequel.connect(SETTINGS['sequel-uri'], loggers: [Logger.new($stdout)])

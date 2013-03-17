@@ -1,30 +1,30 @@
 export OMP_NUM_THREADS=8
 export SVM_CACHESIZE=512
-alias be="bundle exec"
 
 # baseline
-time be ruby verifier.rb -p industry_map -s simple -n 6000 -d 600 -c function -t nelder_mead -v
+time bin/verifier.rb --preprocessor simple --selector simple --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
 
 # trainer
-time be ruby verifier.rb -p industry_map -s simple -n 6000 -d 600 -c function -t doe -v
-time be ruby verifier.rb -p industry_map -s simple -n 6000 -d 600 -c function -t grid -v
+time bin/verifier.rb --preprocessor simple --selector simple --samplesize 6000 --dictionary-size 800 --classification function --trainer grid
+time bin/verifier.rb --preprocessor simple --selector simple --samplesize 6000 --dictionary-size 800 --classification function --trainer doe
 
 # dictionary
-time be ruby verifier.rb -p industry_map -s simple -n 6000 -d 400 -c function -t nelder_mead -v
-time be ruby verifier.rb -p industry_map -s simple -n 6000 -d 800 -c function -t nelder_mead -v
-time be ruby verifier.rb -p industry_map -s simple -n 6000 -d 1000 -c function -t nelder_mead -v
+time bin/verifier.rb --preprocessor simple --selector simple --samplesize 6000 --dictionary-size 400 --classification function --trainer nelder_mead
+time bin/verifier.rb --preprocessor simple --selector simple --samplesize 6000 --dictionary-size 600 --classification function --trainer nelder_mead
+time bin/verifier.rb --preprocessor simple --selector simple --samplesize 6000 --dictionary-size 1000 --classification function --trainer nelder_mead
+time bin/verifier.rb --preprocessor simple --selector simple --samplesize 6000 --dictionary-size 1500 --classification function --trainer nelder_mead
 
 # n-gram
-time be ruby verifier.rb -p industry_map -s ngram -g 2 -n 6000 -d 600 -c function -t nelder_mead -v
-time be ruby verifier.rb -p industry_map -s ngram -g 3 -n 6000 -d 600 -c function -t nelder_mead -v
-time be ruby verifier.rb -p industry_map -s ngram -g 4 -n 6000 -d 600 -c function -t nelder_mead -v
+time bin/verifier.rb --preprocessor simple --selector ngram --gram-size 2 --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
+time bin/verifier.rb --preprocessor simple --selector ngram --gram-size 3 --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
+time bin/verifier.rb --preprocessor simple --selector ngram --gram-size 4 --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
 
 # binary encoded classification_id
-time be ruby verifier.rb -p simple -s binary_encoded -n 6000 -d 600 -c function -t nelder_mead -v
+time bin/verifier.rb --preprocessor simple --selector binary_encoded --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
 
 # samplesize
-time be ruby verifier.rb -p industry_map -s simple -n 3000 -d 600 -c function -t nelder_mead -v
-time be ruby verifier.rb -p industry_map -s simple -n 9000 -d 600 -c function -t nelder_mead -v
+time bin/verifier.rb --preprocessor simple --selector simple --samplesize 3000 --dictionary-size 800 --classification function --trainer nelder_mead
+time bin/verifier.rb --preprocessor simple --selector simple --samplesize 9000 --dictionary-size 800 --classification function --trainer nelder_mead
 
 # more samplesize w/o parameter search
 # $cost=

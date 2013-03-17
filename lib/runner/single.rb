@@ -3,7 +3,7 @@ module Runner
   class Single < Base
     def run(preprocessor, selector, trainer_sym, params={})
       @classification = params.fetch(:classification){ :function }
-      samplesize = params.fetch(:max_samplesize) { 1000 }
+      samplesize = params.fetch(:samplesize) { 1000 }
       dictionary_size = params.fetch(:dictionary_size) { 600 }
 
       @preprocessor = create_preprocessor(preprocessor)
@@ -21,7 +21,19 @@ module Runner
 
       IO.write(File.join(SETTINGS['basedir'], "#{predictor.id}-results"), trainer.format_results(results))
 
-      p predictor.serializable_hash
+      commit(predictor) if params[:git]
+
+      p predictor.serializable_hash.slice(:id, :classification, :properties, :metrics, :trainer_class, :preprocessor_class, :selector_class)
+    end
+    def commit predictor
+      system <<-GIT.gsub(/^ {8}/,'')
+        cd #{SETTINGS['basedir']}
+        git add .
+        git commit -m "##{predictor.id} #{predictor.classification} #{predictor.trainer_class}
+
+        #{predictor.properties}
+        #{predictor.metrics.except(:correct_histogram, :faulty_histogram, :full_histogram)}"
+      GIT
     end
   end
 end
