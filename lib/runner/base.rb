@@ -14,7 +14,7 @@ module Runner
     #
     # @return [Predictor]
     def create_predictor(trainer, feature_vectors, test_set, preprocessor=@preprocessor, selector=@selector, classification=@classification)
-      model, results, _ = trainer.search feature_vectors, 15
+      model, results, _ = trainer.search feature_vectors, (trainer.is_a?(NelderMead) ? 15 : 4 )
       predictor = SvmPredictor::Model.new(
         selector: selector,
         preprocessor: preprocessor,
