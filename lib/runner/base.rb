@@ -107,7 +107,7 @@ module Runner
       params = {parallel: true}.merge params
       if @classification == :industry && preprocessor == :id_map
         #TODO decouple this from Pjpp::Industry
-        id_map = args.fetch(:id_map){ Hash[CLASSIFICATION_IDS[@classification].map.with_index{|e,i| [e,i]}] }
+        id_map = params.fetch(:id_map){ Hash[CLASSIFICATION_IDS[@classification].map.with_index{|e,i| [e,i]}] }
         Preprocessor::IDMapping.new(id_map, params)
       else
         Preprocessor::Simple.new(params)
