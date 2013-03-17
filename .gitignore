@@ -18,5 +18,4 @@ tmp
 _yardoc
 doc/
 
-results/*
 config/settings.json
