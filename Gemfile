@@ -4,6 +4,8 @@ source "https://rubygems.org"
 # database
 gem 'sequel'
 
+gem 'activesupport', require: 'active_support/core_ext'
+
 # Preprocessor & Selectors
 gem 'svm_helper', '>= 0.1.1'
 

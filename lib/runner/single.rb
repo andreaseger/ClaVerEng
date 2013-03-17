@@ -21,7 +21,16 @@ module Runner
 
       IO.write(File.join(SETTINGS['basedir'], "#{predictor.id}-results"), trainer.format_results(results))
 
-      p predictor.serializable_hash
+      puts system(<<-GIT)
+        cd #{SETTINGS['basedir']}
+        git add .
+        git commit -m "#{predictor.id} #{predictor.classification} #{predictor.trainer_class}
+
+        #{predictor.properties}
+        #{predictor.metrics}"
+      GIT
+
+      p predictor.serializable_hash.slice(:id, :classification, :properties, :metrics, :trainer_class, :preprocessor_class, :selector_class)
     end
   end
 end
