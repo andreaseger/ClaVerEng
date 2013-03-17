@@ -6,13 +6,13 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_trainer.git
-  revision: 5aacbe83aa29f199d0b542a147bde76885d55a53
+  revision: f8792d2585412dcd530e55a955e2185105aa479b
   specs:
     svm_trainer (0.1.10)
 
 GIT
   remote: git@github.com:sch1zo/svm_predictor.git
-  revision: c07d12340c7a3639c5ca5121537f7cc2db5d3180
+  revision: fde65078e09f7ba5c453d3563c91c11590e997f9
   specs:
     svm_predictor (0.0.3)
       activesupport

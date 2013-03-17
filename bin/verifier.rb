@@ -32,6 +32,11 @@ optparse = OptionParser.new do |opts|
     options[:trainer] = opt.downcase.to_sym
   end
 
+  options[:git]=true
+  opts.on( "-b", "--no-git", "don't make a commit for the results" ) do |opt|
+    options[:git]=false
+  end
+
   opts.on( '-?', '--help', 'Display this screen' ) do
     puts opts
     exit
