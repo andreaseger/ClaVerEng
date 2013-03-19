@@ -22,7 +22,6 @@ module Runner
       IO.write(File.join(SETTINGS['basedir'], "#{predictor.id}-results"), trainer.format_results(results))
 
       commit(predictor) if params[:git]
-      binding.pry
 
       p predictor.serializable_hash.slice(:id, :classification, :properties, :metrics, :trainer_class, :preprocessor_class, :selector_class)
     end

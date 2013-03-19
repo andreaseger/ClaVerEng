@@ -33,6 +33,8 @@ group :test, :development do
   gem 'github-markup'
 
   gem 'pry'
+  gem 'pry-nav'
+#  gem 'pry-stack_explorer'
   gem 'guard-rspec'
   gem 'guard-yard'
 
