@@ -12,9 +12,9 @@ GIT
 
 GIT
   remote: git@github.com:sch1zo/svm_predictor.git
-  revision: d32af264454b8e4d8ffa9ea83ac5568dcc3ccdf4
+  revision: cac0f7c6c9a43e8f0f8e022885d78956ad8a2f7a
   specs:
-    svm_predictor (0.0.3)
+    svm_predictor (0.0.4)
       activesupport
       sinatra
       sinatra-contrib
@@ -23,8 +23,8 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (3.2.12)
-      i18n (~> 0.6)
+    activesupport (3.2.13)
+      i18n (= 0.6.1)
       multi_json (~> 1.0)
     backports (3.1.1)
     coderay (1.0.9)
@@ -44,7 +44,7 @@ GEM
     guard-yard (2.0.1)
       guard (>= 1.1.0)
       yard (>= 0.7.0)
-    i18n (0.6.4)
+    i18n (0.6.1)
     kramdown (1.0.1)
     listen (0.7.3)
     lumberjack (1.0.2)
@@ -52,7 +52,7 @@ GEM
     method_source (0.8.1)
     mocha (0.13.3)
       metaclass (~> 0.0.1)
-    multi_json (1.7.0)
+    multi_json (1.7.1)
     parallel (0.6.2)
     pg (0.14.1)
     pry (0.9.12)
@@ -120,6 +120,6 @@ DEPENDENCIES
   rb-libsvm (>= 1.1.2)!
   sequel
   svm_helper (>= 0.1.1)
-  svm_predictor (>= 0.0.3)!
+  svm_predictor (>= 0.0.4)!
   svm_trainer (>= 0.1.10)!
   yard
