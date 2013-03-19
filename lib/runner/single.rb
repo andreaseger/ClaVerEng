@@ -19,17 +19,17 @@ module Runner
       l 'parameter search..training..evaluation'
       predictor, results = create_predictor( trainer, feature_vectors, test_set)
 
-      IO.write(File.join(SETTINGS['basedir'], "#{predictor.id}-results"), trainer.format_results(results))
+      IO.write(File.join(SETTINGS['basedir'], predictor.results_filename), trainer.format_results(results))
 
       commit(predictor) if params[:git]
 
       p predictor.serializable_hash.slice(:id, :classification, :properties, :metrics, :trainer_class, :preprocessor_class, :selector_class)
     end
     def commit predictor
-      system <<-GIT.gsub(/^ {8}/,'')
+      puts system(<<-GIT.gsub(/^ {8}/,''))
         cd #{SETTINGS['basedir']}
         git add .
-        git commit -m "##{predictor.id} #{predictor.classification} #{predictor.trainer_class}
+        git commit -m "#{predictor.id} #{predictor.classification} #{predictor.trainer_class}
 
         #{predictor.properties}
         #{predictor.metrics.except(:correct_histogram, :faulty_histogram, :full_histogram)}"

@@ -13,7 +13,7 @@ gem 'svm_helper', '>= 0.1.1'
 gem 'svm_trainer', '>= 0.1.10', github: 'sch1zo/svm_trainer'
 
 # Predictor
-gem 'svm_predictor', '>= 0.0.3', git: 'git@github.com:sch1zo/svm_predictor.git'
+gem 'svm_predictor', '>= 0.0.4', git: 'git@github.com:sch1zo/svm_predictor.git'
 
 # platforms :jruby do
 #   gem 'activerecord-jdbcpostgresql-adapter'
@@ -33,6 +33,8 @@ group :test, :development do
   gem 'github-markup'
 
   gem 'pry'
+  gem 'pry-nav'
+#  gem 'pry-stack_explorer'
   gem 'guard-rspec'
   gem 'guard-yard'
 
