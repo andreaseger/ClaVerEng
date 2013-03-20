@@ -2,44 +2,39 @@ require_relative 'single'
 module Runner
   class Train < Single
     def train options
-      classification = params.fetch(:classification){ :function }
+      @classification = options.fetch(:classification){ :function }
 
-      @preprocessor = create_preprocessor(preprocessor, classification)
-      @selector = create_selector(selector, classification, params)
+      @preprocessor = create_preprocessor(preprocessor)
+      @selector = create_selector(selector, options)
 
-      @feature_vectors = get_feature_vectors(classification,
-                                              options[:max_samplesize],
-                                              options[:dictionary_size]).shuffle
-      @test_set = create_test_problem(fetch_test_data(classification),
-                                      @selector,
-                                      classification)
+      @feature_vectors = get_feature_vectors( options[:max_samplesize],
+                                              options[:dictionary_size])
+      @test_set = create_test_problem(fetch_test_data)
 
       parameter_set = if options[:log2]
               SvmTrainer::ParameterSet.new(options[:gamma], options[:cost])
             else
-              SvmTrainer::ParameterSet.make(options[:gamma], options[:cost])
+              SvmTrainer::ParameterSet.real(options[:gamma], options[:cost])
             end
       @model = ByParameter.new.train(@feature_vectors, parameter_set)
 
-      p = save_predictor classification
+      p = save_predictor
 
-      evaluator = SvmTrainer::Evaluator::AllInOne.new(p.model)
-      evaluator.evaluate_dataset(@test_set)
-      l "overall_accuracy: #{evaluator.overall_accuracy}"
-      l "geometric_mean: #{evaluator.geometric_mean}"
-      l "histogram: #{evaluator.full_histogram.sort}"
-      l  [p.id, p.classification, p.used_preprocessor, p.used_selector,
-          p.used_trainer, p.dictionary_size, p.samplesize, p.created_at,
-          p.gamma, p.cost].flatten
+      commit(predictor) if params[:git]
+
+      p predictor.serializable_hash.slice(:id, :classification, :properties, :metrics, :trainer_class, :preprocessor_class, :selector_class)
     end
-    def save_predictor classification
+    def save_predictor
       p = Predictor.new(selector: @selector,
               preprocessor: @preprocessor,
-              model: @model,
-              classification: classification,
-              used_trainer: ByParameter.to_s,
-              samplesize: @feature_vectors.size)
-      p.test_model @test_set
+              svm: @model,
+              classification: @classification,
+              trainer_class: ByParameter.to_s,
+              properties: { samplesize: feature_vectors.size },
+              basedir: SETTINGS['basedir']
+      evaluator = Evaluator::AllInOne.new(@model)
+      evaluator.evaluate_dataset(@test_set)
+      p.metrics = evaluator.metrics
       p.save
       p
     end

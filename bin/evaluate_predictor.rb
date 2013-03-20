@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
-$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '../..'))
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..'))
 require 'config/setup'
 require 'lib/runner/base'
 
-class Eval < Runner::Base
+class ReEval < Runner::Base
   def self.run
     new.run
   end
@@ -31,4 +31,4 @@ class Eval < Runner::Base
   end
 end
 
-Eval.run
+ReEval.run
