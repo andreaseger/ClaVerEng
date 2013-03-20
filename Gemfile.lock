@@ -12,7 +12,7 @@ GIT
 
 GIT
   remote: git@github.com:sch1zo/svm_predictor.git
-  revision: 001c4ae26fd3a98ff4cc315f067b120f8eac9784
+  revision: c7b14fe82b9ce478e8e4d83aa28c802932fc26a3
   specs:
     svm_predictor (0.0.4)
       activesupport
@@ -53,7 +53,7 @@ GEM
     mocha (0.13.3)
       metaclass (~> 0.0.1)
     multi_json (1.7.1)
-    parallel (0.6.2)
+    parallel (0.6.3)
     pg (0.14.1)
     pry (0.9.12)
       coderay (~> 1.0.5)
