@@ -12,12 +12,11 @@ GIT
 
 GIT
   remote: git@github.com:sch1zo/svm_predictor.git
-  revision: c7b14fe82b9ce478e8e4d83aa28c802932fc26a3
+  revision: debb8f1b17c6cbe07ab080cad59f2b7d2dbb6459
   specs:
     svm_predictor (0.0.4)
       activesupport
       sinatra
-      sinatra-contrib
       svm_helper (>= 0.1.1)
 
 GEM
@@ -26,10 +25,8 @@ GEM
     activesupport (3.2.13)
       i18n (= 0.6.1)
       multi_json (~> 1.0)
-    backports (3.1.1)
     coderay (1.0.9)
     diff-lcs (1.2.1)
-    eventmachine (1.0.3)
     ffi (1.4.0)
     github-markup (0.7.5)
     guard (1.6.2)
@@ -64,8 +61,6 @@ GEM
     rack (1.5.2)
     rack-protection (1.5.0)
       rack
-    rack-test (0.6.2)
-      rack (>= 1.0)
     rake (10.0.3)
     rb-fchange (0.0.6)
       ffi
@@ -81,17 +76,10 @@ GEM
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.13.0)
     sequel (3.45.0)
-    sinatra (1.3.6)
-      rack (~> 1.4)
-      rack-protection (~> 1.3)
-      tilt (~> 1.3, >= 1.3.3)
-    sinatra-contrib (1.3.2)
-      backports (>= 2.0)
-      eventmachine
-      rack-protection
-      rack-test
-      sinatra (~> 1.3.0)
-      tilt (~> 1.3)
+    sinatra (1.4.2)
+      rack (~> 1.5, >= 1.5.2)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
     slop (3.4.4)
     svm_helper (0.1.1)
       parallel (~> 0.6.2)
