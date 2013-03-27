@@ -7,10 +7,11 @@ gem 'sequel'
 gem 'activesupport', require: 'active_support/core_ext'
 
 # Preprocessor & Selectors
-gem 'svm_helper', '>= 0.1.1'
+gem 'svm_helper', github: 'sch1zo/svm_helper', branch: 'forman_selector'
+gem 'parallel'
 
 # Trainer
-gem 'svm_trainer', '>= 0.1.10', github: 'sch1zo/svm_trainer'
+gem 'svm_trainer', github: 'sch1zo/svm_trainer'
 
 # Predictor
 gem 'svm_predictor', '>= 0.0.4', git: 'git@github.com:sch1zo/svm_predictor.git'

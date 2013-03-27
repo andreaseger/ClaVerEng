@@ -128,6 +128,8 @@ module Runner
         Selector::NGram
       when :binary_encoded
         Selector::WithBinaryEncoding
+      when :forman
+        Selector::Forman
       else
         Selector::Simple
       end

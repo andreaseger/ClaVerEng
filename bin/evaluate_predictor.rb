@@ -14,16 +14,20 @@ class ReEval < Runner::Base
     p = SvmPredictor::Model.load_file file
     @classification = p.classification.to_sym
 
+    puts 'fetching jobs...'
     jobs = fetch_jobs(10000, 20000)
+    puts 'preprocessing jobs...'
     data = p.preprocessor.process(jobs)
+    puts 'selecting features...'
     set = p.selector.generate_vectors(data)
     problem = Libsvm::Problem.new.tap{|p|
                 p.set_examples(set.map(&:label),
                                set.map{|e| Libsvm::Node.features(e.data)}
                 )}
     evaluator = SvmTrainer::Evaluator::AllInOne.new(p.svm)
+    puts 'evaluating...'
     evaluator.evaluate_dataset(problem)
-    puts "overall_accuracy: #{evaluator.overall_accuracy}"
+    binding.pry
     puts "geometric_mean: #{evaluator.geometric_mean}"
     puts "histogram: #{evaluator.full_histogram}"
 

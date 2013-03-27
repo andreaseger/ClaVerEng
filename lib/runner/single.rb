@@ -1,6 +1,7 @@
 require_relative 'base'
 module Runner
   class Single < Base
+    attr_accessor :classification
     def run(preprocessor, selector, trainer_sym, params={})
       @classification = params.fetch(:classification){ :function }
       samplesize = params.fetch(:samplesize) { 1000 }
