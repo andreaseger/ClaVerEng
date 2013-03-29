@@ -19,18 +19,18 @@ GIT
 
 GIT
   remote: git@github.com:sch1zo/svm_predictor.git
-  revision: d09a3bf841582fb4b71b10c4e69b081a96364385
+  revision: 851d6bbd4452bb34db62d21b6d6c55803755b395
   specs:
     svm_predictor (0.0.4)
-      active_support
+      activesupport
       svm_helper
 
 GEM
   remote: https://rubygems.org/
   specs:
-    active_support (3.0.0)
-      activesupport (= 3.0.0)
-    activesupport (3.0.0)
+    activesupport (3.2.13)
+      i18n (= 0.6.1)
+      multi_json (~> 1.0)
     coderay (1.0.9)
     diff-lcs (1.2.1)
     ffi (1.6.0)
@@ -48,6 +48,7 @@ GEM
     guard-yard (2.1.0)
       guard (>= 1.1.0)
       yard (>= 0.7.0)
+    i18n (0.6.1)
     kramdown (1.0.1)
     listen (0.7.3)
     lumberjack (1.0.3)
@@ -55,6 +56,7 @@ GEM
     method_source (0.8.1)
     mocha (0.13.3)
       metaclass (~> 0.0.1)
+    multi_json (1.7.2)
     parallel (0.6.3)
     pg (0.15.0)
     pry (0.9.12)

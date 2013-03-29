@@ -1,5 +1,5 @@
 export OMP_NUM_THREADS=8
-export SVM_CACHESIZE=512
+export SVM_CACHESIZE=1024
 
 # baseline
 time bin/verifier.rb --preprocessor simple --selector forman --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
@@ -31,5 +31,5 @@ time bin/verifier.rb --preprocessor simple --selector simple --samplesize 9000 -
 # more samplesize w/o parameter search
 # $cost=
 # $gamma=
-# time be ruby train.rb -p industry_map -s simple -n 12000 -d 600 -c function -t --cost $cost --gamma $gamma -v
-# time be ruby train.rb -p industry_map -s simple -n 15000 -d 600 -c function -t --cost $cost --gamma $gamma -v
+# time ruby train.rb -p industry_map -s simple -n 12000 -d 600 -c function -t --cost $cost --gamma $gamma -v
+# time ruby train.rb -p industry_map -s simple -n 15000 -d 600 -c function -t --cost $cost --gamma $gamma -v
