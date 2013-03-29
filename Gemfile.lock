@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_helper.git
-  revision: 1fb8a493cc49718e75207450f794aacfcadeb4ac
+  revision: e203295a654bd1cd08859e7a75299c86e21daa3c
   branch: forman_selector
   specs:
     svm_helper (0.2.0.pre)
@@ -19,18 +19,18 @@ GIT
 
 GIT
   remote: git@github.com:sch1zo/svm_predictor.git
-  revision: 053d2805aa42b7286f4d20b64286ad91a51bf689
+  revision: 851d6bbd4452bb34db62d21b6d6c55803755b395
   specs:
     svm_predictor (0.0.4)
-      active_support
+      activesupport
       svm_helper
 
 GEM
   remote: https://rubygems.org/
   specs:
-    active_support (3.0.0)
-      activesupport (= 3.0.0)
-    activesupport (3.0.0)
+    activesupport (3.2.13)
+      i18n (= 0.6.1)
+      multi_json (~> 1.0)
     coderay (1.0.9)
     diff-lcs (1.2.1)
     ffi (1.6.0)
@@ -48,6 +48,7 @@ GEM
     guard-yard (2.1.0)
       guard (>= 1.1.0)
       yard (>= 0.7.0)
+    i18n (0.6.1)
     kramdown (1.0.1)
     listen (0.7.3)
     lumberjack (1.0.3)
@@ -55,6 +56,7 @@ GEM
     method_source (0.8.1)
     mocha (0.13.3)
       metaclass (~> 0.0.1)
+    multi_json (1.7.2)
     parallel (0.6.3)
     pg (0.15.0)
     pry (0.9.12)
