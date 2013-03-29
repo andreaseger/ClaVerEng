@@ -37,6 +37,10 @@ optparse = OptionParser.new do |opts|
     options[:git]=false
   end
 
+  options[:pretty]=false
+  opts.on("--pretty", "pretty print predictor json") do
+    options[:pretty]=true
+  end
   opts.on( '-?', '--help', 'Display this screen' ) do
     puts opts
     exit
