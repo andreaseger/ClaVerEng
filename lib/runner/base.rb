@@ -81,7 +81,7 @@ module Runner
 
 
     def create_trainer(trainer, params={})
-      get_trainer_klass(trainer).new(params)
+      get_trainer_klass(trainer).new({evaluator: :normalized_mcc}.merge(params))
     end
     #
     # fetch SvmTrainer class from :symbol
@@ -128,6 +128,8 @@ module Runner
         Selector::NGram
       when :binary_encoded
         Selector::WithBinaryEncoding
+      when :forman
+        Selector::Forman
       else
         Selector::Simple
       end

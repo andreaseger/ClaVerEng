@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
-$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '../..'))
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..'))
 require 'config/setup'
 require 'lib/runner/base'
 
-class Eval < Runner::Base
+class ReEval < Runner::Base
   def self.run
     new.run
   end
@@ -14,16 +14,20 @@ class Eval < Runner::Base
     p = SvmPredictor::Model.load_file file
     @classification = p.classification.to_sym
 
+    puts 'fetching jobs...'
     jobs = fetch_jobs(10000, 20000)
+    puts 'preprocessing jobs...'
     data = p.preprocessor.process(jobs)
+    puts 'selecting features...'
     set = p.selector.generate_vectors(data)
     problem = Libsvm::Problem.new.tap{|p|
                 p.set_examples(set.map(&:label),
                                set.map{|e| Libsvm::Node.features(e.data)}
                 )}
     evaluator = SvmTrainer::Evaluator::AllInOne.new(p.svm)
+    puts 'evaluating...'
     evaluator.evaluate_dataset(problem)
-    puts "overall_accuracy: #{evaluator.overall_accuracy}"
+    binding.pry
     puts "geometric_mean: #{evaluator.geometric_mean}"
     puts "histogram: #{evaluator.full_histogram}"
 
@@ -31,4 +35,4 @@ class Eval < Runner::Base
   end
 end
 
-Eval.run
+ReEval.run

@@ -4,7 +4,7 @@ require 'optparse'
 
 options={}
 optparse = OptionParser.new do |opts|
-  
+
   opts.on( "-a", "--gamma GAMMA", Float, "Gamma. for RBF Kernel" ) do |opt|
     options[:gamma] = opt
   end
@@ -44,8 +44,9 @@ optparse = OptionParser.new do |opts|
 end
 optparse.parse!
 
-require './config/setup'
-require './lib/runner/train'
+$:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..'))
+require 'config/setup'
+require 'lib/runner/train'
 
 runner = Runner::Train.new
 
