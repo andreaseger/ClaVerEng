@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_helper.git
-  revision: 1fb8a493cc49718e75207450f794aacfcadeb4ac
+  revision: e203295a654bd1cd08859e7a75299c86e21daa3c
   branch: forman_selector
   specs:
     svm_helper (0.2.0.pre)
