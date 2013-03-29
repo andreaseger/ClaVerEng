@@ -2,6 +2,9 @@ module Runner
   class Base
     include SvmTrainer
 
+    def initialize(pretty: false)
+      @pretty = pretty
+    end
     def l msg
       puts msg
     end
@@ -27,7 +30,7 @@ module Runner
       evaluator = Evaluator::AllInOne.new(model)
       evaluator.evaluate_dataset(test_set)
       predictor.metrics = evaluator.metrics
-      predictor.save
+      predictor.save @pretty
       [predictor, results]
     end
 

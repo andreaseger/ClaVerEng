@@ -37,6 +37,10 @@ optparse = OptionParser.new do |opts|
     options[:git]=false
   end
 
+  options[:pretty]=false
+  opts.on("--pretty", "pretty print predictor json") do
+    options[:pretty]=true
+  end
   opts.on( '-?', '--help', 'Display this screen' ) do
     puts opts
     exit
@@ -48,6 +52,6 @@ $:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..'))
 require 'config/setup'
 require 'lib/runner/single'
 
-runner = Runner::Single.new
+runner = Runner::Single.new(pretty: options[:pretty]
 
 runner.run(options[:preprocessor], options[:selector], options[:trainer], options)
