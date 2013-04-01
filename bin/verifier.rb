@@ -52,6 +52,7 @@ $:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..'))
 require 'config/setup'
 require 'lib/runner/single'
 
-runner = Runner::Single.new(pretty: options[:pretty])
+#runner = Runner::Single.new(pretty: options[:pretty])
+runner = Runner::Single.new(pretty: true)
 
 runner.run(options[:preprocessor], options[:selector], options[:trainer], options)

@@ -5,7 +5,8 @@ export SVM_CACHESIZE=1024
 time bin/verifier.rb --preprocessor simple --selector forman --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
 
 # trainer
-time bin/verifier.rb --preprocessor simple --selector forman --samplesize 6000 --dictionary-size 800 --classification function --trainer grid
+# seems like it segfaults after 6-7 hours for no obvious reason
+time bin/verifier.rb --preprocessor simple --selector forman --samplesize 4000 --dictionary-size 800 --classification function --trainer grid
 time bin/verifier.rb --preprocessor simple --selector forman --samplesize 6000 --dictionary-size 800 --classification function --trainer doe
 
 # dictionary
@@ -17,16 +18,16 @@ time bin/verifier.rb --preprocessor simple --selector forman --samplesize 6000 -
 # selectors
 # n-gram
 time bin/verifier.rb --preprocessor simple --selector simple --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
-time bin/verifier.rb --preprocessor simple --selector ngram --gram-size 2 --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
-time bin/verifier.rb --preprocessor simple --selector ngram --gram-size 3 --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
-time bin/verifier.rb --preprocessor simple --selector ngram --gram-size 4 --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
+time bin/verifier.rb --preprocessor simple --selector ngram --gram 2 --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
+time bin/verifier.rb --preprocessor simple --selector ngram --gram 3 --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
+time bin/verifier.rb --preprocessor simple --selector ngram --gram 4 --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
 
 # binary encoded classification_id
 # time bin/verifier.rb --preprocessor simple --selector binary_encoded --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
 
 # samplesize
-time bin/verifier.rb --preprocessor simple --selector simple --samplesize 3000 --dictionary-size 800 --classification function --trainer nelder_mead
-time bin/verifier.rb --preprocessor simple --selector simple --samplesize 9000 --dictionary-size 800 --classification function --trainer nelder_mead
+time bin/verifier.rb --preprocessor simple --selector forman --samplesize 3000 --dictionary-size 800 --classification function --trainer nelder_mead
+time bin/verifier.rb --preprocessor simple --selector forman --samplesize 9000 --dictionary-size 800 --classification function --trainer nelder_mead
 
 # more samplesize w/o parameter search
 # $cost=

@@ -13,7 +13,7 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_trainer.git
-  revision: 3579d40ee69d669eabb962c3a35f2596bdfcef4c
+  revision: def557cfd959d6ac51a1e67ba888d9a22cd721b0
   specs:
     svm_trainer (0.2.0.pre)
 
