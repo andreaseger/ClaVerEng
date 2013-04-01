@@ -37,6 +37,13 @@ optparse = OptionParser.new do |opts|
     options[:git]=false
   end
 
+  options[:evaluator] = :normalized_mcc
+  opts.on( "-e", "--evaluator EVAL", "Which evaluator to use during parameter search") do |opt|
+    options[:evaluator] = opt
+  end
+  opts.on( "--word-selection SETTING", String, "one of grams1_2, grams1_2_3, grams1_2_3_4") do |opt|
+    options[:word_selection] = opt.to_sym
+  end
   options[:pretty]=false
   opts.on("--pretty", "pretty print predictor json") do
     options[:pretty]=true

@@ -6,20 +6,20 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_helper.git
-  revision: e203295a654bd1cd08859e7a75299c86e21daa3c
+  revision: 5b0d5454a7e73a610d8fbc306524f06b1476adaa
   branch: forman_selector
   specs:
     svm_helper (0.2.0.pre)
 
 GIT
   remote: git://github.com/sch1zo/svm_trainer.git
-  revision: def557cfd959d6ac51a1e67ba888d9a22cd721b0
+  revision: 739b747caf0e34d56285c78bec6f89c9907ab2fe
   specs:
     svm_trainer (0.2.0.pre)
 
 GIT
   remote: git@github.com:sch1zo/svm_predictor.git
-  revision: 851d6bbd4452bb34db62d21b6d6c55803755b395
+  revision: 8cdc1739a263605e86a4c468f59f14252a33aad9
   specs:
     svm_predictor (0.0.4)
       activesupport
@@ -32,7 +32,7 @@ GEM
       i18n (= 0.6.1)
       multi_json (~> 1.0)
     coderay (1.0.9)
-    diff-lcs (1.2.1)
+    diff-lcs (1.2.2)
     ffi (1.6.0)
     formatador (0.2.4)
     github-markup (0.7.5)
@@ -57,7 +57,7 @@ GEM
     mocha (0.13.3)
       metaclass (~> 0.0.1)
     multi_json (1.7.2)
-    parallel (0.6.3)
+    parallel (0.6.4)
     pg (0.15.0)
     pry (0.9.12)
       coderay (~> 1.0.5)
@@ -81,7 +81,7 @@ GEM
     rspec-mocks (2.13.0)
     sequel (3.45.0)
     slop (3.4.4)
-    thor (0.18.0)
+    thor (0.18.1)
     yard (0.8.5.2)
 
 PLATFORMS

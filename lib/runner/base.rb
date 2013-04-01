@@ -23,7 +23,7 @@ module Runner
         preprocessor: preprocessor,
         svm: model,
         classification: classification,
-        trainer_class: trainer.class.to_s,
+        trainer: trainer,
         properties: { samplesize: feature_vectors.size },
         basedir: SETTINGS['basedir']
       )
