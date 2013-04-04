@@ -1,36 +1,39 @@
 export OMP_NUM_THREADS=8
 export SVM_CACHESIZE=1024
 
+# think about which trainer to use by default
+DEFAULTS = 'time bin/verifier.rb --classification function --trainer nelder_mead'
+
 # baseline
-time bin/verifier.rb --preprocessor simple --selector forman --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
+$DEFAULTS --preprocessor simple --selector simple --word-selection grams1_2 --samplesize 6000 --dictionary-size 800
 
-# trainer
-# seems like it segfaults after 6-7 hours for no obvious reason
-time bin/verifier.rb --preprocessor simple --selector forman --samplesize 4000 --dictionary-size 800 --classification function --trainer grid
-time bin/verifier.rb --preprocessor simple --selector forman --samplesize 6000 --dictionary-size 800 --classification function --trainer doe
+# feature selection metrics (grams1_2 is default here)
+$DEFAULTS --preprocessor simple --selector bns --samplesize 6000 --dictionary-size 800
+$DEFAULTS --preprocessor simple --selector ig --samplesize 6000 --dictionary-size 800
+$DEFAULTS --preprocessor simple --selector bns_ig --samplesize 6000 --dictionary-size 800
 
-# dictionary
-time bin/verifier.rb --preprocessor simple --selector forman --samplesize 6000 --dictionary-size 400 --classification function --trainer nelder_mead
-time bin/verifier.rb --preprocessor simple --selector forman --samplesize 6000 --dictionary-size 600 --classification function --trainer nelder_mead
-time bin/verifier.rb --preprocessor simple --selector forman --samplesize 6000 --dictionary-size 1000 --classification function --trainer nelder_mead
-time bin/verifier.rb --preprocessor simple --selector forman --samplesize 6000 --dictionary-size 1500 --classification function --trainer nelder_mead
+# including 3-grams
+$DEFAULTS --preprocessor simple --selector simple --word-selection grams1_2_3 --samplesize 6000 --dictionary-size 800
+$DEFAULTS --preprocessor simple --selector bns --word-selection grams1_2_3 --samplesize 6000 --dictionary-size 800
+$DEFAULTS --preprocessor simple --selector ig --word-selection grams1_2_3 --samplesize 6000 --dictionary-size 800
+$DEFAULTS --preprocessor simple --selector bns_ig --word-selection grams1_2_3 --samplesize 6000 --dictionary-size 800
 
-# selectors
-# n-gram
-time bin/verifier.rb --preprocessor simple --selector simple --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
-time bin/verifier.rb --preprocessor simple --selector ngram --gram 2 --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
-time bin/verifier.rb --preprocessor simple --selector ngram --gram 3 --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
-time bin/verifier.rb --preprocessor simple --selector ngram --gram 4 --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
+#only 3/4 grams
+$DEFAULTS --preprocessor simple --selector simple --word-selection grams --gram-size 3 --samplesize 6000 --dictionary-size 800
+$DEFAULTS --preprocessor simple --selector bns --word-selection grams --gram-size 3 --samplesize 6000 --dictionary-size 800
+$DEFAULTS --preprocessor simple --selector ig --word-selection grams --gram-size 3 --samplesize 6000 --dictionary-size 800
 
-# binary encoded classification_id
-# time bin/verifier.rb --preprocessor simple --selector binary_encoded --samplesize 6000 --dictionary-size 800 --classification function --trainer nelder_mead
+$DEFAULTS --preprocessor simple --selector simple --word-selection grams --gram-size 4 --samplesize 6000 --dictionary-size 800
+$DEFAULTS --preprocessor simple --selector bns --word-selection grams --gram-size 4 --samplesize 6000 --dictionary-size 800
+$DEFAULTS --preprocessor simple --selector ig --word-selection grams --gram-size 4 --samplesize 6000 --dictionary-size 800
 
-# samplesize
-time bin/verifier.rb --preprocessor simple --selector forman --samplesize 3000 --dictionary-size 800 --classification function --trainer nelder_mead
-time bin/verifier.rb --preprocessor simple --selector forman --samplesize 9000 --dictionary-size 800 --classification function --trainer nelder_mead
+# with stemming
+$DEFAULTS --preprocessor stemming --selector bns --samplesize 6000 --dictionary-size 800
+$DEFAULTS --preprocessor stemming --selector ig --samplesize 6000 --dictionary-size 800
+$DEFAULTS --preprocessor stemming --selector bns_ig --samplesize 6000 --dictionary-size 800
 
-# more samplesize w/o parameter search
-# $cost=
-# $gamma=
-# time ruby train.rb -p industry_map -s simple -n 12000 -d 600 -c function -t --cost $cost --gamma $gamma -v
-# time ruby train.rb -p industry_map -s simple -n 15000 -d 600 -c function -t --cost $cost --gamma $gamma -v
+# TODO: after I know how these perform
+# - samplesize
+# - dictionary_size
+# - evaluators
+# - trainer

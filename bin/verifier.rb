@@ -44,6 +44,10 @@ optparse = OptionParser.new do |opts|
   opts.on( "--word-selection SETTING", String, "one of grams1_2, grams1_2_3, grams1_2_3_4") do |opt|
     options[:word_selection] = opt.to_sym
   end
+  opts.on( "--number-of-folds SETTING", Numeric, "number of folds to use in cross-valication; default = 3; 1 => disables cross-validation") do |opt|
+    options[:number_of_folds] = opt
+  end
+
   options[:pretty]=false
   opts.on("--pretty", "pretty print predictor json") do
     options[:pretty]=true
