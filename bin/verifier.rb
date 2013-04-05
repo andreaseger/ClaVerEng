@@ -47,6 +47,9 @@ optparse = OptionParser.new do |opts|
   opts.on( "--number-of-folds SETTING", Numeric, "number of folds to use in cross-valication; default = 3; 1 => disables cross-validation") do |opt|
     options[:number_of_folds] = opt
   end
+  opts.on( "--id", Numeric, "set the id for the new predictor.") do |opt|
+    options[:id] = opt.to_i
+  end
 
   options[:pretty]=false
   opts.on("--pretty", "pretty print predictor json") do

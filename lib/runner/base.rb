@@ -16,7 +16,11 @@ module Runner
     # @param  test_set [Libsvm::Problem] will be used to make the final evaluation of tha SVM model
     #
     # @return [Predictor]
-    def create_predictor(trainer, feature_vectors, test_set, preprocessor=@preprocessor, selector=@selector, classification=@classification)
+    def create_predictor(trainer, feature_vectors, test_set, opts={})
+      preprocessor = opts.fetch(:preprocessor) {@preprocessor}
+      selector = otps.fetch(:selector) {@selector}
+      classification = opts.fetch(:classification) {@classification}
+      id = opts.fetch(:id) { nil }
       model, results, _ = trainer.search feature_vectors, (trainer.is_a?(NelderMead) ? 15 : 4 )
       predictor = SvmPredictor::Model.new(
         selector: selector,
@@ -25,7 +29,8 @@ module Runner
         classification: classification,
         trainer: trainer,
         properties: { samplesize: feature_vectors.size },
-        basedir: SETTINGS['basedir']
+        basedir: SETTINGS['basedir'],
+        id: id
       )
       evaluator = Evaluator::AllInOne.new(model)
       evaluator.evaluate_dataset(test_set)

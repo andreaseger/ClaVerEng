@@ -18,7 +18,7 @@ module Runner
       test_set = fetch_test_set
 
       l 'parameter search..training..evaluation'
-      predictor, results = create_predictor( trainer, feature_vectors, test_set)
+      predictor, results = create_predictor(trainer, feature_vectors, test_set, id: params[:id])
 
       IO.write(File.join(SETTINGS['basedir'], predictor.results_filename), trainer.format_results(results))
 
