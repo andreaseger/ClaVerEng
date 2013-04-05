@@ -23,7 +23,7 @@ module Runner
         preprocessor: preprocessor,
         svm: model,
         classification: classification,
-        trainer_class: trainer.class.to_s,
+        trainer: trainer,
         properties: { samplesize: feature_vectors.size },
         basedir: SETTINGS['basedir']
       )
@@ -112,6 +112,8 @@ module Runner
         #TODO decouple this from Pjpp::Industry
         id_map = params.fetch(:id_map){ Hash[CLASSIFICATION_IDS[@classification].map.with_index{|e,i| [e,i]}] }
         Preprocessor::IDMapping.new(id_map, params)
+      elsif :stemming
+        Preprocessor::Stemming.new(params)
       else
         Preprocessor::Simple.new(params)
       end
@@ -127,12 +129,12 @@ module Runner
     # @return [Selector]
     def get_selector_klass(selector)
       case selector
-      when :ngram
-        Selector::NGram
-      when :binary_encoded
-        Selector::WithBinaryEncoding
-      when :forman
-        Selector::Forman
+      when :bns
+        Selector::BiNormalSeperation
+      when :ig
+        Selector::InformationGain
+      when :bns_ig
+        Selector::BNS_IG
       else
         Selector::Simple
       end

@@ -1,0 +1,156 @@
+development
+create feature_vectors
+create test_set
+parameter search..training..evaluation
+iteration: 1
+iteration: 2
+iteration: 3
+iteration: 4
+iteration: 5
+iteration: 6
+iteration: 7
+iteration: 8
+iteration: 9
+iteration: 10
+iteration: 11
+iteration: 12
+iteration: 13
+iteration: 14
+iteration: 15
+[thesis_testings_1 f46c5a7] 10 function SvmTrainer::NelderMead
+ 3 files changed, 4950 insertions(+)
+ create mode 100644 0010-model.libsvm
+ create mode 100644 0010-predictor.json
+ create mode 100644 0010-results
+true
+{:id=>10, :classification=>:function, :properties=>{:samplesize=>6000, :dictionary_size=>800, :cost=>18.75535576036552, :gamma=>0.0006124234744941471}, :metrics=>{:geometric_mean=>0.7816063459312494, :rates=>{:fpr=>0.2944, :tpr=>0.8658, :fnr=>0.1342, :tnr=>0.7056}, :precision=>0.746250646440269, :recall=>0.8658, :accuracy=>0.7857, :f_measure=>0.8015924451439681, :matthews_correlation_coefficient=>0.5788764346490306, :normalized_matthews_correlation_coefficient=>0.7894382173245154, :mean_probability=>0.7859268081699555, :correct_historgramm=>[[50, 54], [55, 182], [60, 367], [65, 274], [70, 893], [75, 2521], [80, 1876], [85, 1641], [90, 49]], :faulty_histogram=>[[50, 77], [55, 219], [60, 248], [65, 125], [70, 342], [75, 569], [80, 452], [85, 95], [90, 15], [95, 1]], :full_histogram=>[[0, 1], [5, 15], [10, 95], [15, 452], [20, 569], [25, 342], [30, 125], [35, 248], [40, 219], [45, 77], [50, 54], [55, 182], [60, 367], [65, 274], [70, 893], [75, 2521], [80, 1876], [85, 1641], [90, 49]]}, :trainer_class=>"SvmTrainer::NelderMead", :preprocessor_class=>"Preprocessor::Simple", :selector_class=>"Selector::NGram"}
+
+real	45m9.977s
+user	342m53.908s
+sys	0m14.330s
+development
+create feature_vectors
+create test_set
+parameter search..training..evaluation
+iteration: 1
+iteration: 2
+iteration: 3
+iteration: 4
+iteration: 5
+iteration: 6
+iteration: 7
+iteration: 8
+iteration: 9
+iteration: 10
+iteration: 11
+iteration: 12
+iteration: 13
+iteration: 14
+iteration: 15
+[thesis_testings_1 3af0037] 11 function SvmTrainer::NelderMead
+ 3 files changed, 4576 insertions(+)
+ create mode 100644 0011-model.libsvm
+ create mode 100644 0011-predictor.json
+ create mode 100644 0011-results
+true
+{:id=>11, :classification=>:function, :properties=>{:samplesize=>6000, :dictionary_size=>800, :cost=>20.41744571706796, :gamma=>0.007808992195237741}, :metrics=>{:geometric_mean=>0.7838571298393604, :rates=>{:fpr=>0.3248, :tpr=>0.91, :fnr=>0.09, :tnr=>0.6752}, :precision=>0.7369614512471655, :recall=>0.91, :accuracy=>0.7926, :f_measure=>0.8143905494898872, :matthews_correlation_coefficient=>0.6020305448836674, :normalized_matthews_correlation_coefficient=>0.8010152724418337, :mean_probability=>0.7861658456796867, :correct_historgramm=>[[50, 31], [55, 38], [60, 43], [65, 236], [70, 2249], [75, 2031], [80, 1693], [85, 1555], [90, 40], [95, 10]], :faulty_histogram=>[[50, 35], [55, 30], [60, 72], [65, 183], [70, 979], [75, 366], [80, 340], [85, 60], [90, 7], [95, 2]], :full_histogram=>[[0, 2], [5, 7], [10, 60], [15, 340], [20, 366], [25, 979], [30, 183], [35, 72], [40, 30], [45, 35], [50, 31], [55, 38], [60, 43], [65, 236], [70, 2249], [75, 2031], [80, 1693], [85, 1555], [90, 40], [95, 10]]}, :trainer_class=>"SvmTrainer::NelderMead", :preprocessor_class=>"Preprocessor::Simple", :selector_class=>"Selector::NGram"}
+
+real	34m42.696s
+user	260m47.158s
+sys	0m15.233s
+development
+create feature_vectors
+create test_set
+parameter search..training..evaluation
+iteration: 1
+iteration: 2
+iteration: 3
+iteration: 4
+iteration: 5
+iteration: 6
+iteration: 7
+iteration: 8
+iteration: 9
+iteration: 10
+iteration: 11
+iteration: 12
+iteration: 13
+iteration: 14
+iteration: 15
+[thesis_testings_1 4b29f61] 12 function SvmTrainer::NelderMead
+ 3 files changed, 4090 insertions(+)
+ create mode 100644 0012-model.libsvm
+ create mode 100644 0012-predictor.json
+ create mode 100644 0012-results
+true
+{:id=>12, :classification=>:function, :properties=>{:samplesize=>6000, :dictionary_size=>800, :cost=>95.17701490314585, :gamma=>0.014246154260137537}, :metrics=>{:geometric_mean=>0.7914826593173094, :rates=>{:fpr=>0.3024, :tpr=>0.898, :fnr=>0.102, :tnr=>0.6976}, :precision=>0.7480839720093302, :recall=>0.898, :accuracy=>0.7978, :f_measure=>0.816215233593892, :matthews_correlation_coefficient=>0.6079324183118631, :normalized_matthews_correlation_coefficient=>0.8039662091559315, :mean_probability=>0.7896595384180995, :correct_historgramm=>[[50, 38], [55, 75], [60, 75], [65, 109], [70, 521], [75, 3663], [80, 2912], [85, 393], [90, 166], [95, 26]], :faulty_histogram=>[[50, 24], [55, 39], [60, 50], [65, 66], [70, 268], [75, 1109], [80, 414], [85, 27], [90, 15], [95, 10]], :full_histogram=>[[0, 10], [5, 15], [10, 27], [15, 414], [20, 1109], [25, 268], [30, 66], [35, 50], [40, 39], [45, 24], [50, 38], [55, 75], [60, 75], [65, 109], [70, 521], [75, 3663], [80, 2912], [85, 393], [90, 166], [95, 26]]}, :trainer_class=>"SvmTrainer::NelderMead", :preprocessor_class=>"Preprocessor::Simple", :selector_class=>"Selector::NGram"}
+
+real	32m23.281s
+user	230m39.549s
+sys	0m15.473s
+development
+create feature_vectors
+create test_set
+parameter search..training..evaluation
+iteration: 1
+iteration: 2
+iteration: 3
+iteration: 4
+iteration: 5
+iteration: 6
+iteration: 7
+[thesis_testings_1 8b1a8ab] 13 function SvmTrainer::NelderMead
+ 3 files changed, 3790 insertions(+)
+ create mode 100644 0013-model.libsvm
+ create mode 100644 0013-predictor.json
+ create mode 100644 0013-results
+true
+{:id=>13, :classification=>:function, :properties=>{:samplesize=>3000, :dictionary_size=>800, :cost=>2.3437997110248165, :gamma=>1.834384283148652}, :metrics=>{:geometric_mean=>0.07063285354564121, :rates=>{:fpr=>0.0022, :tpr=>0.005, :fnr=>0.995, :tnr=>0.9978}, :precision=>0.6944444444444444, :recall=>0.005, :accuracy=>0.5014, :f_measure=>0.009928514694201748, :matthews_correlation_coefficient=>0.02337544707460845, :normalized_matthews_correlation_coefficient=>0.5116877235373042, :mean_probability=>0.5374973649230266, :correct_historgramm=>[[50, 4984], [55, 9], [60, 3], [70, 10], [75, 2], [95, 6]], :faulty_histogram=>[[50, 4966], [55, 10], [60, 2], [65, 1], [70, 2], [75, 3], [95, 2]], :full_histogram=>[[0, 2], [20, 3], [25, 2], [30, 1], [35, 2], [40, 10], [45, 4966], [50, 4984], [55, 9], [60, 3], [70, 10], [75, 2], [95, 6]]}, :trainer_class=>"SvmTrainer::NelderMead", :preprocessor_class=>"Preprocessor::Simple", :selector_class=>"Selector::Forman"}
+
+real	13m9.966s
+user	81m12.473s
+sys	0m27.130s
+development
+create feature_vectors
+create test_set
+parameter search..training..evaluation
+iteration: 1
+iteration: 2
+iteration: 3
+iteration: 4
+iteration: 5
+iteration: 6
+iteration: 7
+iteration: 8
+iteration: 9
+iteration: 10
+iteration: 11
+iteration: 12
+iteration: 13
+iteration: 14
+iteration: 15
+[thesis_testings_1 3756234] 14 function SvmTrainer::NelderMead
+ 3 files changed, 6812 insertions(+)
+ create mode 100644 0014-model.libsvm
+ create mode 100644 0014-predictor.json
+ create mode 100644 0014-results
+true
+{:id=>14, :classification=>:function, :properties=>{:samplesize=>9000, :dictionary_size=>800, :cost=>6.485506176144415, :gamma=>0.014437910449303608}, :metrics=>{:geometric_mean=>0.8286513862897955, :rates=>{:fpr=>0.1914, :tpr=>0.8492, :fnr=>0.1508, :tnr=>0.8086}, :precision=>0.8160676532769556, :recall=>0.8492, :accuracy=>0.8289, :f_measure=>0.8323042242477703, :matthews_correlation_coefficient=>0.6583428167643374, :normalized_matthews_correlation_coefficient=>0.8291714083821686, :mean_probability=>0.8295563197218759, :correct_historgramm=>[[50, 249], [55, 263], [60, 375], [65, 477], [70, 606], [75, 793], [80, 1058], [85, 1515], [90, 1844], [95, 1109]], :faulty_histogram=>[[50, 216], [55, 215], [60, 184], [65, 168], [70, 188], [75, 182], [80, 214], [85, 182], [90, 122], [95, 40]], :full_histogram=>[[0, 40], [5, 122], [10, 182], [15, 214], [20, 182], [25, 188], [30, 168], [35, 184], [40, 215], [45, 216], [50, 249], [55, 263], [60, 375], [65, 477], [70, 606], [75, 793], [80, 1058], [85, 1515], [90, 1844], [95, 1109]]}, :trainer_class=>"SvmTrainer::NelderMead", :preprocessor_class=>"Preprocessor::Simple", :selector_class=>"Selector::Forman"}
+
+real	92m19.564s
+user	670m54.509s
+sys	1m19.637s
+development
+create feature_vectors
+create test_set
+development
+create feature_vectors
+create test_set
+parameter search..training..evaluation
+[thesis_testings_1 fe81085] 15 function SvmTrainer::GridSearch
+ 3 files changed, 4182 insertions(+)
+ create mode 100644 0015-model.libsvm
+ create mode 100644 0015-predictor.json
+ create mode 100644 0015-results
+true
+{:id=>15, :classification=>:function, :properties=>{:samplesize=>4000, :dictionary_size=>800, :cost=>8.0, :gamma=>0.0078125}, :metrics=>{:geometric_mean=>0.8019039842774196, :rates=>{:fpr=>0.25, :tpr=>0.8574, :fnr=>0.1426, :tnr=>0.75}, :precision=>0.7742459815784721, :recall=>0.8574, :accuracy=>0.8037, :f_measure=>0.8137040903482965, :matthews_correlation_coefficient=>0.6109337065102165, :normalized_matthews_correlation_coefficient=>0.8054668532551083, :mean_probability=>0.804839663138709, :correct_historgramm=>[[50, 329], [55, 362], [60, 441], [65, 513], [70, 705], [75, 888], [80, 1241], [85, 1438], [90, 1607], [95, 513]], :faulty_histogram=>[[50, 247], [55, 238], [60, 226], [65, 231], [70, 211], [75, 177], [80, 224], [85, 167], [90, 179], [95, 63]], :full_histogram=>[[0, 63], [5, 179], [10, 167], [15, 224], [20, 177], [25, 211], [30, 231], [35, 226], [40, 238], [45, 247], [50, 329], [55, 362], [60, 441], [65, 513], [70, 705], [75, 888], [80, 1241], [85, 1438], [90, 1607], [95, 513]]}, :trainer_class=>"SvmTrainer::GridSearch", :preprocessor_class=>"Preprocessor::Simple", :selector_class=>"Selector::Forman"}

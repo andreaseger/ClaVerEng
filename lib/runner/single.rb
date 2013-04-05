@@ -10,7 +10,7 @@ module Runner
       @preprocessor = create_preprocessor(preprocessor)
       @selector = create_selector(selector, params)
 
-      trainer = create_trainer(trainer_sym)
+      trainer = create_trainer(trainer_sym, params )
 
       l 'create feature_vectors'
       feature_vectors = get_feature_vectors(samplesize, dictionary_size)

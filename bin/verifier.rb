@@ -37,6 +37,17 @@ optparse = OptionParser.new do |opts|
     options[:git]=false
   end
 
+  options[:evaluator] = :normalized_mcc
+  opts.on( "-e", "--evaluator EVAL", "Which evaluator to use during parameter search") do |opt|
+    options[:evaluator] = opt
+  end
+  opts.on( "--word-selection SETTING", String, "one of grams1_2, grams1_2_3, grams1_2_3_4") do |opt|
+    options[:word_selection] = opt.to_sym
+  end
+  opts.on( "--number-of-folds SETTING", Numeric, "number of folds to use in cross-valication; default = 3; 1 => disables cross-validation") do |opt|
+    options[:number_of_folds] = opt
+  end
+
   options[:pretty]=false
   opts.on("--pretty", "pretty print predictor json") do
     options[:pretty]=true
@@ -52,6 +63,7 @@ $:.unshift File.expand_path(File.join(File.dirname(__FILE__), '..'))
 require 'config/setup'
 require 'lib/runner/single'
 
-runner = Runner::Single.new(pretty: options[:pretty])
+#runner = Runner::Single.new(pretty: options[:pretty])
+runner = Runner::Single.new(pretty: true)
 
 runner.run(options[:preprocessor], options[:selector], options[:trainer], options)
