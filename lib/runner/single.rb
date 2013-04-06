@@ -12,13 +12,32 @@ module Runner
 
       trainer = create_trainer(trainer_sym, params )
 
-      l 'create feature_vectors'
-      feature_vectors = get_feature_vectors(samplesize, dictionary_size)
+      distribution = params[:distribution]
+      if distribution && distribution > 1
+        l "create feature_vectors, #{distribution}:1 distribution"
+        jobs  = fetch_with_original_ids samplesize
+        data = @preprocessor.process jobs
+        @selector.build_dictionary data
+        data.flat_map! do |d|
+          if d.label
+            d
+          else
+            ids = CLASSIFICATION_IDS[@classification.to_sym].reject{|e| e == d.id }.sample(distribution)
+            ids.map do |id|
+              d.tap{|e| e.id=id }
+            end
+          end
+        end
+        feature_vectors = @selector.generate_vectors(data, dictionary_size)
+      else
+        l 'create feature_vectors, 1:1 distribution'
+        feature_vectors = get_feature_vectors(samplesize, dictionary_size)
+      end
       l 'create test_set'
       test_set = fetch_test_set
 
       l 'parameter search..training..evaluation'
-      predictor, results = create_predictor(trainer, feature_vectors, test_set, id: params[:id])
+      predictor, results = create_predictor(trainer, feature_vectors, test_set, id: params[:id], distribution: distribution)
 
       IO.write(File.join(SETTINGS['basedir'], predictor.results_filename), trainer.format_results(results))
 

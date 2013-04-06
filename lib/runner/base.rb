@@ -18,17 +18,20 @@ module Runner
     # @return [Predictor]
     def create_predictor(trainer, feature_vectors, test_set, opts={})
       preprocessor = opts.fetch(:preprocessor) {@preprocessor}
-      selector = otps.fetch(:selector) {@selector}
+      selector = opts.fetch(:selector) {@selector}
       classification = opts.fetch(:classification) {@classification}
       id = opts.fetch(:id) { nil }
-      model, results, _ = trainer.search feature_vectors, (trainer.is_a?(NelderMead) ? 15 : 4 )
+      model, results, _ = trainer.search feature_vectors, (trainer.is_a?(NelderMead) ? 20 : 5 )
       predictor = SvmPredictor::Model.new(
         selector: selector,
         preprocessor: preprocessor,
         svm: model,
         classification: classification,
-        trainer: trainer,
-        properties: { samplesize: feature_vectors.size },
+        trainer_class: trainer.class.to_s,
+        properties: { samplesize: feature_vectors.size,
+                      distribution: (opts[:distribution] || 1),
+                      evaluator: trainer.evaluator,
+                      cross_validation: trainer.number_of_folds},
         basedir: SETTINGS['basedir'],
         id: id
       )
@@ -86,6 +89,21 @@ module Runner
         { title: job[:title], description: job[:description], id: id, label: label }
       end
     end
+    def fetch_with_original_ids(limit = 100, offset = 0, language = 6)
+      # skip the 1000 oldest jobs
+      offset += 1000
+
+      sql(JOBS_SQL, language, limit, offset).map.with_index do |job,index|
+        id = job[:"#{@classification}_id"]
+        if index.even?
+          label = true
+        else
+          label = false
+        end
+        { title: job[:title], description: job[:description], id: id, label: label }
+      end
+    end
+
 
 
     def create_trainer(trainer, params={})
@@ -117,7 +135,7 @@ module Runner
         #TODO decouple this from Pjpp::Industry
         id_map = params.fetch(:id_map){ Hash[CLASSIFICATION_IDS[@classification].map.with_index{|e,i| [e,i]}] }
         Preprocessor::IDMapping.new(id_map, params)
-      elsif :stemming
+      elsif preprocessor == :stemming
         Preprocessor::Stemming.new(params)
       else
         Preprocessor::Simple.new(params)
