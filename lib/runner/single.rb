@@ -18,7 +18,7 @@ module Runner
         jobs  = fetch_with_original_ids samplesize
         data = @preprocessor.process jobs
         @selector.build_dictionary data
-        data.flat_map! do |d|
+        data = data.flat_map do |d|
           if d.label
             d
           else
