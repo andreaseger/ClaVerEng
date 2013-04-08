@@ -1,6 +1,7 @@
 GIT
   remote: git://github.com/sch1zo/rb-libsvm.git
-  revision: 59590400d017939804d943cdd77388ecd306e856
+  revision: c39c43de52439f2f4d601e8f7bfc6ff997174322
+  branch: with_libsvm_output
   specs:
     rb-libsvm (1.1.2)
 
@@ -13,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/sch1zo/svm_trainer.git
-  revision: a77f2741f371b85be0ced6970b5adbc41c076e8c
+  revision: 4be41d78759a20fd64ca15c38c65c788fbe49d9c
   specs:
     svm_trainer (0.2.0.pre)
 
@@ -78,7 +79,7 @@ GEM
     rspec-core (2.13.1)
     rspec-expectations (2.13.0)
       diff-lcs (>= 1.1.3, < 2.0)
-    rspec-mocks (2.13.0)
+    rspec-mocks (2.13.1)
     ruby-stemmer (0.9.3)
     sequel (3.46.0)
     slop (3.4.4)

@@ -18,7 +18,7 @@ gem 'svm_predictor', '>= 0.1.0.pre1', git: 'git@github.com:sch1zo/svm_predictor.
 
 platforms :ruby do
   gem 'pg'
-  gem "rb-libsvm", '>= 1.1.2',  github: 'sch1zo/rb-libsvm', require: 'libsvm'
+  gem "rb-libsvm", '>= 1.1.2',  github: 'sch1zo/rb-libsvm', branch: 'with_libsvm_output', require: 'libsvm'
 end
 
 group :test, :development do
