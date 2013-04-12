@@ -15,7 +15,7 @@ module Runner
       distribution = params[:distribution]
       if distribution && distribution > 1
         l "create feature_vectors, #{distribution}:1 distribution"
-        jobs  = fetch_with_original_ids samplesize
+        jobs  = fetch_jobs limit: samplesize
         data = @preprocessor.process jobs
         @selector.build_dictionary data
         data = data.flat_map do |d|

@@ -43,7 +43,7 @@ module Runner
     end
 
     def get_feature_vectors(size, dictionary_size)
-      jobs = fetch_jobs size
+      jobs = fetch_jobs limit: size, original_ids: false
       data = @preprocessor.process jobs
       @selector.generate_vectors(data, dictionary_size)
     end
@@ -58,7 +58,7 @@ module Runner
     #
     # @return [Problem] libsvm Problem
     def fetch_test_data count=10000, offset=20000
-      @preprocessor.process(fetch_jobs(count, offset))
+      @preprocessor.process(fetch_jobs(limit: count, offset: offset, original_ids: false))
     end
     def create_test_problem data
       set = @selector.generate_vectors data
@@ -73,38 +73,39 @@ module Runner
     # @param  language [Integer] language_id, see pjpp
     #
     # @return [Array<Hash>]
-    def fetch_jobs(limit = 100, offset = 0, language = 6)
-      # skip the 1000 oldest jobs
-      offset += 1000
+    def fetch_jobs opts={}
+      opts.reverse_merge! limit: 100, offset: 0, language: 6, original_ids: true
 
-      sql(JOBS_SQL, language, limit, offset).map.with_index do |job,index|
-        if index.even?
-          id = job[:"#{@classification}_id"]
-          label = true
-        else
-          #select a random false id
-          id = CLASSIFICATION_IDS[@classification.to_sym].reject{|e| e == job[:"#{@classification}_id"]}.sample
-          label = false
-        end
-        { title: job[:title], description: job[:description], id: id, label: label }
-      end
-    end
-    def fetch_with_original_ids(limit = 100, offset = 0, language = 6)
-      # skip the 1000 oldest jobs
-      offset += 1000
-
-      sql(JOBS_SQL, language, limit, offset).map.with_index do |job,index|
+      sql(JOBS_SQL, opts[:language], opts[:limit], opts[:offset] + 1000).map.with_index do |job,index|
         id = job[:"#{@classification}_id"]
         if index.even?
           label = true
         else
+          unless opts[:original_ids]
+            #select a random false id
+            id = CLASSIFICATION_IDS[@classification.to_sym].reject{|e| e == job[:"#{@classification}_id"]}.sample
+          end
           label = false
         end
         { title: job[:title], description: job[:description], id: id, label: label }
       end
     end
-
-
+    def fetch_jobs_partitioned opts={}
+      opts.reverse_merge! limit: 100, offset: 0, language: 6, original_ids: true
+      sql(job_sql(opts[:offset], opts[:limit]), opts[:language]).map.with_index do |job,index|
+        id = job[:"#{@classification}_id"]
+        if index.even?
+          label = true
+        else
+          #select a random false id
+          unless opts[:original_ids]
+            id = CLASSIFICATION_IDS[@classification.to_sym].reject{|e| e == job[:"#{@classification}_id"]}.sample
+          end
+          label = false
+        end
+        { title: job[:title], description: job[:description], id: id, label: label }
+      end
+    end
 
     def create_trainer(trainer, params={})
       get_trainer_klass(trainer).new({evaluator: :normalized_mcc}.merge(params))
@@ -175,6 +176,22 @@ module Runner
       LIMIT ?
       OFFSET ?;
     SQL
+    def job_sql(offset, limit)
+      classification_count = CLASSIFICATION_IDS[@classification.to_sym].count
+      partition_offset = offset/classification_count
+      partition_limit = partition_offset + limit/classification_count - 1
+    <<-SQL
+      SELECT x.title, x.description, x.function_id, x.industry_id, x.career_level_id
+      FROM (SELECT ROW_NUMBER() OVER (PARTITION BY j.function_id order by jc.created_at ASC) AS r,
+        j.*,jc.created_at as jc_created_at
+        FROM jobs j
+        INNER JOIN ja_qc_job_checks jc ON j.id = jc.job_id
+        INNER JOIN ja_qc_check_status cs ON jc.id = cs.qc_job_check_id
+        WHERE j.language_id = ?) x
+      WHERE x.r BETWEEN #{partition_offset} AND #{partition_limit}
+      ORDER BY RANDOM();
+    SQL
+    end
     def self.sql(*args)
       # Sequel.postgres(SETTINGS['database'].merge(logger: Logger.new($stdout))) {|db| db[*args] }
       Sequel.postgres(SETTINGS['database']) {|db| db[*args] }
