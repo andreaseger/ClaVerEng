@@ -13,7 +13,7 @@ VERIFIER="time bin/verifier.rb"
 #eval $VERIFIER $DEFAULTS --id 11 --selector ig
 #eval $VERIFIER $DEFAULTS --id 12 --selector bns_ig
 #DEFAULTS="--classification function --preprocessor simple --samplesize 6000 --dictionary-size 600 --trainer nelder_mead"
-#eval $VERIFIER $DEFAULTS --id 15 --selector simple
+#eval $VERIFIER $DEFAULTS --id 15 --selector simple --word-selection grams1_2
 #eval $VERIFIER $DEFAULTS --id 16 --selector bns
 #eval $VERIFIER $DEFAULTS --id 17 --selector ig
 #
@@ -46,21 +46,40 @@ VERIFIER="time bin/verifier.rb"
 #eval $VERIFIER $DEFAULTS --id 46 --selector bns
 #eval $VERIFIER $DEFAULTS --id 47 --selector ig
 
-DEFAULTS="--classification function --preprocessor simple --word-selection grams1_2 --samplesize 3000 --dictionary-size 800 --trainer nelder_mead"
-eval $VERIFIER $DEFAULTS --id 50 --distribution 3 --selector simple
-eval $VERIFIER $DEFAULTS --id 51 --distribution 3 --selector bns
-eval $VERIFIER $DEFAULTS --id 52 --distribution 3 --selector ig
-DEFAULTS="--classification function --preprocessor simple --word-selection grams1_2 --samplesize 3000 --dictionary-size 600 --trainer nelder_mead"
-eval $VERIFIER $DEFAULTS --id 55 --distribution 3 --selector simple
-eval $VERIFIER $DEFAULTS --id 56 --distribution 3 --selector bns
-eval $VERIFIER $DEFAULTS --id 57 --distribution 3 --selector ig
+#DEFAULTS="--classification function --preprocessor simple --word-selection grams1_2 --samplesize 3000 --dictionary-size 800 --trainer nelder_mead"
+#eval $VERIFIER $DEFAULTS --id 50 --distribution 3 --selector simple
+#eval $VERIFIER $DEFAULTS --id 51 --distribution 3 --selector bns
+#eval $VERIFIER $DEFAULTS --id 52 --distribution 3 --selector ig
+#DEFAULTS="--classification function --preprocessor simple --word-selection grams1_2 --samplesize 3000 --dictionary-size 600 --trainer nelder_mead"
+#eval $VERIFIER $DEFAULTS --id 55 --distribution 3 --selector simple
+#eval $VERIFIER $DEFAULTS --id 56 --distribution 3 --selector bns
+#eval $VERIFIER $DEFAULTS --id 57 --distribution 3 --selector ig
+
+#DEFAULTS="--classification function --preprocessor simple --samplesize 6000 --word-selection single --dictionary-size 800 --trainer nelder_mead"
+#eval $VERIFIER $DEFAULTS --id 60 --selector simple
+#eval $VERIFIER $DEFAULTS --id 61 --selector bns
+#eval $VERIFIER $DEFAULTS --id 62 --selector ig
 
 ## with stemming
 #DEFAULTS="--classification function --preprocessor stemming --word-selection grams1_2 --samplesize 6000 --dictionary-size 800 --trainer nelder_mead"
-#eval $VERIFIER $DEFAULTS --id 16 --selector simple
-#eval $VERIFIER $DEFAULTS --id 17 --selector bns
-#eval $VERIFIER $DEFAULTS --id 18 --selector ig
+#eval $VERIFIER $DEFAULTS --id 70 --selector simple
+#eval $VERIFIER $DEFAULTS --id 71 --selector bns
+#eval $VERIFIER $DEFAULTS --id 72 --selector ig
 
+## - samplesize
+#DEFAULTS="--classification function --preprocessor simple --word-selection grams1_2 --samplesize 4000 --dictionary-size 800 --trainer doe"
+#eval $VERIFIER $DEFAULTS --id 80 --selector simple
+#eval $VERIFIER $DEFAULTS --id 81 --selector bns
+#eval $VERIFIER $DEFAULTS --id 82 --selector ig
+#DEFAULTS="--classification function --preprocessor simple --word-selection grams1_2 --samplesize 8000 --dictionary-size 800 --trainer nelder_mead"
+#eval $VERIFIER $DEFAULTS --id 90 --selector simple
+#eval $VERIFIER $DEFAULTS --id 91 --selector bns
+#eval $VERIFIER $DEFAULTS --id 92 --selector ig
+
+DEFAULTS="--classification function --preprocessor simple --samplesize 6000 --dictionary-size 400 --trainer nelder_mead"
+eval $VERIFIER $DEFAULTS --id 100 --selector simple --word-selection grams1_2
+eval $VERIFIER $DEFAULTS --id 101 --selector bns
+eval $VERIFIER $DEFAULTS --id 102 --selector ig
 # cross-validation
 #DEFAULTS="--classification function --preprocessor simple --word-selection grams1_2 --samplesize 6000 --dictionary-size 800 --trainer nelder_mead"
 #eval $VERIFIER $DEFAULTS --id 20 --number-of-folds 1 --selector simple
@@ -77,13 +96,6 @@ eval $VERIFIER $DEFAULTS --id 57 --distribution 3 --selector ig
 #eval $VERIFIER $DEFAULTS --id 26 --distribution 3 --selector bns
 #eval $VERIFIER $DEFAULTS --id 27 --distribution 3 --selector ig
 
-## - samplesize
-#DEFAULTS="--classification function --preprocessor simple --word-selection grams1_2 --samplesize 4000 --dictionary-size 800 --trainer nelder_mead"
-#eval $VERIFIER $DEFAULTS --id 30 --selector simple
-#eval $VERIFIER $DEFAULTS --id 31 --selector ig
-#DEFAULTS="--classification function --preprocessor simple --word-selection grams1_2 --samplesize 8000 --dictionary-size 800 --trainer nelder_mead"
-#eval $VERIFIER $DEFAULTS --id 35 --selector simple
-#eval $VERIFIER $DEFAULTS --id 36 --selector ig
 
 # - evaluators
 #DEFAULTS="--classification function --preprocessor simple --word-selection grams1_2 --samplesize 6000 --dictionary-size 800 --trainer nelder_mead --evaluator f1"
