@@ -7,6 +7,8 @@ module Runner
       samplesize = params.fetch(:samplesize) { 1000 }
       dictionary_size = params.fetch(:dictionary_size) { 600 }
 
+      #tmp override
+      params.merge!(classification_encoding: :binary)
       @preprocessor = create_preprocessor(preprocessor)
       @selector = create_selector(selector, params)
 

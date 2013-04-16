@@ -3,10 +3,14 @@ export SVM_CACHESIZE=1024
 
 VERIFIER="time bin/verifier.rb"
 # baseline
-#DEFAULTS="--classification function --preprocessor simple --selector simple --word-selection grams1_2 --samplesize 6000 --dictionary-size 800"
+DEFAULTS="--classification function --preprocessor simple --selector simple --word-selection grams1_2 --samplesize 6000 --dictionary-size 400"
 #eval $VERIFIER $DEFAULTS --id 1 --trainer nelder_mead
 #eval $VERIFIER $DEFAULTS --id 2 --trainer doe
-#
+
+#eval $VERIFIER $DEFAULTS --selector simple
+#eval $VERIFIER $DEFAULTS --selector bns
+eval $VERIFIER $DEFAULTS --selector ig
+
 ## feature selection metrics (grams1_2 is default here)
 #DEFAULTS="--classification function --preprocessor simple --samplesize 6000 --dictionary-size 800 --trainer nelder_mead"
 #eval $VERIFIER $DEFAULTS --id 10 --selector bns
@@ -16,7 +20,7 @@ VERIFIER="time bin/verifier.rb"
 #eval $VERIFIER $DEFAULTS --id 15 --selector simple --word-selection grams1_2
 #eval $VERIFIER $DEFAULTS --id 16 --selector bns
 #eval $VERIFIER $DEFAULTS --id 17 --selector ig
-#
+
 ### including 3-grams
 #DEFAULTS="--classification function --preprocessor simple --word-selection grams1_2_3 --samplesize 6000 --dictionary-size 800 --trainer nelder_mead"
 #eval $VERIFIER $DEFAULTS --id 20 --selector simple
@@ -76,10 +80,11 @@ VERIFIER="time bin/verifier.rb"
 #eval $VERIFIER $DEFAULTS --id 91 --selector bns
 #eval $VERIFIER $DEFAULTS --id 92 --selector ig
 
-DEFAULTS="--classification function --preprocessor simple --samplesize 6000 --dictionary-size 400 --trainer nelder_mead"
-eval $VERIFIER $DEFAULTS --id 100 --selector simple --word-selection grams1_2
-eval $VERIFIER $DEFAULTS --id 101 --selector bns
-eval $VERIFIER $DEFAULTS --id 102 --selector ig
+#DEFAULTS="--classification function --preprocessor simple --samplesize 6000 --dictionary-size 400 --trainer nelder_mead"
+#eval $VERIFIER $DEFAULTS --id 100 --selector simple --word-selection grams1_2
+#eval $VERIFIER $DEFAULTS --id 101 --selector bns
+#eval $VERIFIER $DEFAULTS --id 102 --selector ig
+
 # cross-validation
 #DEFAULTS="--classification function --preprocessor simple --word-selection grams1_2 --samplesize 6000 --dictionary-size 800 --trainer nelder_mead"
 #eval $VERIFIER $DEFAULTS --id 20 --number-of-folds 1 --selector simple

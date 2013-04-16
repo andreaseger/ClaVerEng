@@ -16,15 +16,16 @@ module Runner
         GC.start
         selector = create_selector(s.to_sym, params)
         selector.build_dictionary data
-        [800,600,400].each do |d|
-          selector.global_dictionary = selector.global_dictionary.first(d)
-          IO.write(File.join('tmp',"#{s}_#{d}_dictionary"), selector.global_dictionary.join("\n"))
-          feature_vectors = selector.generate_vectors(data, dictionary_size)
-          f = feature_vectors.map(&:word_data)
-          p "mean true features #{s} #{d}: #{f.map{|e| e.reduce(&:+)}.reduce(&:+)/6000}"
-          m = f.transpose.map{|e| e.reduce(&:+)}
-          IO.write(File.join('tmp',"#{s}_#{d}_feature_statistics.json"),m.to_json)
-        end
+        #[800,600,400].each do |d|
+        #  selector.global_dictionary = selector.global_dictionary.first(d)
+        #  IO.write(File.join('tmp',"#{s}_#{d}_dictionary"), selector.global_dictionary.join("\n"))
+        #  feature_vectors = selector.generate_vectors(data, dictionary_size)
+        #  f = feature_vectors.map(&:word_data)
+        #  p "mean true features #{s} #{d}: #{f.map{|e| e.reduce(&:+)}.reduce(&:+)/6000}"
+        #  count per dictionary word
+        #  m = f.transpose.map{|e| e.reduce(&:+)}
+        #  IO.write(File.join('tmp',"#{s}_#{d}_feature_statistics.json"),m.to_json)
+        #end
       end
 
       #l 'parameter search..training..evaluation'
