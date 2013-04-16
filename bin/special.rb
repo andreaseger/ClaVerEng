@@ -6,4 +6,4 @@ require 'lib/runner/special'
 
 runner = Runner::Special.new(pretty: true)
 
-runner.run(:simple, :bns, samplesize: 6000, dictionary_size: 400, classification: :function)
+runner.run(:simple, :bns, word_selection: :grams1_2, samplesize: 6000, dictionary_size: 400, classification: :function)
