@@ -7,7 +7,8 @@ module Runner
       samplesize = params.fetch(:samplesize) { 1000 }
       dictionary_size = params.fetch(:dictionary_size) { 600 }
 
-      @preprocessor = create_preprocessor(preprocessor)
+      @language = params.fetch(:language){'en'}
+      @preprocessor = create_preprocessor(preprocessor, language: @language)
       @selector = create_selector(selector, params)
 
       trainer = create_trainer(trainer_sym, params )
@@ -37,13 +38,24 @@ module Runner
       test_set = fetch_test_set
 
       l 'parameter search..training..evaluation'
-      predictor, results = create_predictor(trainer, feature_vectors, test_set, id: params[:id], distribution: distribution)
+      predictor, results = create_predictor(trainer,
+                                            feature_vectors,
+                                            test_set,
+                                            id: params[:id],
+                                            distribution: distribution)
 
-      IO.write(File.join(SETTINGS['basedir'], predictor.results_filename), trainer.format_results(results))
+      IO.write( File.join(SETTINGS['basedir'], predictor.results_filename),
+                trainer.format_results(results))
 
       commit(predictor) if params[:git]
 
-      p predictor.serializable_hash.slice(:id, :classification, :properties, :metrics, :trainer_class, :preprocessor_class, :selector_class)
+      p predictor.serializable_hash.slice(:id,
+                                          :classification,
+                                          :properties,
+                                          :metrics,
+                                          :trainer_class,
+                                          :preprocessor_class,
+                                          :selector_class)
     end
     def commit predictor
       puts system(<<-GIT.gsub(/^ {8}/,''))

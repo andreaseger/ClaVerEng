@@ -1,12 +1,11 @@
 {
   "database": {
     "host": "localhost",
-    "user": "username",
-    "password": "password",
-    "database": "database"
+    "user": "verifier",
+    "password": "secret",
+    "database": "testdb1"
   },
 
   "basedir": "../results", // relative to this file
-  "function_predictor": "346-predictor.json" // relative to basedir
 }
 

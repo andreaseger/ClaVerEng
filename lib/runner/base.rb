@@ -20,7 +20,9 @@ module Runner
       preprocessor = opts.fetch(:preprocessor) {@preprocessor}
       selector = opts.fetch(:selector) {@selector}
       classification = opts.fetch(:classification) {@classification}
+      language = opts.fetch(:language) { @language }
       id = opts.fetch(:id) { nil }
+
       model, results, _ = trainer.search feature_vectors, (trainer.is_a?(NelderMead) ? 20 : 5 )
       predictor = SvmPredictor::Model.new(
         selector: selector,
@@ -28,6 +30,7 @@ module Runner
         svm: model,
         classification: classification,
         trainer_class: trainer.class.to_s,
+        language: language,
         properties: { samplesize: feature_vectors.size,
                       distribution: (opts[:distribution] || 1),
                       evaluator: trainer.evaluator,
@@ -57,7 +60,15 @@ module Runner
     # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
     #
     # @return [Problem] libsvm Problem
-    def fetch_test_data count=10000, offset=20000
+    def fetch_test_data count=10000
+      offset = case @language
+      when 'en'
+        20000
+      when 'de'
+        4000
+      when 'fr'
+        0
+      end
       @preprocessor.process(fetch_jobs(limit: count, offset: offset, original_ids: false))
     end
     def create_test_problem data
@@ -74,9 +85,9 @@ module Runner
     #
     # @return [Array<Hash>]
     def fetch_jobs opts={}
-      opts.reverse_merge! limit: 100, offset: 0, language: 6, original_ids: true
+      opts.reverse_merge! limit: 100, offset: 0, language: language_id(@language), original_ids: true
 
-      sql(JOBS_SQL, opts[:language], opts[:limit], opts[:offset] + 1000).map.with_index do |job,index|
+      sql(JOBS_SQL, opts[:language], opts[:limit], opts[:offset]).map.with_index do |job,index|
         id = job[:"#{@classification}_id"]
         if index.even?
           label = true
@@ -165,6 +176,21 @@ module Runner
     end
 
     private
+    def self.sql(*args)
+      # Sequel.postgres(SETTINGS['database'].merge(logger: Logger.new($stdout))) {|db| db[*args] }
+      Sequel.postgres(SETTINGS['database']) {|db| db[*args] }
+    end
+    def sql(*args)
+      self.class.sql(*args)
+    end
+
+    def language_id(code)
+      sql("select id from languages where lower(code) like ?",code).first[:id]
+    rescue NoMethodError
+      # default to english language/jobs
+      6
+    end
+
     JOBS_SQL = <<-SQL
       SELECT title, description, function_id, industry_id, career_level_id
         FROM jobs j
@@ -172,7 +198,7 @@ module Runner
       INNER JOIN ja_qc_check_status cs ON jc.id = cs.qc_job_check_id
       WHERE j.language_id = ?
         AND cs.check_status IS NOT NULL
-      ORDER BY jc.created_at ASC
+      ORDER BY jc.created_at DESC
       LIMIT ?
       OFFSET ?;
     SQL
@@ -191,13 +217,6 @@ module Runner
       WHERE x.r BETWEEN #{partition_offset} AND #{partition_limit}
       ORDER BY RANDOM();
     SQL
-    end
-    def self.sql(*args)
-      # Sequel.postgres(SETTINGS['database'].merge(logger: Logger.new($stdout))) {|db| db[*args] }
-      Sequel.postgres(SETTINGS['database']) {|db| db[*args] }
-    end
-    def sql(*args)
-      self.class.sql(*args)
     end
     CLASSIFICATION_IDS = {
       function: sql(:functions).map(:id).sort,
