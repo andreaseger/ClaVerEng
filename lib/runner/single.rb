@@ -35,8 +35,12 @@ module Runner
         feature_vectors = get_feature_vectors(samplesize, dictionary_size)
       end
       l 'create test_set'
-      test_set = fetch_test_set
-      binding.pry
+      test_set = case @language
+      when 'en'
+        fetch_test_set
+      when 'de','fr'
+        fetch_test_set 10000, feature_vectors.count
+      end
 
       l 'parameter search..training..evaluation'
       predictor, results = create_predictor(trainer,

@@ -60,12 +60,12 @@ module Runner
     # @param  classification [Symbol] in `:industry`, `:function`, `:career_level`
     #
     # @return [Problem] libsvm Problem
-    def fetch_test_data count=10000, offset=10000
+    def fetch_test_data count=10000, offset=20000
       jobs = case @language
         when 'en'
-          fetch_jobs(limit: count, offset: [offset,20000].max, original_ids: false)
+          fetch_jobs(limit: count, offset: [offset,20000].min, original_ids: false)
         when 'de','fr'
-          fetch_jobs(limit: count, offset: [offset,10000].max, original_ids: false)
+          fetch_jobs(limit: count, offset: [offset,10000].min, original_ids: false)
         end
       @preprocessor.process(jobs)
     end
