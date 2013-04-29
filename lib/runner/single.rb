@@ -36,6 +36,7 @@ module Runner
       end
       l 'create test_set'
       test_set = fetch_test_set
+      binding.pry
 
       l 'parameter search..training..evaluation'
       predictor, results = create_predictor(trainer,
