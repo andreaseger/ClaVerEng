@@ -12,7 +12,7 @@ GIT
 
 GIT
   remote: git@github.com:sch1zo/svm_predictor.git
-  revision: c04d2fbb65b0fd1c19179d6454aabb33c8062701
+  revision: c0d2aac6ef21541255e037bb357b374d26ad81d1
   specs:
     svm_predictor (0.1.1)
       activesupport

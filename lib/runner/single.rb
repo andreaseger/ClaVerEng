@@ -2,12 +2,13 @@ require_relative 'base'
 module Runner
   class Single < Base
     attr_accessor :classification
+    attr_accessor :language
     def run(preprocessor, selector, trainer_sym, params={})
-      @classification = params.fetch(:classification){ :function }
+      @classification ||= params.fetch(:classification){ :function }
+      @language ||= params.fetch(:language){'en'}
       samplesize = params.fetch(:samplesize) { 1000 }
       dictionary_size = params.fetch(:dictionary_size) { 600 }
 
-      @language = params.fetch(:language){'en'}
       @preprocessor = create_preprocessor(preprocessor, language: @language)
       @selector = create_selector(selector, params)
 
@@ -51,6 +52,10 @@ module Runner
 
       IO.write( File.join(SETTINGS['basedir'], predictor.results_filename),
                 trainer.format_results(results))
+
+      open(File.join(SETTINGS['basedir'], 'predictors'),  'a'){|f|
+        f.puts(predictor.filename)
+      }
 
       commit(predictor) if params[:git]
 
