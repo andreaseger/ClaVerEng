@@ -9,7 +9,7 @@ optparse = OptionParser.new do |opts|
     exit
   end
   options[:run] = 'build.yml'
-  opts.on( "-r", "--run", String, "run setup" ) do |opt|
+  opts.on( "-r", "--run FILE", String, "run setup" ) do |opt|
     options[:run] = opt
   end
 end
