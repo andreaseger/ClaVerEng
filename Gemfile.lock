@@ -1,16 +1,8 @@
 GIT
   remote: git://github.com/sch1zo/rb-libsvm.git
-  revision: c39c43de52439f2f4d601e8f7bfc6ff997174322
-  branch: with_libsvm_output
+  revision: 98fdfcb473dba6d6c42e88f4706698a909ba720d
   specs:
     rb-libsvm (1.1.2)
-
-GIT
-  remote: git://github.com/sch1zo/svm_helper.git
-  revision: 72e6bbc7808493479511bee7f275c9fb7a14cc80
-  specs:
-    svm_helper (0.2.0.rc3)
-      ruby-stemmer
 
 GIT
   remote: git://github.com/sch1zo/svm_trainer.git
@@ -20,9 +12,9 @@ GIT
 
 GIT
   remote: git@github.com:sch1zo/svm_predictor.git
-  revision: e85e710877d1436596f33485bc35242e2a99134c
+  revision: c0d2aac6ef21541255e037bb357b374d26ad81d1
   specs:
-    svm_predictor (0.1.0.pre1)
+    svm_predictor (0.1.1)
       activesupport
       svm_helper
 
@@ -33,17 +25,17 @@ GEM
       i18n (= 0.6.1)
       multi_json (~> 1.0)
     coderay (1.0.9)
-    diff-lcs (1.2.2)
-    ffi (1.6.0)
+    diff-lcs (1.2.4)
+    ffi (1.8.1)
     formatador (0.2.4)
     github-markup (0.7.5)
-    guard (1.7.0)
+    guard (1.8.0)
       formatador (>= 0.2.4)
-      listen (>= 0.6.0)
+      listen (>= 1.0.0)
       lumberjack (>= 1.0.2)
       pry (>= 0.9.10)
       thor (>= 0.14.6)
-    guard-rspec (2.5.2)
+    guard-rspec (2.5.4)
       guard (>= 1.1)
       rspec (~> 2.11)
     guard-yard (2.1.0)
@@ -51,7 +43,10 @@ GEM
       yard (>= 0.7.0)
     i18n (0.6.1)
     kramdown (1.0.1)
-    listen (0.7.3)
+    listen (1.0.2)
+      rb-fsevent (>= 0.9.3)
+      rb-inotify (>= 0.9)
+      rb-kqueue (>= 0.2)
     lumberjack (1.0.3)
     metaclass (0.0.1)
     method_source (0.8.1)
@@ -59,8 +54,8 @@ GEM
       metaclass (~> 0.0.1)
     multi_json (1.7.2)
     parallel (0.6.4)
-    pg (0.15.0)
-    pry (0.9.12)
+    pg (0.15.1)
+    pry (0.9.12.1)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
@@ -71,6 +66,8 @@ GEM
       ffi
     rb-fsevent (0.9.3)
     rb-inotify (0.9.0)
+      ffi (>= 0.5.0)
+    rb-kqueue (0.2.0)
       ffi (>= 0.5.0)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
@@ -83,8 +80,10 @@ GEM
     ruby-stemmer (0.9.3)
     sequel (3.46.0)
     slop (3.4.4)
+    svm_helper (0.2.1)
+      ruby-stemmer
     thor (0.18.1)
-    yard (0.8.5.2)
+    yard (0.8.6.1)
 
 PLATFORMS
   ruby
@@ -106,7 +105,7 @@ DEPENDENCIES
   rb-inotify (~> 0.9)
   rb-libsvm (>= 1.1.2)!
   sequel
-  svm_helper (>= 0.2.0.rc1)!
-  svm_predictor (>= 0.1.0.pre1)!
+  svm_helper (>= 0.2.1)
+  svm_predictor (>= 0.1.1)!
   svm_trainer (>= 0.2.0.pre)!
   yard

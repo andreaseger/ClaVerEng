@@ -27,6 +27,9 @@ optparse = OptionParser.new do |opts|
                  "One of [*function*, industry, career_level]" ) do |opt|
     options[:classification] = opt.downcase.to_sym
   end
+  opts.on( "-l", "--language LANGUAGE", String,"one of 'en','de','fr'" ) do |opt|
+    options[:language] = opt
+  end
 
   opts.on( "-t", "--trainer TRAINER", String, "either *grid*, *doe* or *nelder_mead* " ) do |opt|
     options[:trainer] = opt.downcase.to_sym
