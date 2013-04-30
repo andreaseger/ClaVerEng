@@ -66,6 +66,7 @@ module Runner
                                           :trainer_class,
                                           :preprocessor_class,
                                           :selector_class)
+      predictor.filename
     end
     def commit predictor
       puts system(<<-GIT.gsub(/^ {8}/,''))
