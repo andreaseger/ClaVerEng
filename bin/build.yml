@@ -5,7 +5,7 @@ _defaults: &defaults
   :selector: :simple
   :word_selection: grams1_2
   :dictionary_size: 600
-  :git: false
+  :git: true
   # :evaluator: :normalized_mcc
   # :number_of_folds: 3
   # :distribution: 1
