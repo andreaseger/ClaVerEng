@@ -1,0 +1,51 @@
+_defaults: &defaults
+  :samplesize: 6000
+  :trainer: :nelder_mead
+  :preprocessor: :simple
+  :selector: :simple
+  :word_selection: grams1_2
+  :dictionary_size: 600
+  :git: true
+  # :evaluator: :normalized_mcc
+  # :number_of_folds: 3
+  # :distribution: 1
+
+en:
+  :function:
+   -
+    << : *defaults
+    :word_selection: :grams1_2_3
+   -
+    << : *defaults
+    :selector: :bns
+    :word_selection: :grams1_2_3
+   -
+    << : *defaults
+    :preprocessor: :stemming
+    :word_selection: :grams1_2_3
+de:
+  :function:
+   -
+    << : *defaults
+    :word_selection: :grams1_2_3
+   -
+    << : *defaults
+    :selector: :bns
+    :word_selection: :grams1_2_3
+   -
+    << : *defaults
+    :preprocessor: :stemming
+    :word_selection: :grams1_2_3
+fr:
+  :function:
+   -
+    << : *defaults
+    :word_selection: :grams1_2_3
+   -
+    << : *defaults
+    :selector: :bns
+    :word_selection: :grams1_2_3
+   -
+    << : *defaults
+    :preprocessor: :stemming
+    :word_selection: :grams1_2_3

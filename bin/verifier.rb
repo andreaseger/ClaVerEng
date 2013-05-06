@@ -11,7 +11,7 @@ optparse = OptionParser.new do |opts|
   opts.on( "-s", "--selector NAME", "Which Selector to use. [simple,ngram,binary_encoded]" ) do |opt|
     options[:selector] = opt.downcase.to_sym
   end
-  opts.on( "-g", "--gram SIZE", Integer, "n-gram size." ) do |opt|
+  opts.on( "-g", "--gram-size SIZE", Integer, "n-gram size." ) do |opt|
     options[:gram_size] = opt.to_i
   end
   opts.on( "-n", "--samplesize SIZE", Integer, "number of jobs to use." ) do |opt|
@@ -26,6 +26,9 @@ optparse = OptionParser.new do |opts|
   opts.on( "-c", "--classification CLASSIFICATION", String,
                  "One of [*function*, industry, career_level]" ) do |opt|
     options[:classification] = opt.downcase.to_sym
+  end
+  opts.on( "-l", "--language LANGUAGE", String,"one of 'en','de','fr'" ) do |opt|
+    options[:language] = opt
   end
 
   opts.on( "-t", "--trainer TRAINER", String, "either *grid*, *doe* or *nelder_mead* " ) do |opt|
@@ -46,6 +49,12 @@ optparse = OptionParser.new do |opts|
   end
   opts.on( "--number-of-folds SETTING", Numeric, "number of folds to use in cross-valication; default = 3; 1 => disables cross-validation") do |opt|
     options[:number_of_folds] = opt
+  end
+  opts.on( "--distribution N", Numeric, "distribution between true and false jobs(defaults to 1:1)\n3 means 3 times as much false one as true ones.") do |opt|
+    options[:distribution] = opt
+  end
+  opts.on( "--id ID", Numeric, "set the id for the new predictor.") do |opt|
+    options[:id] = opt
   end
 
   options[:pretty]=false
